@@ -22,7 +22,7 @@ export const configFieldId = {
 	SibPass: 'sib_ip_pass',
 
 	/**
-	 * Sport In The Box helper password from helper in tray..
+	 * Sport In The Box helper password from helper in tray.
 	 */
 	SibHelperPass: 'sib_helper_pass',
 

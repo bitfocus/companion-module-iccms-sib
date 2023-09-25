@@ -3,7 +3,7 @@
 	"name": "iccms-sib",
 	"shortname": "sib",
 	"description": "Control QuickButtons in Sport In The Box",
-	"version": "0.1.0",
+	"version": "0.1.2",
 	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-iccms-sib.git",
 	"bugs": "https://support.sportinthebox.com/en-US",
