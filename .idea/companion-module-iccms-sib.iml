@@ -10,8 +10,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="@types/object-path" level="application" />
     <orderEntry type="library" name="@types/jest" level="application" />
-    <orderEntry type="library" name="@types/sharp" level="application" />
+    <orderEntry type="library" name="@types/object-path" level="application" />
   </component>
 </module>
