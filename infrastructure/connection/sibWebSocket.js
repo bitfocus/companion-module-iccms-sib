@@ -1,5 +1,6 @@
 import { logger } from '../../logger.js'
 import WebSocket from 'ws'
+import * as path from 'path'
 
 /**
  * Handles connection to SIB.
@@ -25,10 +26,13 @@ export class SibWebSocket {
 			//ws://localhost:50492/open
 			const localWsUrl = 'ws://' + this.#sibConfig.sibIp + ':50492/open'
 
+			db.Token = this.#sibConfig.helperToken
+
 			logger.debug(`Send open database: ${JSON.stringify(db)} via ${localWsUrl}`)
 
 			let ws = new WebSocket(db.SibUrlPort)
-			db.Token = this.#sibConfig.helperToken
+
+			logger.error('456')
 
 			ws.on('open', () => {
 				logger.debug('ws, open. Send data.')
@@ -40,12 +44,12 @@ export class SibWebSocket {
 			})
 			ws.on('close', (code) => {
 				logger.debug('ws, close.')
-				reject(e)
+				reject(code)
 			})
 
 			ws.on('error', (data) => {
-				logger.debug(`ws, error. ${JSON.stringify(data)}`)
-				reject(e)
+				logger.error('ws, error. %s', JSON.stringify(data))
+				reject(data)
 			})
 		})
 	}
