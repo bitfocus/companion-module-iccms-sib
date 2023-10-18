@@ -43,13 +43,16 @@ export async function controllerQuickButtonCollections(sibComputer, sibIcons, ap
 		}
 	}
 
+	const sibConfig = sibComputer.getConnectionConfig()
+
 	// Send to module.
 	updateActionsFromButtons(
 		cmpModule,
 		sibComputer.getApiUrl(),
 		sibHttpClientTriggerQuickButtonById,
 		parsedCollectionsJson,
-		sibSocket
+		sibSocket,
+		sibConfig
 	)
 	cmpModule.setPresetDefinitions(presetsAll)
 

@@ -87,7 +87,7 @@ class SibPluginInstance extends InstanceBase {
 			await this.#sibConnection.connectToSib(this.#sibConfig)
 
 			// Hardcoded thins.
-			updateActionsAtStartup(this, this.#sibSocket)
+			updateActionsAtStartup(this, this.#sibSocket, this.#sibConfig)
 			updateVariableDefinitions(this)
 			updateFeedbacks(this, this.#sibComputer)
 

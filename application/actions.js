@@ -18,8 +18,16 @@ import objectPath from 'object-path'
  * @param sibHttpClientTriggerQbById
  * @param {apiQuickButtonCollectionWithGroupsAndButtons[]} qbCollections
  * @param {SibWebSocket} sibSocket
+ * @param {SibConnection} sibConfig
  */
-export function updateActionsFromButtons(self, restBaseUrl, sibHttpClientTriggerQbById, qbCollections, sibSocket) {
+export function updateActionsFromButtons(
+	self,
+	restBaseUrl,
+	sibHttpClientTriggerQbById,
+	qbCollections,
+	sibSocket,
+	sibConfig
+) {
 	logger.debug('Update actions from buttons.')
 
 	let my_actions = {}
@@ -37,7 +45,7 @@ export function updateActionsFromButtons(self, restBaseUrl, sibHttpClientTrigger
 			},
 		],
 		callback: (event) => {
-			logger.debug('Fire TriggerId (my_action_trigger_event):', event.options[actionId.TriggerEvent])
+			logger.debug('Fire TriggerId (my_action_trigger_event): %s', event.options[actionId.TriggerEvent])
 			sibHttpClientTriggerQbById(restBaseUrl, event.options[actionId.TriggerEvent])
 		},
 	}
@@ -45,14 +53,6 @@ export function updateActionsFromButtons(self, restBaseUrl, sibHttpClientTrigger
 	my_actions[actionId.OpenDatabase] = {
 		name: 'Open database',
 		options: [
-			{
-				type: 'textinput',
-				id: 'sib_ip_port',
-				label: 'SIB connection url',
-				default: 'ws://localhost:50492/open',
-				required: true,
-				isVisible: () => false,
-			},
 			{
 				type: 'textinput',
 				id: 'db_path',
@@ -70,17 +70,19 @@ export function updateActionsFromButtons(self, restBaseUrl, sibHttpClientTrigger
 			},
 		],
 		callback: async (event) => {
-			logger.debug('Fire open database (sib_action_open_database):', event.options[actionId.OpenDatabase])
+			logger.debug('Fire open database (sib_action_open_database): %s', event.options[actionId.OpenDatabase])
 
-			const sibIpPort = objectPath.get(event.options, 'sib_ip_port', '')
+			const sibIpPort = sibConfig.sibIpPort
 			const sibDbpath = objectPath.get(event.options, 'db_path', '')
 			const sibDelay = objectPath.get(event.options, 'db_delay', 0)
 			const cmd = new ApiOpenDatabase(sibIpPort, sibDbpath, sibDelay)
 
+			logger.debug('Open database from buttons : %s.', JSON.stringify(cmd))
+
 			try {
 				await sibSocket.openSibDatabaseAsync(cmd)
 			} catch (e) {
-				logger.error(e)
+				logger.error('Got error from socket.')
 			}
 		},
 	}
@@ -99,8 +101,9 @@ export function updateActionsFromButtons(self, restBaseUrl, sibHttpClientTrigger
  * @see <a href="https://github.com/bitfocus/companion/wiki/Actions">Actions v2</a>
  * @param {*} self
  * @param {SibWebSocket} sibSocket
+ * @param {SibConnection} sibConfig
  */
-export function updateActionsAtStartup(self, sibSocket) {
+export function updateActionsAtStartup(self, sibSocket, sibConfig) {
 	logger.debug('Update actions at startup.')
 
 	let my_actions = {}
@@ -108,14 +111,6 @@ export function updateActionsAtStartup(self, sibSocket) {
 	my_actions[actionId.OpenDatabase] = {
 		name: 'Open database',
 		options: [
-			{
-				type: 'textinput',
-				id: 'sib_ip_port',
-				label: 'SIB connection url',
-				default: 'ws://localhost:50492/open',
-				required: true,
-				isVisible: () => false,
-			},
 			{
 				type: 'textinput',
 				id: 'db_path',
@@ -133,17 +128,19 @@ export function updateActionsAtStartup(self, sibSocket) {
 			},
 		],
 		callback: async (event) => {
-			logger.debug('Fire open database (sib_action_open_database):', event.options[actionId.OpenDatabase])
+			logger.debug('Fire open database (sib_action_open_database): %s', event.options[actionId.OpenDatabase])
 
-			const sibIpPort = objectPath.get(event.options, 'sib_ip_port', '')
+			const sibIpPort = sibConfig.sibIpPort
 			const sibDbpath = objectPath.get(event.options, 'db_path', '')
 			const sibDelay = objectPath.get(event.options, 'db_delay', 0)
 			const cmd = new ApiOpenDatabase(sibIpPort, sibDbpath, sibDelay)
 
+			logger.debug('Open database from startup : %s', JSON.stringify(cmd))
+
 			try {
 				await sibSocket.openSibDatabaseAsync(cmd)
 			} catch (e) {
-				logger.error(e)
+				logger.error('Got error from socket.')
 			}
 		},
 	}

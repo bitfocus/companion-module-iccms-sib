@@ -8,6 +8,7 @@ export const logger = winston.createLogger({
 			format: winston.format.combine(
 				//winston.format.colorize(),
 				winston.format.timestamp(),
+				winston.format.splat(),
 				winston.format.align(),
 				winston.format.printf((debug) => {
 					const { timestamp, level, message, ...args } = debug

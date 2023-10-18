@@ -25,10 +25,12 @@ export class SibWebSocket {
 			//ws://localhost:50492/open
 			const localWsUrl = 'ws://' + this.#sibConfig.sibIp + ':50492/open'
 
-			logger.error('Send open database: %s via %s', JSON.stringify(db), localWsUrl)
-
-			let ws = new WebSocket(db.SibUrlPort)
 			db.Token = this.#sibConfig.helperToken
+
+			logger.debug('Current config: %s', JSON.stringify(this.#sibConfig))
+			logger.debug('Send open database: %s via %s', JSON.stringify(db), localWsUrl)
+
+			let ws = new WebSocket(localWsUrl)
 
 			ws.on('open', () => {
 				logger.debug('ws, open. Send data.')
@@ -40,12 +42,12 @@ export class SibWebSocket {
 			})
 			ws.on('close', (code) => {
 				logger.debug('ws, close.')
-				reject(e)
+				reject(code)
 			})
 
 			ws.on('error', (data) => {
-				logger.debug('ws, error.')
-				reject(e)
+				logger.error('ws, error. %s', JSON.stringify(data))
+				reject(data)
 			})
 		})
 	}

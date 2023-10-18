@@ -1,6 +1,6 @@
 {
 	"name": "companion-module-iccms-sib",
-	"version": "0.1.2",
+	"version": "1.0.0",
 	"main": "main.js",
 	"type": "module",
 	"scripts": {
