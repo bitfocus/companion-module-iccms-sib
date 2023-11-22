@@ -4,12 +4,16 @@ import { logger } from '../../logger.js'
 import * as http from 'http'
 import { ApiMessageSibInfo } from '../protocol/apiMessageSibInfo.js'
 import { parseCollectionWithGroupsAndButtonsArray } from '../acl/parseCollectionWithGroupsAndButtonsArray.js'
+import { ApiSportTeamWithoutPlayers } from '../protocol/apiSportTeamWithoutPlayers.js'
+
+import { parseApiSportTeamWithoutPlayersArray } from '../acl/parseApiSportTeamWithoutPlayersArray.js'
 
 const apiHttp = 'http://'
 const apiHb = '/api/hb/'
 const apiQuickButton = '/api/quickbutton'
 const apiQuickButtonCollectionsFull = '/api/quickButtonCollectionsFull/'
 const apiIcon = '/api/iconPng/'
+const apiTeams = '/api/teams/'
 
 function passIsSet(value) {
 	if (value === undefined) {
@@ -191,6 +195,52 @@ export function sibHttpClientGetPngIconBase64(baseUrl, token, iconId) {
 			})
 			.on('error', (e) => {
 				logger.error('API. Icon: ' + iconId + ' ' + e.message)
+				reject(e)
+			})
+	})
+}
+
+/**
+ * Gets all teams at once.
+ * @param {string} baseUrl
+ * @param {string} token
+ * @returns {Promise<ApiSportTeamWithoutPlayers[]>}
+ */
+export function sibHttpClientGetTeamsAsync(baseUrl, token) {
+	return new Promise((resolve, reject) => {
+		let urlTeams
+		if (!passIsSet(token)) {
+			// http://localhost:8080/api/teams
+			urlTeams = apiHttp + baseUrl + apiTeams
+		} else {
+			// http://localhost:8080/api/teams/my_pass
+			urlTeams = apiHttp + baseUrl + apiTeams + token + '/'
+		}
+
+		logger.debug('Called url: ' + urlTeams)
+
+		let apiData
+
+		http
+			.get(urlTeams, (res) => {
+				let rawData = ''
+				res.on('data', (chunk) => {
+					rawData += chunk
+				})
+				res.on('end', () => {
+					try {
+						logger.debug('Got teams from api.')
+
+						apiData = parseApiSportTeamWithoutPlayersArray(rawData)
+						resolve(apiData)
+					} catch (e) {
+						logger.warn("API, can't parse teams from API: %s.", e.message)
+						reject(e)
+					}
+				})
+			})
+			.on('error', (e) => {
+				logger.error("API, can't get teams from API: %s.", e.message)
 				reject(e)
 			})
 	})
