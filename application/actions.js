@@ -4,6 +4,7 @@ import { logger } from '../logger.js'
 import { ApiOpenDatabase } from '../infrastructure/protocol/apiOpenDatabase.js'
 import objectPath from 'object-path'
 import { apiSportTeamType } from '../infrastructure/protocol/apiSportTeamType.js'
+import { getChoicesForChangeTeamAction } from './presetFactory/getChoicesForChangeTeamAction.js'
 
 /**
  * Update drop-down from buttons.
@@ -20,6 +21,8 @@ import { apiSportTeamType } from '../infrastructure/protocol/apiSportTeamType.js
  * @param {apiQuickButtonCollectionWithGroupsAndButtons[]} qbCollections
  * @param {SibWebSocket} sibSocket
  * @param {SibConnection} sibConfig
+ * @param sibHttpClientChangeTeamById http client to change team.
+ * @param {ApiSportTeamWithoutPlayers[]} allTeams all teams from api
  */
 export function updateActionsFromButtons(
 	self,
@@ -27,7 +30,9 @@ export function updateActionsFromButtons(
 	sibHttpClientTriggerQbById,
 	qbCollections,
 	sibSocket,
-	sibConfig
+	sibConfig,
+	sibHttpClientChangeTeamById,
+	allTeams
 ) {
 	logger.debug('Update actions from buttons.')
 
@@ -88,6 +93,49 @@ export function updateActionsFromButtons(
 		},
 	}
 
+	// Teams
+
+	my_actions[actionId.ChangeTeam] = {
+		name: 'Change team',
+		options: [
+			{
+				type: 'dropdown',
+				label: 'Team to change',
+				id: 'team_type',
+				default: apiSportTeamType.Home,
+				tooltip: 'Which team to change?',
+				choices: [
+					{ id: apiSportTeamType.Home, label: 'Home' },
+					{ id: apiSportTeamType.Guest, label: 'Guest' },
+				],
+			},
+			{
+				type: 'dropdown',
+				label: 'Select team,',
+				id: 'team_oid',
+				default: -1,
+				tooltip: 'Change match home or guest team.',
+				choices: getChoicesForChangeTeamAction(allTeams),
+			},
+		],
+		callback: async (event) => {
+			logger.debug('Change team (sib_action_change_team): %s', event.options[actionId.ChangeTeam])
+
+			const sibIpPort = sibConfig.sibIpPort
+			const sibTeamType = objectPath.get(event.options, 'team_type', 'h')
+			const sibTeamOid = objectPath.get(event.options, 'team_oid', -1)
+
+			logger.debug('Change team from startup. Type %s, id %s.', sibTeamType, sibTeamOid)
+
+			try {
+				logger.debug('Fire (sib_action_change_team): %s', event.options[actionId.ChangeTeam])
+				sibHttpClientChangeTeamById(sibIpPort, sibTeamType, sibTeamOid)
+			} catch (e) {
+				logger.error('Got error from teams client.')
+			}
+		},
+	}
+
 	self.setActionDefinitions(my_actions)
 }
 
@@ -103,7 +151,7 @@ export function updateActionsFromButtons(
  * @param {*} self
  * @param {SibWebSocket} sibSocket
  * @param {SibConnection} sibConfig
- * @param sibHttpClientChangeTeamById
+ * @param sibHttpClientChangeTeamById http client to change team
  */
 export function updateActionsAtStartup(self, sibSocket, sibConfig, sibHttpClientChangeTeamById) {
 	logger.debug('Update actions at startup.')
