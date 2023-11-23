@@ -29,7 +29,7 @@ describe('Create preset from collection with teams', () => {
 
 		// assert
 		const actualKeys = Object.keys(actual)
-		expect(actualKeys).toHaveLength(2)
+		expect(actualKeys).toHaveLength(4)
 	})
 
 	test('Collection, no teams, preset is not created.', () => {

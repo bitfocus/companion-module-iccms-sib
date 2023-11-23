@@ -1,7 +1,10 @@
 import { createPresetFromTeam } from './createPresetFromTeam.js'
+import { apiSportTeamType } from '../../infrastructure/protocol/apiSportTeamType.js'
 
 /**
  * Create presets from collection teams.
+ * Makes home and guest presets.
+ *
  * Don't create presets for collections without teams.
  *
  * NOTE: only one level of nesting is possible.
@@ -14,12 +17,21 @@ export function createPresetsFromTeamsArray(collections) {
 	}
 	const presets = {}
 
-	// Collections (can only have one parent category, use separator.)
+	// home
 	collections.forEach((team) => {
-		const presetQb = createPresetFromTeam(team)
+		const presetQb = createPresetFromTeam(team, apiSportTeamType.Home)
 
 		if (presetQb != null) {
-			presets[`preset_team_${team.Id}`] = presetQb
+			presets[`preset_home_team_${team.Id}`] = presetQb
+		}
+	})
+
+	// guest
+	collections.forEach((team) => {
+		const presetQb = createPresetFromTeam(team, apiSportTeamType.Guest)
+
+		if (presetQb != null) {
+			presets[`preset_guest_team_${team.Id}`] = presetQb
 		}
 	})
 
