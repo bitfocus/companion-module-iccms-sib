@@ -3,6 +3,7 @@ import { getChoicesForTriggerEventAction } from './presetFactory/getChoicesForTr
 import { logger } from '../logger.js'
 import { ApiOpenDatabase } from '../infrastructure/protocol/apiOpenDatabase.js'
 import objectPath from 'object-path'
+import { apiSportTeamType } from '../infrastructure/protocol/apiSportTeamType.js'
 
 /**
  * Update drop-down from buttons.
@@ -102,8 +103,9 @@ export function updateActionsFromButtons(
  * @param {*} self
  * @param {SibWebSocket} sibSocket
  * @param {SibConnection} sibConfig
+ * @param sibHttpClientChangeTeamById
  */
-export function updateActionsAtStartup(self, sibSocket, sibConfig) {
+export function updateActionsAtStartup(self, sibSocket, sibConfig, sibHttpClientChangeTeamById) {
 	logger.debug('Update actions at startup.')
 
 	let my_actions = {}
@@ -141,6 +143,46 @@ export function updateActionsAtStartup(self, sibSocket, sibConfig) {
 				await sibSocket.openSibDatabaseAsync(cmd)
 			} catch (e) {
 				logger.error('Got error from socket.')
+			}
+		},
+	}
+
+	my_actions[actionId.ChangeTeam] = {
+		name: 'Change team',
+		options: [
+			{
+				type: 'dropdown',
+				label: 'Team to change',
+				id: 'team_type',
+				default: apiSportTeamType.Home,
+				tooltip: 'Which team to change?',
+				choices: [
+					{ id: apiSportTeamType.Home, label: 'Home' },
+					{ id: apiSportTeamType.Guest, label: 'Guest' },
+				],
+			},
+			{
+				type: 'number',
+				id: 'team_oid',
+				label: 'Team Id from teams api,',
+				tooltip: 'Requires connection to sib to get teams as dro-down.',
+				default: 0,
+			},
+		],
+		callback: async (event) => {
+			logger.debug('Change team (sib_action_change_team): %s', event.options[actionId.ChangeTeam])
+
+			const sibIpPort = sibConfig.sibIpPort
+			const sibTeamType = objectPath.get(event.options, 'team_type', 'h')
+			const sibTeamOid = objectPath.get(event.options, 'team_oid', -1)
+
+			logger.debug('Change team from startup. Type %s, id %s.', sibTeamType, sibTeamOid)
+
+			try {
+				logger.debug('Fire (sib_action_change_team): %s', event.options[actionId.ChangeTeam])
+				sibHttpClientChangeTeamById(sibIpPort, sibTeamType, sibTeamOid)
+			} catch (e) {
+				logger.error('Got error from teams client.')
 			}
 		},
 	}
