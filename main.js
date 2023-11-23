@@ -130,11 +130,26 @@ class SibPluginInstance extends InstanceBase {
 				this.#sibComputer.setSibInfo(value)
 			})
 
+			this.#sibConnection.on(sibConnectionEvents.OnSibTeamsUpdated, async (value) => {
+				logger.debug(`Got teams data.`)
+				this.#sibComputer.setSibTeams(value)
+
+				let allTeams = this.#sibComputer.getSibTeams()
+
+				await controllerQuickButtonCollections(
+					this.#sibComputer,
+					this.#sibIcons,
+					value,
+					this,
+					this.#sibSocket,
+					allTeams
+				)
+			})
+
 			this.#sibConnection.on(sibConnectionEvents.OnSibQuickButtonsUpdated, async (value) => {
 				logger.debug(`Got connected data.`)
 
-				// BUG: get all teams.
-				let allTeams
+				let allTeams = this.#sibComputer.getSibTeams()
 
 				await controllerQuickButtonCollections(
 					this.#sibComputer,
