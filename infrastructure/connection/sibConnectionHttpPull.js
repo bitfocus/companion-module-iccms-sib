@@ -124,6 +124,21 @@ export class SibConnectionHttpPull extends EventEmitter {
 			return
 		}
 
+		// Teams
+		try {
+			const apiTeams = await sibHttpClientGetTeamsAsync(this.#sibConfig.sibIpPort, this.#sibConfig.token)
+
+			if (!(JSON.stringify(this.#prevTeams) === JSON.stringify(apiTeams))) {
+				logger.debug('Connection. Teams updated.')
+
+				this.#prevTeams = apiTeams
+				this.emit(sibConnectionEvents.OnSibTeamsUpdated, apiTeams)
+			}
+		} catch (error) {
+			logger.error('Sib request for teams failed, %s', error)
+			this.emit(sibConnectionEvents.OnSibError, 'Request to sib failed. Check password in settings.')
+		}
+
 		// qb collections.
 		try {
 			const apiCollections = await sibHttpClientGetQuickButtonCollectionsAsync(
@@ -139,21 +154,6 @@ export class SibConnectionHttpPull extends EventEmitter {
 			}
 		} catch (error) {
 			logger.error('Sib request for collections failed, %s', error)
-			this.emit(sibConnectionEvents.OnSibError, 'Request to sib failed. Check password in settings.')
-		}
-
-		// Teams
-		try {
-			const apiTeams = await sibHttpClientGetTeamsAsync(this.#sibConfig.sibIpPort, this.#sibConfig.token)
-
-			if (!(JSON.stringify(this.#prevTeams) === JSON.stringify(apiTeams))) {
-				logger.debug('Connection. Teams updated.')
-
-				this.#prevTeams = apiTeams
-				this.emit(sibConnectionEvents.OnSibTeamsUpdated, apiTeams)
-			}
-		} catch (error) {
-			logger.error('Sib request for teams failed, %s', error)
 			this.emit(sibConnectionEvents.OnSibError, 'Request to sib failed. Check password in settings.')
 		}
 
