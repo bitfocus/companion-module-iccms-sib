@@ -14,6 +14,8 @@ const apiQuickButton = '/api/quickbutton'
 const apiQuickButtonCollectionsFull = '/api/quickButtonCollectionsFull/'
 const apiIcon = '/api/iconPng/'
 const apiTeams = '/api/teams/'
+const apiTeam = '/api/team/'
+const apiMatch = '/api/match/'
 
 function passIsSet(value) {
 	if (value === undefined) {
@@ -243,5 +245,31 @@ export function sibHttpClientGetTeamsAsync(baseUrl, token) {
 				logger.error("API, can't get teams from API: %s.", e.message)
 				reject(e)
 			})
+	})
+}
+
+/**
+ * Calls SIB api and changes home or guest team via HTTP get.
+ * {@link https://nodejs.org/api/http.html#httpgetoptions-callback Node http}.
+ * @param {string} baseUrl rest base url from config without ending slash.
+ * @param {string} teamType - home/h or guest/g
+ * @param {number} teamOid
+ * @param {string} token
+ */
+export function sibHttpClientChangeTeamById(baseUrl, teamType, teamOid, token) {
+	let fullUrl
+
+	if (!passIsSet(token)) {
+		// http://localhost:8080/api/match/team/h/1/
+		fullUrl = apiHttp + baseUrl + apiMatch + '/team/' + teamType
+	} else {
+		//http://localhost:8080/api/match/team/h/1/my_pass
+		fullUrl = apiHttp + baseUrl + apiMatch + '/team/' + teamType + '/' + token
+	}
+
+	logger.debug('Change team url: ' + fullUrl)
+
+	http.get(fullUrl).on('error', (err) => {
+		logger.error('Error for team: ' + teamType + ' ' + teamOid + ' ' + err.message)
 	})
 }
