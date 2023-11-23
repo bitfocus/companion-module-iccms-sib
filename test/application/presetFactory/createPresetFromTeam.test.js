@@ -2,6 +2,7 @@ import { SibIcons } from '../../../domain/sibIcons.js'
 import { actionId } from '../../../application/actionId.js'
 import { createPresetFromTeam } from '../../../application/presetFactory/createPresetFromTeam.js'
 import { ApiSportTeamWithoutPlayers } from '../../../infrastructure/protocol/apiSportTeamWithoutPlayers.js'
+import { apiSportTeamType } from '../../../infrastructure/protocol/apiSportTeamType.js'
 
 describe('Create preset from team', () => {
 	test('Default values', () => {
@@ -30,11 +31,12 @@ describe('Create preset from team', () => {
 
 		// steps
 
-		// up
-		expect(actual.steps[0].down[0].actionId).toBe(actionId.ChangeTeam)
-		//(actual.steps[0].down[0].options[actionId.ChangeTeam]).toBe(expected.Id)
-
 		// down
+		expect(actual.steps[0].down[0].actionId).toBe(actionId.ChangeTeam)
+		expect(actual.steps[0].down[0].options['team_type']).toBe(apiSportTeamType.Home)
+		expect(actual.steps[0].down[0].options['team_oid']).toBe(expected.Id)
+
+		// up
 		expect(actual.steps[0].up).toEqual(expect.any(Array))
 
 		// feedbacks

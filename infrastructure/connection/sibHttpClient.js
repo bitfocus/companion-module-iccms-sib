@@ -261,10 +261,10 @@ export function sibHttpClientChangeTeamById(baseUrl, teamType, teamOid, token) {
 
 	if (!passIsSet(token)) {
 		// http://localhost:8080/api/match/team/h/1/
-		fullUrl = apiHttp + baseUrl + apiMatch + '/team/' + teamType
+		fullUrl = apiHttp + baseUrl + apiMatch + '/team/' + teamType + '/' + teamOid + '/'
 	} else {
 		//http://localhost:8080/api/match/team/h/1/my_pass
-		fullUrl = apiHttp + baseUrl + apiMatch + '/team/' + teamType + '/' + token
+		fullUrl = apiHttp + baseUrl + apiMatch + '/team/' + teamType + '/' + teamOid + '/' + token
 	}
 
 	logger.debug('Change team url: ' + fullUrl)

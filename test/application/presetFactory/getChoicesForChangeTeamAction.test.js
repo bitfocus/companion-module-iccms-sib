@@ -43,7 +43,7 @@ describe('Choices are created from teams', () => {
 		const actualKeys = Object.keys(actual)
 		expect(actualKeys).toHaveLength(1)
 
-		const expected = { id: -1, label: 'No teams' }
+		const expected = { id: -1, label: 'No team' }
 
 		expect(actual).toContainEqual(expected)
 	})

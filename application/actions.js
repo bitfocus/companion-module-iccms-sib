@@ -111,7 +111,7 @@ export function updateActionsFromButtons(
 			},
 			{
 				type: 'dropdown',
-				label: 'Select team,',
+				label: 'Select team',
 				id: 'team_oid',
 				default: -1,
 				tooltip: 'Change match home or guest team.',

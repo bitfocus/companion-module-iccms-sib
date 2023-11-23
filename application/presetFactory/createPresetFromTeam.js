@@ -1,6 +1,7 @@
 import { combineRgb } from '@companion-module/base'
 import { actionId } from '../actionId.js'
 import { colord } from 'colord'
+import { apiSportTeamType } from '../../infrastructure/protocol/apiSportTeamType.js'
 
 /**
  * Create companion preset from qb collection with groups and buttons.
@@ -54,7 +55,8 @@ export function createPresetFromTeam(team) {
 						// add an action on down press
 						actionId: actionId.ChangeTeam,
 						options: {
-							[actionId.TriggerEvent]: team.Id,
+							['team_type']: apiSportTeamType.Home,
+							['team_oid']: team.Id,
 						},
 					},
 				],

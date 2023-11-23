@@ -8,7 +8,7 @@ import { logger } from '../../logger.js'
 export function getChoicesForChangeTeamAction(allTeams) {
 	let options = []
 
-	options.push({ id: -1, label: 'No teams' })
+	options.push({ id: -1, label: 'No team' })
 
 	if (!allTeams) return options
 
