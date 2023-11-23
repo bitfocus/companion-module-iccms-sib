@@ -6,6 +6,7 @@ import {
 	sibHttpClientChangeTeamById,
 	sibHttpClientTriggerQuickButtonById,
 } from '../../infrastructure/connection/sibHttpClient.js'
+import { createPresetsFromTeamsArray } from '../presetFactory/createPresetsFromTeamsArray.js'
 
 /**
  * Handles received QB and saves data locally.
@@ -50,6 +51,15 @@ export async function controllerQuickButtonCollections(
 
 	if (colPresets != null) {
 		for (const [key, pObject] of Object.entries(colPresets)) {
+			presetsAll[key] = pObject
+		}
+	}
+
+	// Teams presets
+	const teamPresets = createPresetsFromTeamsArray(allTeams)
+
+	if (teamPresets != null) {
+		for (const [key, pObject] of Object.entries(teamPresets)) {
 			presetsAll[key] = pObject
 		}
 	}
