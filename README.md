@@ -38,6 +38,8 @@ Inspiration
 ## Features
 
 * Fire QuickButton from StreamDeck.
+* Open and change SIB database.
+* Change team.
 
 ## Usage
 

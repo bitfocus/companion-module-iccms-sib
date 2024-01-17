@@ -12,6 +12,7 @@ import { sibConnectionEvents } from './infrastructure/connection/sibConnectionEv
 import { controllerQuickButtonCollections } from './application/controllers/controllerQuickButtonCollections.js'
 import { SibWebSocket } from './infrastructure/connection/sibWebSocket.js'
 import { updateActionsAtStartup } from './application/actions.js'
+import { sibHttpClientChangeTeamById } from './infrastructure/connection/sibHttpClient.js'
 
 /**
  * When your module is started, first the constructor will be called, followed by your upgrade scripts and then the init method.
@@ -87,7 +88,7 @@ class SibPluginInstance extends InstanceBase {
 			await this.#sibConnection.connectToSib(this.#sibConfig)
 
 			// Hardcoded thins.
-			updateActionsAtStartup(this, this.#sibSocket, this.#sibConfig)
+			updateActionsAtStartup(this, this.#sibSocket, this.#sibConfig, sibHttpClientChangeTeamById)
 			updateVariableDefinitions(this)
 			updateFeedbacks(this, this.#sibComputer)
 
@@ -129,9 +130,35 @@ class SibPluginInstance extends InstanceBase {
 				this.#sibComputer.setSibInfo(value)
 			})
 
+			this.#sibConnection.on(sibConnectionEvents.OnSibTeamsUpdated, async (value) => {
+				logger.debug(`Got teams data.`)
+				this.#sibComputer.setSibTeams(value)
+
+				let allTeams = this.#sibComputer.getSibTeams()
+
+				await controllerQuickButtonCollections(
+					this.#sibComputer,
+					this.#sibIcons,
+					value,
+					this,
+					this.#sibSocket,
+					allTeams
+				)
+			})
+
 			this.#sibConnection.on(sibConnectionEvents.OnSibQuickButtonsUpdated, async (value) => {
 				logger.debug(`Got connected data.`)
-				await controllerQuickButtonCollections(this.#sibComputer, this.#sibIcons, value, this, this.#sibSocket)
+
+				let allTeams = this.#sibComputer.getSibTeams()
+
+				await controllerQuickButtonCollections(
+					this.#sibComputer,
+					this.#sibIcons,
+					value,
+					this,
+					this.#sibSocket,
+					allTeams
+				)
 			})
 
 			this.isInitialized = true
