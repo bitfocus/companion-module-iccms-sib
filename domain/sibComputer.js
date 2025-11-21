@@ -23,9 +23,16 @@ export class SibComputer {
 	 */
 	#sibConnectionConfig = undefined
 
+	/**
+	 * Parsed and corrected teams from sib instance.
+	 * @type {ApiSportTeamWithoutPlayers[]}
+	 */
+	#sibTeams = undefined
+
 	constructor() {
 		this.#sibInfo = new ApiMessageSibInfo()
 		this.#sibCollections = []
+		this.#sibTeams = []
 	}
 
 	/**
@@ -129,6 +136,51 @@ export class SibComputer {
 			}
 		})
 		return colForPresets
+	}
+
+	/**
+	 * Set sib teams.
+	 * @param {ApiSportTeamWithoutPlayers[]} parsedTeams
+	 */
+	setSibTeams(parsedTeams) {
+		if (typeof parsedTeams == 'undefined') {
+			this.#sibCollections = []
+			logger.warn('CMP. Teams collection is undefined.')
+			return
+		}
+
+		if (!Array.isArray(parsedTeams) || !parsedTeams.length) {
+			this.#sibCollections = []
+			logger.warn('CMP. Teams collection is not array.')
+			return
+		}
+
+		this.#sibTeams = parsedTeams
+	}
+
+	/**
+	 * Get saved teams.
+	 * Doesn't include 'no team' row.
+	 * @returns {ApiSportTeamWithoutPlayers[]}
+	 */
+	getSibTeams() {
+		let colTeams = []
+
+		if (!colTeams) return colTeams
+
+		if (!Array.isArray(this.#sibTeams) || !this.#sibTeams.length) {
+			return []
+		}
+
+		this.#sibTeams.forEach((eCollection) => {
+			try {
+				colTeams.push(eCollection)
+			} catch (e) {
+				logger.error('CMP. Get teams loop, %s.', e)
+			}
+		})
+		// Return copy to prevent changed.
+		return colTeams
 	}
 
 	/**

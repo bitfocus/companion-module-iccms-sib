@@ -41,4 +41,9 @@ export const sibConnectionEvents = {
 	 * Connect message from SIB received.
 	 */
 	OnSibQuickButtonsUpdated: 'sib_quick_buttons_updated',
+
+	/**
+	 * Teams were updated. Recreate presets.
+	 */
+	OnSibTeamsUpdated: 'sib_teams_updated',
 }

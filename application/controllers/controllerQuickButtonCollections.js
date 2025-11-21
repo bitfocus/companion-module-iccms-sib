@@ -2,7 +2,11 @@ import { parseCollectionWithGroupsAndButtonsArray } from '../../infrastructure/a
 import { createPresetsFromCollectionsWithGroupsAndButtons } from '../presetFactory/createPresetsFromCollectionsWithGroupsAndButtons.js'
 import { logger } from '../../logger.js'
 import { updateActionsFromButtons } from '../actions.js'
-import { sibHttpClientTriggerQuickButtonById } from '../../infrastructure/connection/sibHttpClient.js'
+import {
+	sibHttpClientChangeTeamById,
+	sibHttpClientTriggerQuickButtonById,
+} from '../../infrastructure/connection/sibHttpClient.js'
+import { createPresetsFromTeamsArray } from '../presetFactory/createPresetsFromTeamsArray.js'
 
 /**
  * Handles received QB and saves data locally.
@@ -12,8 +16,16 @@ import { sibHttpClientTriggerQuickButtonById } from '../../infrastructure/connec
  * @param {string} apiCommand
  * @param {SibPluginInstance} cmpModule
  * @param {SibWebSocket} sibSocket
+ * @param {ApiSportTeamWithoutPlayers[]} allTeams all teams from api
  */
-export async function controllerQuickButtonCollections(sibComputer, sibIcons, apiCommand, cmpModule, sibSocket) {
+export async function controllerQuickButtonCollections(
+	sibComputer,
+	sibIcons,
+	apiCommand,
+	cmpModule,
+	sibSocket,
+	allTeams
+) {
 	logger.debug('controllerQuickButtonCollections. Begin.')
 
 	let presetsAll = {}
@@ -43,13 +55,27 @@ export async function controllerQuickButtonCollections(sibComputer, sibIcons, ap
 		}
 	}
 
+	// Teams presets
+	const teamPresets = createPresetsFromTeamsArray(allTeams)
+
+	if (teamPresets != null) {
+		for (const [key, pObject] of Object.entries(teamPresets)) {
+			presetsAll[key] = pObject
+		}
+	}
+
+	const sibConfig = sibComputer.getConnectionConfig()
+
 	// Send to module.
 	updateActionsFromButtons(
 		cmpModule,
 		sibComputer.getApiUrl(),
 		sibHttpClientTriggerQuickButtonById,
 		parsedCollectionsJson,
-		sibSocket
+		sibSocket,
+		sibConfig,
+		sibHttpClientChangeTeamById,
+		allTeams
 	)
 	cmpModule.setPresetDefinitions(presetsAll)
 
