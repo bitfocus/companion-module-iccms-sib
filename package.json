@@ -18,6 +18,14 @@
 		"url": "https://support.sportinthebox.com/en-US"
 	},
 	"homepage": "https://www.iccmediasport.com/en",
+	"engines": {
+		"node": ">=22"
+	},
+	"devEngines": {
+		"node": ">=22",
+		"yarn": ">=3",
+		"onFail": "error"
+	},
 	"dependencies": {
 		"@companion-module/base": "^1.4.3",
 		"colord": "^2.9.3",
