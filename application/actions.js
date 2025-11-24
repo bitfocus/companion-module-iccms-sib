@@ -1,9 +1,9 @@
 import { actionId } from './actionId.js'
 import { getChoicesForTriggerEventAction } from './presetFactory/getChoicesForTriggerEventAction.js'
 import { logger } from '../logger.js'
-import { ApiOpenDatabase } from '../infrastructure/protocol/apiOpenDatabase.js'
+import { ApiOpenDatabase } from '../infrastructure/sib-api/apiOpenDatabase.js'
 import objectPath from 'object-path'
-import { apiSportTeamType } from '../infrastructure/protocol/apiSportTeamType.js'
+import { apiSportTeamType } from '../infrastructure/sib-api/apiSportTeamType.js'
 import { getChoicesForChangeTeamAction } from './presetFactory/getChoicesForChangeTeamAction.js'
 
 /**

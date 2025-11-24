@@ -1,5 +1,5 @@
-import { apiQuickButtonInGroup } from '../../../infrastructure/protocol/apiQuickButtonInGroup.js'
-import { apiQuickButtonGroupWithButtons } from '../../../infrastructure/protocol/apiQuickButtonGroupWithButtons.js'
+import { apiQuickButtonInGroup } from '../../../infrastructure/sib-api/apiQuickButtonInGroup.js'
+import { apiQuickButtonGroupWithButtons } from '../../../infrastructure/sib-api/apiQuickButtonGroupWithButtons.js'
 import { SibIcons } from '../../../domain/sibIcons.js'
 import { createPresetFromButton } from '../../../application/presetFactory/createPresetFromButton.js'
 

@@ -1,7 +1,7 @@
 import { combineRgb } from '@companion-module/base'
 import { actionId } from '../actionId.js'
 import { colord } from 'colord'
-import { apiSportTeamType } from '../../infrastructure/protocol/apiSportTeamType.js'
+import { apiSportTeamType } from '../../infrastructure/sib-api/apiSportTeamType.js'
 
 /**
  * Create companion preset from qb collection with groups and buttons.

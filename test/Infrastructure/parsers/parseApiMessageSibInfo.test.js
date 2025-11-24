@@ -1,8 +1,8 @@
-import { parseApiMessageSibInfo } from '../../../infrastructure/acl/parseApiMessageSibInfo.js'
+import { parseApiMessageSibInfo } from '../../../infrastructure/parsers/parseApiMessageSibInfo.js'
 import { defineFixture } from 'efate'
 import { faker } from '@faker-js/faker'
 import * as path from 'path'
-import { ApiMessageSibInfo } from '../../../infrastructure/protocol/apiMessageSibInfo.js'
+import { ApiMessageSibInfo } from '../../../infrastructure/sib-api/apiMessageSibInfo.js'
 
 describe('Sib info deserialization', () => {
 	const userFixture = defineFixture((t) => {

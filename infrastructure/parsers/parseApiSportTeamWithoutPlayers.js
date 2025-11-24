@@ -1,5 +1,5 @@
 import objectPath from 'object-path'
-import { ApiSportTeamWithoutPlayers } from '../protocol/apiSportTeamWithoutPlayers.js'
+import { ApiSportTeamWithoutPlayers } from '../sib-api/apiSportTeamWithoutPlayers.js'
 
 /**
  * Parse groups with buttons and correct serialization values.

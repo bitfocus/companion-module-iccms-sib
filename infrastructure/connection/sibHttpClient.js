@@ -2,11 +2,11 @@
 
 import {logger} from '../../logger.js'
 import * as http from 'http'
-import {ApiMessageSibInfo} from '../protocol/apiMessageSibInfo.js'
-import {parseCollectionWithGroupsAndButtonsArray} from '../acl/parseCollectionWithGroupsAndButtonsArray.js'
-import {ApiSportTeamWithoutPlayers} from '../protocol/apiSportTeamWithoutPlayers.js'
+import {ApiMessageSibInfo} from '../sib-api/apiMessageSibInfo.js'
+import {parseCollectionWithGroupsAndButtonsArray} from '../parsers/parseCollectionWithGroupsAndButtonsArray.js'
+import {ApiSportTeamWithoutPlayers} from '../sib-api/apiSportTeamWithoutPlayers.js'
 
-import {parseApiSportTeamWithoutPlayersArray} from '../acl/parseApiSportTeamWithoutPlayersArray.js'
+import {parseApiSportTeamWithoutPlayersArray} from '../parsers/parseApiSportTeamWithoutPlayersArray.js'
 
 const apiHttp = 'http://'
 const apiHb = '/api/hb/'
@@ -194,7 +194,7 @@ export function sibHttpClientGetPngIconBase64(baseUrl, token, iconId, deviceId) 
         res.on('data', (chunk) => {
           chunks_of_data.push(chunk)
         })
-		
+
         res.on('end', () => {
           try {
             logger.debug('API. Got icon: %s, url: %s', iconId, urlIcon)

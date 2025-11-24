@@ -1,4 +1,4 @@
-import { apiQuickButtonCollectionWithGroupsAndButtons } from '../protocol/apiQuickButtonCollectionWithGroupsAndButtons.js'
+import { apiQuickButtonCollectionWithGroupsAndButtons } from '../sib-api/apiQuickButtonCollectionWithGroupsAndButtons.js'
 import objectPath from 'object-path'
 import { parseGroupsWithButtons } from './parseGroupsWithButtons.js'
 

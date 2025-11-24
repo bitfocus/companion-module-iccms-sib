@@ -1,4 +1,4 @@
-import { parseCollectionWithGroupsAndButtonsArray } from '../../infrastructure/acl/parseCollectionWithGroupsAndButtonsArray.js'
+import { parseCollectionWithGroupsAndButtonsArray } from '../../infrastructure/parsers/parseCollectionWithGroupsAndButtonsArray.js'
 import { createPresetsFromCollectionsWithGroupsAndButtons } from '../presetFactory/createPresetsFromCollectionsWithGroupsAndButtons.js'
 import { logger } from '../../logger.js'
 import { updateActionsFromButtons } from '../actions.js'

@@ -1,4 +1,4 @@
-import { ApiMessageSibInfo } from '../infrastructure/protocol/apiMessageSibInfo.js'
+import { ApiMessageSibInfo } from '../infrastructure/sib-api/apiMessageSibInfo.js'
 import { logger } from '../logger.js'
 
 /**

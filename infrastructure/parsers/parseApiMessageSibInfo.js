@@ -1,5 +1,5 @@
 import objectPath from 'object-path'
-import { ApiMessageSibInfo } from '../protocol/apiMessageSibInfo.js'
+import { ApiMessageSibInfo } from '../sib-api/apiMessageSibInfo.js'
 
 /**
  * Parse groups with buttons and correct serialization values.

@@ -6,7 +6,7 @@ import {
 	sibHttpClientGetSibInfoAsync,
 	sibHttpClientGetTeamsAsync,
 } from './sibHttpClient.js'
-import { parseApiMessageSibInfo } from '../acl/parseApiMessageSibInfo.js'
+import { parseApiMessageSibInfo } from '../parsers/parseApiMessageSibInfo.js'
 
 // https://nodejs.dev/en/api/v18/events/
 // https://nodejs.dev/en/learn/the-nodejs-event-emitter/

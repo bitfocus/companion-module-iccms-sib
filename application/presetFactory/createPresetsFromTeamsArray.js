@@ -1,5 +1,5 @@
 import { createPresetFromTeam } from './createPresetFromTeam.js'
-import { apiSportTeamType } from '../../infrastructure/protocol/apiSportTeamType.js'
+import { apiSportTeamType } from '../../infrastructure/sib-api/apiSportTeamType.js'
 
 /**
  * Create presets from collection teams.

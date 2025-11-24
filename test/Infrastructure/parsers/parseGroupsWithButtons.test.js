@@ -1,4 +1,4 @@
-import { parseGroupsWithButtons } from '../../../infrastructure/acl/parseGroupsWithButtons.js'
+import { parseGroupsWithButtons } from '../../../infrastructure/parsers/parseGroupsWithButtons.js'
 
 describe('apiQuickButtonGroupWithButtons deserialization', () => {
 	test('Deserialized with buttons', () => {

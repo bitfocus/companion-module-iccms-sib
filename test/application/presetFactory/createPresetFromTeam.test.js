@@ -1,7 +1,7 @@
 import { actionId } from '../../../application/actionId.js'
 import { createPresetFromTeam } from '../../../application/presetFactory/createPresetFromTeam.js'
-import { ApiSportTeamWithoutPlayers } from '../../../infrastructure/protocol/apiSportTeamWithoutPlayers.js'
-import { apiSportTeamType } from '../../../infrastructure/protocol/apiSportTeamType.js'
+import { ApiSportTeamWithoutPlayers } from '../../../infrastructure/sib-api/apiSportTeamWithoutPlayers.js'
+import { apiSportTeamType } from '../../../infrastructure/sib-api/apiSportTeamType.js'
 import { defineFixture } from 'efate'
 import { faker } from '@faker-js/faker'
 

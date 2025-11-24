@@ -1,5 +1,5 @@
 import objectPath from 'object-path'
-import { apiQuickButtonInGroup } from '../protocol/apiQuickButtonInGroup.js'
+import { apiQuickButtonInGroup } from '../sib-api/apiQuickButtonInGroup.js'
 
 /**
  * Parse groups with buttons and correct serialization values.
