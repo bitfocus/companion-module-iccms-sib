@@ -4,7 +4,6 @@
 	"main": "main.js",
 	"type": "module",
 	"scripts": {
-		"dev": "yarn build:watch",
 		"test": "jest",
 		"format": "prettier -w .",
 		"lint:raw": "eslint --ext .ts --ext .js --ignore-pattern dist --ignore-pattern pkg",
