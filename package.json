@@ -26,7 +26,7 @@
 		"onFail": "error"
 	},
 	"dependencies": {
-		"@companion-module/base": "^1.13.4",
+		"@companion-module/base": "~1.12.1",
 		"colord": "^2.9.3",
 		"object-path": "^0.11.8",
 		"path": "^0.12.7",
@@ -36,9 +36,9 @@
 	"devDependencies": {
 		"@babel/core": "^7.28.5",
 		"@babel/preset-env": "^7.28.5",
-		"@companion-module/tools": "^1.5.1",
-		"@faker-js/faker": "^8.4.1",
-		"@types/jest": "^29.5.14",
+		"@companion-module/tools": "^2.4.2",
+		"@faker-js/faker": "^10.1.0",
+		"@types/jest": "^30.0.0",
 		"babel-jest": "^30.2.0",
 		"efate": "^1.5.1",
 		"efate-faker": "^1.5.1",
@@ -49,5 +49,5 @@
 		"webpack-cli": "^6.0.1"
 	},
 	"prettier": "@companion-module/tools/.prettierrc.json",
-	"packageManager": "yarn@3.6.1"
+	"packageManager": "yarn@4.10.3"
 }
