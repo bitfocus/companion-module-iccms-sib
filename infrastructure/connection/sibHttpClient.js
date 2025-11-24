@@ -1,12 +1,12 @@
 // noinspection HttpUrlsUsage
 
-import { logger } from '../../logger.js'
+import {logger} from '../../logger.js'
 import * as http from 'http'
-import { ApiMessageSibInfo } from '../protocol/apiMessageSibInfo.js'
-import { parseCollectionWithGroupsAndButtonsArray } from '../acl/parseCollectionWithGroupsAndButtonsArray.js'
-import { ApiSportTeamWithoutPlayers } from '../protocol/apiSportTeamWithoutPlayers.js'
+import {ApiMessageSibInfo} from '../protocol/apiMessageSibInfo.js'
+import {parseCollectionWithGroupsAndButtonsArray} from '../acl/parseCollectionWithGroupsAndButtonsArray.js'
+import {ApiSportTeamWithoutPlayers} from '../protocol/apiSportTeamWithoutPlayers.js'
 
-import { parseApiSportTeamWithoutPlayersArray } from '../acl/parseApiSportTeamWithoutPlayersArray.js'
+import {parseApiSportTeamWithoutPlayersArray} from '../acl/parseApiSportTeamWithoutPlayersArray.js'
 
 const apiHttp = 'http://'
 const apiHb = '/api/hb/'
@@ -18,16 +18,16 @@ const apiTeam = '/api/team/'
 const apiMatch = '/api/match/'
 
 function passIsSet(value) {
-	if (value === undefined) {
-		return false
-	} else if (value === null) {
-		return false
-	} else if (value.trim() === '') {
-		return false
-	} else if (value.length === 0) {
-		return false
-	}
-	return true
+  if (value === undefined) {
+    return false
+  } else if (value === null) {
+    return false
+  } else if (value.trim() === '') {
+    return false
+  } else if (value.length === 0) {
+    return false
+  }
+  return true
 }
 
 /**
@@ -37,7 +37,7 @@ function passIsSet(value) {
  * @returns {string}
  */
 export function convertIconIdToBase64(iconId) {
-	return btoa(iconId)
+  return btoa(iconId)
 }
 
 /**
@@ -48,19 +48,19 @@ export function convertIconIdToBase64(iconId) {
  * @param {string} token
  */
 export function sibHttpClientTriggerQuickButtonById(baseUrl, triggerId, token) {
-	let fullUrl
+  let fullUrl
 
-	if (!passIsSet(token)) {
-		fullUrl = apiHttp + baseUrl + apiQuickButton + '/trig/' + triggerId
-	} else {
-		fullUrl = apiHttp + baseUrl + apiQuickButton + '/trig/' + triggerId + '/' + token
-	}
+  if (!passIsSet(token)) {
+    fullUrl = apiHttp + baseUrl + apiQuickButton + '/trig/' + triggerId
+  } else {
+    fullUrl = apiHttp + baseUrl + apiQuickButton + '/trig/' + triggerId + '/' + token
+  }
 
-	logger.debug('Trigger url: ' + fullUrl)
+  logger.debug('Trigger url: ' + fullUrl)
 
-	http.get(fullUrl).on('error', (err) => {
-		logger.error('Error for id: ' + triggerId + ' ' + err.message)
-	})
+  http.get(fullUrl).on('error', (err) => {
+    logger.error('Error for id: ' + triggerId + ' ' + err.message)
+  })
 }
 
 /**
@@ -69,35 +69,35 @@ export function sibHttpClientTriggerQuickButtonById(baseUrl, triggerId, token) {
  * @returns {Promise<ApiMessageSibInfo>}
  */
 export function sibHttpClientGetSibInfoAsync(baseUrl) {
-	return new Promise((resolve, reject) => {
-		const fullUrl = apiHttp + baseUrl + apiHb
+  return new Promise((resolve, reject) => {
+    const fullUrl = apiHttp + baseUrl + apiHb
 
-		logger.debug('Called url: ' + fullUrl)
+    logger.debug('Called url: ' + fullUrl)
 
-		http
-			.get(fullUrl, (res) => {
-				let chunks_of_data = []
+    http
+      .get(fullUrl, (res) => {
+        let chunks_of_data = []
 
-				res.on('data', (chunk) => {
-					chunks_of_data.push(chunk)
-				})
-				res.on('end', () => {
-					try {
-						logger.debug('Got db info from api.')
+        res.on('data', (chunk) => {
+          chunks_of_data.push(chunk)
+        })
+        res.on('end', () => {
+          try {
+            logger.debug('Got db info from api.')
 
-						let response_body = Buffer.concat(chunks_of_data)
-						resolve(response_body.toString())
-					} catch (e) {
-						logger.warn(`API. Db info end: %s.`, e.message)
-						reject(e)
-					}
-				})
-			})
-			.on('error', (e) => {
-				logger.warn(`API. Db info error: %s.`, e.message)
-				reject(e)
-			})
-	})
+            let response_body = Buffer.concat(chunks_of_data)
+            resolve(response_body.toString())
+          } catch (e) {
+            logger.warn(`API. Db info end: %s.`, e.message)
+            reject(e)
+          }
+        })
+      })
+      .on('error', (e) => {
+        logger.warn(`API. Db info error: %s.`, e.message)
+        reject(e)
+      })
+  })
 }
 
 /**
@@ -107,42 +107,42 @@ export function sibHttpClientGetSibInfoAsync(baseUrl) {
  * @returns {Promise<apiQuickButtonCollectionWithGroupsAndButtons[]>}
  */
 export function sibHttpClientGetQuickButtonCollectionsAsync(baseUrl, token) {
-	return new Promise((resolve, reject) => {
-		let urlQb
-		if (!passIsSet(token)) {
-			// http://localhost:8080/api/iconPng/action
-			urlQb = apiHttp + baseUrl + apiQuickButtonCollectionsFull
-		} else {
-			// http://localhost:8080/api/iconPng/action/my_pass
-			urlQb = apiHttp + baseUrl + apiQuickButtonCollectionsFull + token + '/'
-		}
+  return new Promise((resolve, reject) => {
+    let urlQb
+    if (!passIsSet(token)) {
+      // http://localhost:8080/api/iconPng/action
+      urlQb = apiHttp + baseUrl + apiQuickButtonCollectionsFull
+    } else {
+      // http://localhost:8080/api/iconPng/action/my_pass
+      urlQb = apiHttp + baseUrl + apiQuickButtonCollectionsFull + token + '/'
+    }
 
-		logger.debug('Called url: ' + urlQb)
+    logger.debug('Called url: ' + urlQb)
 
-		let apiData
+    let apiData
 
-		http
-			.get(urlQb, (res) => {
-				let rawData = ''
-				res.on('data', (chunk) => {
-					rawData += chunk
-				})
-				res.on('end', () => {
-					try {
-						logger.debug('Got collections from api.')
-						apiData = parseCollectionWithGroupsAndButtonsArray(rawData)
-						resolve(apiData)
-					} catch (e) {
-						logger.warn("API, can't parse qb collection from API: %s.", e.message)
-						reject(e)
-					}
-				})
-			})
-			.on('error', (e) => {
-				logger.error("API, can't get qb collection from API: %s.", e.message)
-				reject(e)
-			})
-	})
+    http
+      .get(urlQb, (res) => {
+        let rawData = ''
+        res.on('data', (chunk) => {
+          rawData += chunk
+        })
+        res.on('end', () => {
+          try {
+            logger.debug('Got collections from api.')
+            apiData = parseCollectionWithGroupsAndButtonsArray(rawData)
+            resolve(apiData)
+          } catch (e) {
+            logger.warn("API, can't parse qb collection from API: %s.", e.message)
+            reject(e)
+          }
+        })
+      })
+      .on('error', (e) => {
+        logger.error("API, can't get qb collection from API: %s.", e.message)
+        reject(e)
+      })
+  })
 }
 
 /**
@@ -150,56 +150,69 @@ export function sibHttpClientGetQuickButtonCollectionsAsync(baseUrl, token) {
  * @param {string} baseUrl
  * @param {string} token
  * @param {string} iconId matches QuickButtonIconId class in sib
+ * @param {string} deviceId plugin id for auth.
  * @returns {Promise<string>}
  */
-export function sibHttpClientGetPngIconBase64(baseUrl, token, iconId) {
-	return new Promise((resolve, reject) => {
-		const iconBase64 = convertIconIdToBase64(iconId)
+export function sibHttpClientGetPngIconBase64(baseUrl, token, iconId, deviceId) {
+  return new Promise((resolve, reject) => {
+    const iconBase64 = convertIconIdToBase64(iconId)
 
-		let urlIcon
-		if (!passIsSet(token)) {
-			urlIcon = apiHttp + baseUrl + apiIcon + iconBase64
-		} else {
-			urlIcon = apiHttp + baseUrl + apiIcon + iconBase64 + '/' + token
-		}
+    // Construct URL using URL class
+    const url = new URL(apiHttp + baseUrl + apiIcon + iconBase64)
+    if (passIsSet(token)) {
+      url.pathname += `/${token}`
+    }
+    const urlIcon = url.toString()
 
-		logger.debug('Called url: ' + urlIcon)
+    url.searchParams.append('w', '144')
+    url.searchParams.append('h', '144')
 
-		http
-			.get(urlIcon, (res) => {
-				let chunks_of_data = []
+    if (passIsSet(deviceId)) {
+      url.searchParams.append('deviceId', deviceId)
+    }
 
-				if (res.statusCode === 400) {
-					logger.warn('API. 400. Icon: %s, url: %s: ', iconId, urlIcon)
-					reject(400)
-				}
+    logger.debug('Called url: ' + urlIcon)
 
-				if (res.statusCode === 404) {
-					logger.warn('API. 404. Icon: %s, url: %s: ', iconId, urlIcon)
-					reject(404)
-				}
+    http
+      .get(urlIcon, (res) => {
+        let chunks_of_data = []
 
-				res.on('data', (chunk) => {
-					chunks_of_data.push(chunk)
-				})
-				res.on('end', () => {
-					try {
-						logger.debug('API. Got icon: %s, url: %s: ', iconId, urlIcon)
+        // Improved error handling for all status codes
+        if (res.statusCode === 404) {
+          logger.warn('API. 404 Not Found. Icon: %s, url: %s', iconId, urlIcon)
+          return reject(new Error('Icon not found (404)'))
+        }
+        if (res.statusCode === 429) {
+          logger.warn('API. 429 Too Many Requests. Icon: %s, url: %s', iconId, urlIcon)
+          return reject(new Error('Too many requests (429)'))
+        }
+        if (res.statusCode < 200 || res.statusCode >= 300) {
+          logger.error('API. HTTP Error %s. Icon: %s, url: %s', res.statusCode, iconId, urlIcon)
+          return reject(new Error(`HTTP Error ${res.statusCode}`))
+        }
 
-						let response_body = Buffer.concat(chunks_of_data)
-						const responseString = response_body.toString()
-						resolve(responseString)
-					} catch (e) {
-						logger.warn('API. Icon end: ' + iconId + ' ' + e.message)
-						reject(e)
-					}
-				})
-			})
-			.on('error', (e) => {
-				logger.error('API. Icon: ' + iconId + ' ' + e.message)
-				reject(e)
-			})
-	})
+        res.on('data', (chunk) => {
+          chunks_of_data.push(chunk)
+        })
+		
+        res.on('end', () => {
+          try {
+            logger.debug('API. Got icon: %s, url: %s', iconId, urlIcon)
+
+            let response_body = Buffer.concat(chunks_of_data)
+            const responseString = response_body.toString()
+            resolve(responseString)
+          } catch (e) {
+            logger.warn('API. Icon processing error: %s, url: %s', e.message, urlIcon)
+            reject(e)
+          }
+        })
+      })
+      .on('error', (e) => {
+        logger.error('API. Icon request error: %s, url: %s', e.message, urlIcon)
+        reject(e)
+      })
+  })
 }
 
 /**
@@ -209,43 +222,43 @@ export function sibHttpClientGetPngIconBase64(baseUrl, token, iconId) {
  * @returns {Promise<ApiSportTeamWithoutPlayers[]>}
  */
 export function sibHttpClientGetTeamsAsync(baseUrl, token) {
-	return new Promise((resolve, reject) => {
-		let urlTeams
-		if (!passIsSet(token)) {
-			// http://localhost:8080/api/teams
-			urlTeams = apiHttp + baseUrl + apiTeams
-		} else {
-			// http://localhost:8080/api/teams/my_pass
-			urlTeams = apiHttp + baseUrl + apiTeams + token + '/'
-		}
+  return new Promise((resolve, reject) => {
+    let urlTeams
+    if (!passIsSet(token)) {
+      // http://localhost:8080/api/teams
+      urlTeams = apiHttp + baseUrl + apiTeams
+    } else {
+      // http://localhost:8080/api/teams/my_pass
+      urlTeams = apiHttp + baseUrl + apiTeams + token + '/'
+    }
 
-		logger.debug('Called url: ' + urlTeams)
+    logger.debug('Called url: ' + urlTeams)
 
-		let apiData
+    let apiData
 
-		http
-			.get(urlTeams, (res) => {
-				let rawData = ''
-				res.on('data', (chunk) => {
-					rawData += chunk
-				})
-				res.on('end', () => {
-					try {
-						logger.debug('Got teams from api.')
+    http
+      .get(urlTeams, (res) => {
+        let rawData = ''
+        res.on('data', (chunk) => {
+          rawData += chunk
+        })
+        res.on('end', () => {
+          try {
+            logger.debug('Got teams from api.')
 
-						apiData = parseApiSportTeamWithoutPlayersArray(rawData)
-						resolve(apiData)
-					} catch (e) {
-						logger.warn("API, can't parse teams from API: %s.", e.message)
-						reject(e)
-					}
-				})
-			})
-			.on('error', (e) => {
-				logger.error("API, can't get teams from API: %s.", e.message)
-				reject(e)
-			})
-	})
+            apiData = parseApiSportTeamWithoutPlayersArray(rawData)
+            resolve(apiData)
+          } catch (e) {
+            logger.warn("API, can't parse teams from API: %s.", e.message)
+            reject(e)
+          }
+        })
+      })
+      .on('error', (e) => {
+        logger.error("API, can't get teams from API: %s.", e.message)
+        reject(e)
+      })
+  })
 }
 
 /**
@@ -257,19 +270,19 @@ export function sibHttpClientGetTeamsAsync(baseUrl, token) {
  * @param {string} token
  */
 export function sibHttpClientChangeTeamById(baseUrl, teamType, teamOid, token) {
-	let fullUrl
+  let fullUrl
 
-	if (!passIsSet(token)) {
-		// http://localhost:8080/api/match/team/h/1/
-		fullUrl = apiHttp + baseUrl + apiMatch + '/team/' + teamType + '/' + teamOid + '/'
-	} else {
-		//http://localhost:8080/api/match/team/h/1/my_pass
-		fullUrl = apiHttp + baseUrl + apiMatch + '/team/' + teamType + '/' + teamOid + '/' + token
-	}
+  if (!passIsSet(token)) {
+    // http://localhost:8080/api/match/team/h/1/
+    fullUrl = apiHttp + baseUrl + apiMatch + '/team/' + teamType + '/' + teamOid + '/'
+  } else {
+    //http://localhost:8080/api/match/team/h/1/my_pass
+    fullUrl = apiHttp + baseUrl + apiMatch + '/team/' + teamType + '/' + teamOid + '/' + token
+  }
 
-	logger.debug('Change team url: ' + fullUrl)
+  logger.debug('Change team url: ' + fullUrl)
 
-	http.get(fullUrl).on('error', (err) => {
-		logger.error('Error for team: ' + teamType + ' ' + teamOid + ' ' + err.message)
-	})
+  http.get(fullUrl).on('error', (err) => {
+    logger.error('Error for team: ' + teamType + ' ' + teamOid + ' ' + err.message)
+  })
 }

@@ -49,7 +49,14 @@ export class SibConnectionHttpPull extends EventEmitter {
 	 */
 	#prevTeams
 
-	/**
+  /**
+   * Unique ID that used to identify module in sib.
+   * Not currently used.
+   * @type {string}
+   */
+  #deviceId
+
+  /**
 	 * Connect to WebSocket.
 	 * Tries to reconnect if connection fails (sib is not running).
 	 * @param {SibConnection} config
@@ -60,6 +67,7 @@ export class SibConnectionHttpPull extends EventEmitter {
 		this.emit(sibConnectionEvents.OnSibConnecting)
 
 		this.#sibConfig = config
+    this.#deviceId = "companion-module-iccms-sib"
 
 		// Will time out gui sometimes. Make first call not to wait for timer.
 		setImmediate(async () => {

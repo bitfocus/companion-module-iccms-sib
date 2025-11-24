@@ -19,8 +19,16 @@ export class SibIcons {
 	 */
 	#sibVersionWithIconApi = '2.15.8630'
 
+  /**
+   * Unique ID that used to identify module in sib.
+   * Not currently used.
+   * @type {string}
+   */
+  #deviceId
+
 	constructor() {
 		this.#icons = new Map()
+    this.#deviceId = "companion-module-iccms-sib"
 	}
 
 	/**
@@ -83,7 +91,7 @@ export class SibIcons {
 		let convertedIcons = await Promise.all(
 			newIconIds.map(async (iconId) => {
 				try {
-					const base64png = await sibHttpClientGetPngIconBase64(connectionCfg.sibIpPort, connectionCfg.token, iconId)
+					const base64png = await sibHttpClientGetPngIconBase64(connectionCfg.sibIpPort, connectionCfg.token, iconId, this.#deviceId)
 
 					if (base64png !== '') {
 						return { iconId: iconId, png64: base64png }
