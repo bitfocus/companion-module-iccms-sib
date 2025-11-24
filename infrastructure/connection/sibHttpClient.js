@@ -7,6 +7,7 @@ import {parseCollectionWithGroupsAndButtonsArray} from '../parsers/parseCollecti
 import {ApiSportTeamWithoutPlayers} from '../sib-api/apiSportTeamWithoutPlayers.js'
 
 import {parseApiSportTeamWithoutPlayersArray} from '../parsers/parseApiSportTeamWithoutPlayersArray.js'
+import {parseApiRundownWithoutItemsArray} from '../parsers/parseApiRundownWithoutItemsArray.js'
 
 const apiHttp = 'http://'
 const apiHb = '/api/hb/'
@@ -16,6 +17,7 @@ const apiIcon = '/api/iconPng/'
 const apiTeams = '/api/teams/'
 const apiTeam = '/api/team/'
 const apiMatch = '/api/match/'
+const apiRundownWithoutItems = '/api/rundown-without-items/'
 
 function passIsSet(value) {
   if (value === undefined) {
@@ -155,64 +157,58 @@ export function sibHttpClientGetQuickButtonCollectionsAsync(baseUrl, token) {
  */
 export function sibHttpClientGetPngIconBase64(baseUrl, token, iconId, deviceId) {
   return new Promise((resolve, reject) => {
-    const iconBase64 = convertIconIdToBase64(iconId)
+    try {
+      const iconBase64 = convertIconIdToBase64(iconId);
 
-    // Construct URL using URL class
-    const url = new URL(apiHttp + baseUrl + apiIcon + iconBase64)
-    if (passIsSet(token)) {
-      url.pathname += `/${token}`
-    }
-    const urlIcon = url.toString()
+      // Construct URL using URL class
+      const url = new URL(apiHttp + baseUrl + apiIcon + iconBase64);
+      if (passIsSet(token)) {
+        url.pathname += `/${token}`;
+      }
 
-    url.searchParams.append('w', '144')
-    url.searchParams.append('h', '144')
+      url.searchParams.append('w', '144');
+      url.searchParams.append('h', '144');
 
-    if (passIsSet(deviceId)) {
-      url.searchParams.append('deviceId', deviceId)
-    }
+      if (passIsSet(deviceId)) {
+        url.searchParams.append('deviceId', deviceId);
+      }
 
-    logger.debug('Called url: ' + urlIcon)
+      logger.debug('Called url: ' + url.toString());
 
-    http
-      .get(urlIcon, (res) => {
-        let chunks_of_data = []
+      http
+        .get(url.toString(), (res) => {
+          let chunks_of_data = [];
 
-        // Improved error handling for all status codes
-        if (res.statusCode === 404) {
-          logger.warn('API. 404 Not Found. Icon: %s, url: %s', iconId, urlIcon)
-          return reject(new Error('Icon not found (404)'))
-        }
-        if (res.statusCode === 429) {
-          logger.warn('API. 429 Too Many Requests. Icon: %s, url: %s', iconId, urlIcon)
-          return reject(new Error('Too many requests (429)'))
-        }
-        if (res.statusCode < 200 || res.statusCode >= 300) {
-          logger.error('API. HTTP Error %s. Icon: %s, url: %s', res.statusCode, iconId, urlIcon)
-          return reject(new Error(`HTTP Error ${res.statusCode}`))
-        }
-
-        res.on('data', (chunk) => {
-          chunks_of_data.push(chunk)
-        })
-
-        res.on('end', () => {
-          try {
-            logger.debug('API. Got icon: %s, url: %s', iconId, urlIcon)
-
-            let response_body = Buffer.concat(chunks_of_data)
-            const responseString = response_body.toString()
-            resolve(responseString)
-          } catch (e) {
-            logger.warn('API. Icon processing error: %s, url: %s', e.message, urlIcon)
-            reject(e)
+          // Reject on any non-2xx status code
+          if (res.statusCode < 200 || res.statusCode >= 300) {
+            logger.error('API. HTTP Error %s. Icon: %s, url: %s', res.statusCode, iconId, url.toString());
+            return reject(new Error(`HTTP Error ${res.statusCode}`));
           }
+
+          res.on('data', (chunk) => {
+            chunks_of_data.push(chunk);
+          });
+
+          res.on('end', () => {
+            try {
+              logger.debug('API. Got icon: %s, url: %s', iconId, url.toString());
+              const response_body = Buffer.concat(chunks_of_data);
+              resolve(response_body.toString());
+            } catch (e) {
+              logger.warn('API. Icon processing error: %s, url: %s', e.message, url.toString());
+              reject(e);
+            }
+          });
         })
-      })
-      .on('error', (e) => {
-        logger.error('API. Icon request error: %s, url: %s', e.message, urlIcon)
-        reject(e)
-      })
-  })
+        .on('error', (e) => {
+          logger.error('API. Icon request error: %s, url: %s', e.message, url.toString());
+          reject(e);
+        });
+    } catch (e) {
+      logger.error('Error constructing URL or making request: %s', e.message);
+      reject(e);
+    }
+  });
 }
 
 /**
@@ -285,4 +281,67 @@ export function sibHttpClientChangeTeamById(baseUrl, teamType, teamOid, token) {
   http.get(fullUrl).on('error', (err) => {
     logger.error('Error for team: ' + teamType + ' ' + teamOid + ' ' + err.message)
   })
+}
+
+/**
+ * Gets all rundowns without items.
+ * @param {string} baseUrl - Base URL of the API.
+ * @param {string} token - Authentication token.
+ * @param {string} deviceId - Device ID for authentication.
+ * @returns {Promise<ApiRundownWithoutItemsDto[]>}
+ */
+export function sibHttpClientGetRundownsWithoutItemsAsync(baseUrl, token, deviceId) {
+  return new Promise((resolve, reject) => {
+    try {
+      const url = new URL(apiHttp + baseUrl);
+
+      if (!passIsSet(token)) {
+        // http://localhost:8080/api/rundown-without-items/
+        url.pathname = apiRundownWithoutItems;
+      } else {
+        // http://localhost:8080/api/rundown-without-items/my_pass
+        url.pathname = `${apiRundownWithoutItems}${token}/`;
+      }
+
+      // Add deviceId as query parameter if available
+      if (passIsSet(deviceId)) {
+        url.searchParams.append('deviceId', deviceId);
+      }
+
+      logger.debug('Called url: ' + url.toString());
+
+      let rawData = '';
+
+      http
+        .get(url.toString(), (res) => {
+          // Reject on any non-2xx status code
+          if (res.statusCode < 200 || res.statusCode >= 300) {
+            logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString());
+            return reject(new Error(`HTTP Error ${res.statusCode}`));
+          }
+
+          res.on('data', (chunk) => {
+            rawData += chunk;
+          });
+
+          res.on('end', () => {
+            try {
+              logger.debug('Got rundowns without items data from API.');
+              const apiData = parseApiRundownWithoutItemsArray(rawData);
+              resolve(apiData);
+            } catch (e) {
+              logger.warn("API, can't parse rundowns without items from API: %s.", e.message);
+              reject(e);
+            }
+          });
+        })
+        .on('error', (e) => {
+          logger.error("API, can't get rundowns without items from API: %s.", e.message);
+          reject(e);
+        });
+    } catch (e) {
+      logger.error('Error constructing URL or making request: %s', e.message);
+      reject(e);
+    }
+  });
 }
