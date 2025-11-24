@@ -15,9 +15,11 @@ This document summarizes all available hooks for Companion modules using `@compa
 These abstract methods **must** be implemented in your module class extending `InstanceBase`:
 
 ### `init(config, isFirstInit, secrets)`
+
 Called once the module is ready to start doing things.
 
 **Parameters:**
+
 - `config: TConfig` - The module configuration
 - `isFirstInit: boolean` - Whether this is the first initialization
 - `secrets: TSecrets` - Secret values (passwords, tokens, etc.)
@@ -37,6 +39,7 @@ async init(config, isFirstInit, secrets) {
 ---
 
 ### `destroy()`
+
 Called when the module is deleted or disabled. Clean up resources here.
 
 **Returns:** `void | Promise<void>`
@@ -55,9 +58,11 @@ async destroy() {
 ---
 
 ### `configUpdated(config, secrets)`
+
 Called when the user updates the module configuration.
 
 **Parameters:**
+
 - `config: TConfig` - The updated configuration
 - `secrets: TSecrets` - Updated secret values
 
@@ -76,6 +81,7 @@ async configUpdated(config, secrets) {
 ---
 
 ### `getConfigFields()`
+
 Returns the configuration fields displayed in the Companion web UI.
 
 **Returns:** `SomeCompanionConfigField[]`
@@ -111,9 +117,11 @@ getConfigFields() {
 ## Optional Instance Hooks
 
 ### `handleHttpRequest(request)`
+
 Handle HTTP requests sent to your module from Companion.
 
 **Parameters:**
+
 - `request: CompanionHTTPRequest` - Partial Express request object
 
 **Returns:** `CompanionHTTPResponse | Promise<CompanionHTTPResponse>`
@@ -131,9 +139,11 @@ handleHttpRequest(request) {
 ---
 
 ### `handleStartStopRecordActions(isRecording)`
+
 Called when Companion starts or stops recording actions.
 
 **Parameters:**
+
 - `isRecording: boolean` - Whether recording is now active
 
 **Returns:** `void`
@@ -153,9 +163,11 @@ handleStartStopRecordActions(isRecording) {
 Define actions using `this.setActionDefinitions(actions)`. Each action definition can include:
 
 ### `callback(action, context)` *(required)*
+
 Executes when the action is triggered.
 
 **Parameters:**
+
 - `action: CompanionActionEvent` - Action information and options
 - `context: CompanionActionContext` - Utility functions
 
@@ -176,11 +188,13 @@ Executes when the action is triggered.
 ---
 
 ### `subscribe(action, context)` *(optional)*
+
 Called when an action is added, enabled, or its options change.
 
 **Use case:** Load necessary data, establish subscriptions
 
 **Parameters:**
+
 - `action: CompanionActionInfo` - Action information
 - `context: CompanionActionContext` - Utility functions
 
@@ -198,11 +212,13 @@ subscribe: async (action, context) => {
 ---
 
 ### `unsubscribe(action, context)` *(optional)*
+
 Called when an action is removed, disabled, or edited.
 
 **Use case:** Clean up subscriptions or resources
 
 **Parameters:**
+
 - `action: CompanionActionInfo` - Action information
 - `context: CompanionActionContext` - Utility functions
 
@@ -218,9 +234,11 @@ unsubscribe: (action, context) => {
 ---
 
 ### `learn(action, context)` *(optional)*
+
 Implements "learn" functionality to auto-populate action options from the device.
 
 **Parameters:**
+
 - `action: CompanionActionEvent` - Action information
 - `context: CompanionActionContext` - Utility functions
 
@@ -246,14 +264,17 @@ learn: async (action, context) => {
 Define feedbacks using `this.setFeedbackDefinitions(feedbacks)`. Each feedback definition can include:
 
 ### `callback(feedback, context)` *(required)*
+
 Returns the current state of the feedback.
 
 **Types:**
+
 - **Boolean:** Returns `boolean` - used for button styling
 - **Value:** Returns `JsonValue` - used in expressions
 - **Advanced:** Returns `CompanionAdvancedFeedbackResult` - full control over button appearance
 
 **Parameters:**
+
 - `feedback: CompanionFeedbackBooleanEvent | CompanionFeedbackValueEvent | CompanionFeedbackAdvancedEvent`
 - `context: CompanionFeedbackContext` - Utility functions
 
@@ -283,11 +304,13 @@ Returns the current state of the feedback.
 ---
 
 ### `subscribe(feedback, context)` *(optional)*
+
 Called when a feedback is added or its options change.
 
 **Use case:** Load data needed to evaluate the feedback
 
 **Parameters:**
+
 - `feedback: CompanionFeedbackInfo` - Feedback information
 - `context: CompanionFeedbackContext` - Utility functions
 
@@ -303,11 +326,13 @@ subscribe: async (feedback, context) => {
 ---
 
 ### `unsubscribe(feedback, context)` *(optional)*
+
 Called when a feedback is removed or edited.
 
 **Use case:** Clean up monitoring or subscriptions
 
 **Parameters:**
+
 - `feedback: CompanionFeedbackInfo` - Feedback information
 - `context: CompanionFeedbackContext` - Utility functions
 
@@ -322,9 +347,11 @@ unsubscribe: (feedback, context) => {
 ---
 
 ### `learn(feedback, context)` *(optional)*
+
 Implements "learn" functionality for feedback options.
 
 **Parameters:**
+
 - `feedback: CompanionFeedbackInfo` - Feedback information
 - `context: CompanionFeedbackContext` - Utility functions
 
@@ -348,6 +375,7 @@ learn: async (feedback, context) => {
 These methods are available on the `InstanceBase` class:
 
 ### State Management
+
 - `setActionDefinitions(actions)` - Define available actions
 - `setFeedbackDefinitions(feedbacks)` - Define available feedbacks
 - `setPresetDefinitions(presets)` - Define button presets
@@ -356,20 +384,24 @@ These methods are available on the `InstanceBase` class:
 - `getVariableValue(variableId)` - Get current variable value
 
 ### Feedback Control
+
 - `checkFeedbacks(...feedbackTypes)` - Request feedbacks to be re-evaluated
 - `checkFeedbacksById(...feedbackIds)` - Request specific feedback instances to be re-evaluated
 
 ### Action/Feedback Subscription
+
 - `subscribeActions(...actionIds)` - Call subscribe on all placed actions
 - `unsubscribeActions(...actionIds)` - Call unsubscribe on all placed actions
 - `subscribeFeedbacks(...feedbackIds)` - Call subscribe on all placed feedbacks
 - `unsubscribeFeedbacks(...feedbackIds)` - Call unsubscribe on all placed feedbacks
 
 ### Status & Logging
+
 - `updateStatus(status, message)` - Update instance connection status
 - `log(level, message)` - Write to the Companion log
 
 ### Other
+
 - `saveConfig(newConfig, newSecrets)` - Save updated configuration
 - `oscSend(host, port, path, args)` - Send OSC messages
 - `recordAction(action, uniquenessId)` - Add action to recording session
