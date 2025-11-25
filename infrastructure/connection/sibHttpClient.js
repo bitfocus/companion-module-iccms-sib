@@ -19,6 +19,9 @@ const apiTeam = '/api/team/'
 const apiMatch = '/api/match/'
 const apiRundownWithoutItems = '/api/rundown-without-items/'
 const apiRundownSelectedRun = '/api/rundown/selected-run/'
+const apiRundownCurrentSelectPrevious = '/api/rundown/select-previous/'
+const apiRundownCurrentSelectNext = '/api/rundown/select-next/'
+const apiRundownSelect = '/api/rundown/select-rundown/'
 
 function passIsSet(value) {
   if (value === undefined) {
@@ -355,7 +358,7 @@ export async function sibHttpClientGetRundownsWithoutItems(baseUrl, token, devic
  * @param {string} deviceId - Device ID for authentication.
  * @returns {Promise<void>}
  */
-export function sibHttpClientRundownSelectedItemRun(baseUrl, rundownId, token, deviceId) {
+export async function sibHttpClientRundownSelectedItemRun(baseUrl, rundownId, token, deviceId) {
   return new Promise((resolve, reject) => {
     try {
       const url = new URL(apiHttp + baseUrl);
@@ -395,6 +398,62 @@ export function sibHttpClientRundownSelectedItemRun(baseUrl, rundownId, token, d
         })
         .on('error', (e) => {
           logger.error("API, can't trigger rundown selected item run: %s.", e.message);
+          reject(e);
+        });
+    } catch (e) {
+      logger.error('Error constructing URL or making request: %s.', e.message);
+      reject(e);
+    }
+  });
+}
+
+/**
+ * Calls SIB api and selects previous item in current rundown.
+ * @param {string} baseUrl - Base URL of the API.
+ * @param {string} token - Authentication token.
+ * @param {string} deviceId - Device ID for authentication.
+ * @returns {Promise<void>}
+ */
+export async function sibHttpClientRundownSelectPreviousItem(baseUrl, token, deviceId) {
+  return new Promise((resolve, reject) => {
+    try {
+      const url = new URL(apiHttp + baseUrl);
+
+      if (!passIsSet(token)) {
+        // http://localhost:8080/api/rundown/select-previous/
+        url.pathname = apiRundownCurrentSelectPrevious;
+      } else {
+        // http://localhost:8080/api/rundown/select-previous/my_pass
+        url.pathname = `${apiRundownCurrentSelectPrevious}${token}`;
+      }
+
+      // Add deviceId as query parameter if available
+      if (passIsSet(deviceId)) {
+        url.searchParams.append('deviceId', deviceId);
+      }
+
+      logger.debug('Called url: ' + url.toString());
+
+      http
+        .get(url.toString(), (res) => {
+          // Reject on any non-2xx status code
+          if (res.statusCode < 200 || res.statusCode >= 300) {
+            logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString());
+            return reject(new Error(`HTTP Error ${res.statusCode}`));
+          }
+
+          res.on('end', () => {
+            try {
+              logger.debug('API. Rundown select previous item triggered successfully. Url: %s', url.toString());
+              resolve();
+            } catch (e) {
+              logger.warn('API. Rundown select previous item error: %s', e.message);
+              reject(e);
+            }
+          });
+        })
+        .on('error', (e) => {
+          logger.error("API, can't trigger rundown select previous item: %s.", e.message);
           reject(e);
         });
     } catch (e) {
