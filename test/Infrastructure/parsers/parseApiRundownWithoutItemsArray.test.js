@@ -4,23 +4,21 @@ describe('ApiRundownWithoutItemsArray deserialization', () => {
 	test('Deserialized correctly', () => {
 		// arrange
 		const input = [
-			{
-				Id: 1,
-				Order: 1,
-				RundownName: 'Rundown 1',
-				ColorHex: '#FF0000',
-				IconId: 'icon1',
-				SvgIcon: 'svgIcon1',
-			},
-			{
-				Id: 2,
-				Order: 2,
-				RundownName: 'Rundown 2',
-				ColorHex: '#00FF00',
-				IconId: 'icon2',
-				SvgIcon: 'svgIcon2',
-			},
-		]
+      {
+        "Id": 7,
+        "Order": 1,
+        "Name": "Id 7 - LightCoral",
+        "ColorHex": "#FF9999",
+        "IconId": "rundown"
+      },
+      {
+        "Id": 6,
+        "Order": 2,
+        "Name": "Id 5 - Rundown - Grey",
+        "ColorHex": "#000000",
+        "IconId": "rundown"
+      }
+    ]
 
 		// act
 		const actual = parseApiRundownWithoutItemsArray(input)
@@ -28,8 +26,11 @@ describe('ApiRundownWithoutItemsArray deserialization', () => {
 		// assert
 		expect(actual).not.toBeNull()
 		expect(actual.Rundowns.length).toBe(2)
-		expect(actual.Rundowns[0].Id).toBe(1)
-		expect(actual.Rundowns[1].RundownName).toBe('Rundown 2')
+		expect(actual.Rundowns[0].Id).toBe(7)
+		expect(actual.Rundowns[0].Order).toBe(1)
+		expect(actual.Rundowns[0].ColorHex).toBe('#FF9999')
+		expect(actual.Rundowns[0].IconId).toBe('rundown')
+		expect(actual.Rundowns[0].RundownName).toBe('Id 7 - LightCoral')
 	})
 
 	test('Returns null for invalid input', () => {

@@ -13,7 +13,7 @@ export function parseApiRundownWithoutItemsDto(rJson) {
 
 	const id = objectPath.get(rJson, 'Id', -1)
 	const order = objectPath.get(rJson, 'Order', 0)
-	const rundownName = objectPath.get(rJson, 'RundownName', '')
+	const rundownName = objectPath.get(rJson, 'Name', '')
 	const colorHex = objectPath.get(rJson, 'ColorHex', '')
 	const iconId = objectPath.get(rJson, 'IconId', '')
 	const svgIcon = objectPath.get(rJson, 'SvgIcon', '')

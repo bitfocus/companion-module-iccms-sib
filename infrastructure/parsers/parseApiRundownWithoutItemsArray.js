@@ -7,6 +7,13 @@ import { parseApiRundownWithoutItemsDto } from './parseApiRundownWithoutItemsDto
  * @returns {ApiRundownWithoutItemsArray}
  */
 export function parseApiRundownWithoutItemsArray(rJson) {
+	if (typeof rJson === 'string') {
+		try {
+			rJson = JSON.parse(rJson)
+		} catch {
+			return null
+		}
+	}
 	if (!Array.isArray(rJson)) {
 		return null
 	}
