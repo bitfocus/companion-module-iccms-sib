@@ -29,10 +29,17 @@ export class SibComputer {
 	 */
 	#sibTeams = undefined
 
+	/**
+	 * Rundown data from sib instance.
+	 * @type {ApiRundownWithoutItemsArray}
+	 */
+	#sibRundownArray = undefined
+
 	constructor() {
 		this.#sibInfo = new ApiMessageSibInfo()
 		this.#sibCollections = []
 		this.#sibTeams = []
+		this.#sibRundownArray = undefined
 	}
 
 	/**
@@ -181,6 +188,50 @@ export class SibComputer {
 		})
 		// Return copy to prevent changed.
 		return colTeams
+	}
+
+	/**
+	 * Set sib rundown array.
+	 * @param {ApiRundownWithoutItemsArray} rundownArray
+	 */
+	setSibRundownArray(rundownArray) {
+		if (typeof rundownArray == 'undefined') {
+			this.#sibRundownArray = undefined
+			logger.warn('CMP. Rundown array is undefined.')
+			return
+		}
+
+		if (!rundownArray || !Array.isArray(rundownArray.Rundowns) || !rundownArray.Rundowns.length) {
+			this.#sibRundownArray = undefined
+			logger.warn('CMP. Rundown array is not array or empty.')
+			return
+		}
+
+		this.#sibRundownArray = rundownArray
+	}
+
+	/**
+	 * Get sib rundown array.
+	 * @returns {ApiRundownWithoutItemsArray}
+	 */
+	getSibRundownArray() {
+		let rundownCopy = []
+
+		if (!rundownCopy) return rundownCopy
+
+		if (!this.#sibRundownArray || !Array.isArray(this.#sibRundownArray.Rundowns) || !this.#sibRundownArray.Rundowns.length) {
+			return []
+		}
+
+		this.#sibRundownArray.Rundowns.forEach((rundown) => {
+			try {
+				rundownCopy.push(rundown)
+			} catch (e) {
+				logger.error('CMP. Get rundowns loop, %s.', e)
+			}
+		})
+		// Return copy to prevent changed.
+		return rundownCopy
 	}
 
 	/**
