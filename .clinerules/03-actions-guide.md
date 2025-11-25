@@ -6,11 +6,20 @@ Actions are the commands that execute when a button is pressed in Companion. Thi
 
 ---
 
+## Project-Specific Action Locations
+
+In this project, actions are organized in the following files:
+
+- **Action IDs**: [application/actionId.js](application/actionId.js) - Defines all action identifiers as constants
+- **Action Definitions**: [application/actions.js](application/actions.js) - Contains action definitions, options, and callback implementations
+
+---
+
 ## Documentation References
 
 - **Module SDK**: <https://github.com/bitfocus/companion-module-base/wiki>
 - **Action API**: Check `@companion-module/base` for `CompanionActionDefinitions`
-- **Local Reference**: Review `actionId.js` in your module for existing patterns
+- **Local Reference**: Review [actionId.js](application/actionId.js) and [actions.js](application/actions.js) for existing patterns in this module.
 
 ---
 

@@ -9,7 +9,7 @@ import {
 import { createPresetsFromTeamsArray } from '../presetFactory/createPresetsFromTeamsArray.js'
 
 /**
- * Handles received QB and saves data locally.
+ * Handles received QB and save data locally.
  * Sets companion presets and variables.
  * @param {SibComputer} sibComputer
  * @param {SibIcons} sibIcons Holds all icons as name and converted value.
