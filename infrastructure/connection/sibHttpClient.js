@@ -463,3 +463,59 @@ export async function sibHttpClientRundownSelectPreviousItem(baseUrl, token, dev
   });
 }
 
+/**
+ * Calls SIB api and selects next item in current rundown.
+ * @param {string} baseUrl - Base URL of the API.
+ * @param {string} token - Authentication token.
+ * @param {string} deviceId - Device ID for authentication.
+ * @returns {Promise<void>}
+ */
+export async function sibHttpClientRundownSelectNextItem(baseUrl, token, deviceId) {
+  return new Promise((resolve, reject) => {
+    try {
+      const url = new URL(apiHttp + baseUrl);
+
+      if (!passIsSet(token)) {
+        // http://localhost:8080/api/rundown/select-next/
+        url.pathname = apiRundownCurrentSelectNext;
+      } else {
+        // http://localhost:8080/api/rundown/select-next/my_pass
+        url.pathname = `${apiRundownCurrentSelectNext}${token}`;
+      }
+
+      // Add deviceId as query parameter if available
+      if (passIsSet(deviceId)) {
+        url.searchParams.append('deviceId', deviceId);
+      }
+
+      logger.debug('Called url: ' + url.toString());
+
+      http
+        .get(url.toString(), (res) => {
+          // Reject on any non-2xx status code
+          if (res.statusCode < 200 || res.statusCode >= 300) {
+            logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString());
+            return reject(new Error(`HTTP Error ${res.statusCode}`));
+          }
+
+          res.on('end', () => {
+            try {
+              logger.debug('API. Rundown select next item triggered successfully. Url: %s', url.toString());
+              resolve();
+            } catch (e) {
+              logger.warn('API. Rundown select next item error: %s', e.message);
+              reject(e);
+            }
+          });
+        })
+        .on('error', (e) => {
+          logger.error("API, can't trigger rundown select next item: %s.", e.message);
+          reject(e);
+        });
+    } catch (e) {
+      logger.error('Error constructing URL or making request: %s.', e.message);
+      reject(e);
+    }
+  });
+}
+
