@@ -10,7 +10,7 @@
     },
     {
       "name": "Attach to Companion module",
-      "port": 54218,
+      "port": 54220,
       "request": "attach",
       "skipFiles": [
         "<node_internals>/**"
