@@ -7,7 +7,7 @@ import { ApiRundownWithoutItemsDto } from '../sib-api/ApiRundownWithoutItemsDto.
  * @returns {ApiRundownWithoutItemsDto}
  */
 export function parseApiRundownWithoutItemsDto(rJson) {
-	if (typeof rJson !== 'object') {
+	if (rJson === null || typeof rJson !== 'object') {
 		return null
 	}
 
