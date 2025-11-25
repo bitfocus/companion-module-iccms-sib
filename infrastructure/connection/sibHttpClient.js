@@ -18,6 +18,7 @@ const apiTeams = '/api/teams/'
 const apiTeam = '/api/team/'
 const apiMatch = '/api/match/'
 const apiRundownWithoutItems = '/api/rundown-without-items/'
+const apiRundownSelectedRun = '/api/rundown/selected-run/'
 
 function passIsSet(value) {
   if (value === undefined) {
@@ -195,13 +196,13 @@ export function sibHttpClientGetPngIconBase64(baseUrl, token, iconId, deviceId) 
               const response_body = Buffer.concat(chunks_of_data);
               resolve(response_body.toString());
             } catch (e) {
-              logger.warn('API. Icon processing error: %s, url: %s', e.message, url.toString());
+              logger.warn('API. Icon processing error: %s, url: %s', e.message);
               reject(e);
             }
           });
         })
         .on('error', (e) => {
-          logger.error('API. Icon request error: %s, url: %s', e.message, url.toString());
+          logger.error('API. Icon request error: %s, url: %s', e.message);
           reject(e);
         });
     } catch (e) {
@@ -290,7 +291,7 @@ export function sibHttpClientChangeTeamById(baseUrl, teamType, teamOid, token) {
  * @param {string} deviceId - Device ID for authentication.
  * @returns {Promise<ApiRundownWithoutItemsDto[]>}
  */
-export function sibHttpClientGetRundownsWithoutItemsAsync(baseUrl, token, deviceId) {
+export async function sibHttpClientGetRundownsWithoutItems(baseUrl, token, deviceId) {
   return new Promise((resolve, reject) => {
     try {
       const url = new URL(apiHttp + baseUrl);
@@ -340,8 +341,38 @@ export function sibHttpClientGetRundownsWithoutItemsAsync(baseUrl, token, device
           reject(e);
         });
     } catch (e) {
-      logger.error('Error constructing URL or making request: %s', e.message);
+      logger.error('Error constructing URL or making request: %s.', e.message);
       reject(e);
     }
   });
 }
+
+/**
+ * Calls SIB api and runs currently selected item on rundown id.
+ * @param {number} rundownId
+ */
+export function rundownSelectedItemRun(rundownId) {
+    const url = new URL(`${apiHttp}${this.#baseUrl}`);
+
+    if (!this.#passIsSet(this.#token)) {
+        // http://localhost:8080/api/rundown/selected-run/4
+        url.pathname = `${apiRundownSelectedRun}${rundownId}/`;
+    } else {
+        // http://localhost:8080/api/rundown/selected-run/4/my_pass
+        url.pathname = `${apiRundownSelectedRun}${rundownId}/${this.#token}`;
+    }
+
+    // Add deviceId as query parameter if available
+    if (this.#deviceId) {
+        url.searchParams.set('deviceId', this.#deviceId);
+    }
+
+    console.log('Change rundown url: ' + url.toString());
+
+    fetch(url.toString(), {
+        method: 'get'
+    }).then(function (response) {
+        // No content
+    }).catch(function (err) {
+        //logger.error("API, can't get qb collection from API: %s.", e.message)
+    });}

@@ -1,10 +1,10 @@
-import { sibHttpClientGetRundownsWithoutItemsAsync } from '../../../infrastructure/connection/sibHttpClient.js';
+import { sibHttpClientGetRundownsWithoutItems } from '../../../infrastructure/connection/sibHttpClient.js';
 import * as http from 'http';
 import { jest } from '@jest/globals';
 
 jest.mock('http');
 
-describe('sibHttpClientGetRundownsWithoutItemsAsync', () => {
+describe('sibHttpClientGetRundownsWithoutItems', () => {
   const mockBaseUrl = 'localhost:8080';
   const mockToken = 'test_token';
   const mockDeviceId = 'device_123';
@@ -45,7 +45,7 @@ describe('sibHttpClientGetRundownsWithoutItemsAsync', () => {
       return mockEmitter;
     });
 
-    const result = await sibHttpClientGetRundownsWithoutItemsAsync(
+    const result = await sibHttpClientGetRundownsWithoutItems(
       mockBaseUrl,
       mockToken,
       mockDeviceId
@@ -81,7 +81,7 @@ describe('sibHttpClientGetRundownsWithoutItemsAsync', () => {
       return mockEmitter;
     });
 
-    await sibHttpClientGetRundownsWithoutItemsAsync(
+    await sibHttpClientGetRundownsWithoutItems(
       mockBaseUrl,
       null, // No token
       mockDeviceId
@@ -116,7 +116,7 @@ describe('sibHttpClientGetRundownsWithoutItemsAsync', () => {
       return mockEmitter;
     });
 
-    await sibHttpClientGetRundownsWithoutItemsAsync(
+    await sibHttpClientGetRundownsWithoutItems(
       mockBaseUrl,
       mockToken,
       mockDeviceId
@@ -146,7 +146,7 @@ describe('sibHttpClientGetRundownsWithoutItemsAsync', () => {
     });
 
     await expect(
-      sibHttpClientGetRundownsWithoutItemsAsync(
+      sibHttpClientGetRundownsWithoutItems(
         mockBaseUrl,
         mockToken,
         mockDeviceId
