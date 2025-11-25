@@ -2,9 +2,9 @@ import EventEmitter from 'events'
 import { sibConnectionEvents } from './sibConnectionEvents.js'
 import { logger } from '../../logger.js'
 import {
-	sibHttpClientGetQuickButtonCollectionsAsync,
-	sibHttpClientGetSibInfoAsync,
-	sibHttpClientGetTeams,
+  sibHttpClientGetQuickButtonCollectionsAsync, sibHttpClientGetRundownsWithoutItems,
+  sibHttpClientGetSibInfoAsync,
+  sibHttpClientGetTeams,
 } from './sibHttpClient.js'
 import { parseApiMessageSibInfo } from '../parsers/parseApiMessageSibInfo.js'
 
@@ -48,6 +48,13 @@ export class SibConnectionHttpPull extends EventEmitter {
 	 * Compare and don't raise if same.
 	 */
 	#prevTeams
+
+  /**
+   * Previous rundowns.
+   * Compare and don't raise if same.
+   */
+  #prevRundowns;
+
 
   /**
    * Unique ID that used to identify module in sib.
@@ -164,6 +171,20 @@ export class SibConnectionHttpPull extends EventEmitter {
 			logger.error('Sib request for collections failed, %s', error)
 			this.emit(sibConnectionEvents.OnSibError, 'Request to sib failed. Check password in settings.')
 		}
+
+    try{
+      const apiRundowns = await sibHttpClientGetRundownsWithoutItems(this.#sibConfig.sibIpPort, this.#sibConfig.token, this.#deviceId)
+      if (!(JSON.stringify(this.#prevRundowns) === JSON.stringify(apiRundowns))) {
+        logger.debug('Connection. Rundowns updated.')
+
+        this.#prevRundowns = apiRundowns
+        this.emit(sibConnectionEvents.OnSibRundownUpdated, apiRundowns)
+      }
+
+    }catch (error) {
+      logger.error('Sib request for rundowns failed, %s', error)
+      this.emit(sibConnectionEvents.OnSibError, 'Request to sib failed. Check password in settings.')
+    }
 
 		this.emit(sibConnectionEvents.OnSibConnected)
 
