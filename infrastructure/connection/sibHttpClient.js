@@ -349,30 +349,58 @@ export async function sibHttpClientGetRundownsWithoutItems(baseUrl, token, devic
 
 /**
  * Calls SIB api and runs currently selected item on rundown id.
- * @param {number} rundownId
+ * @param {string} baseUrl - Base URL of the API.
+ * @param {number} rundownId - The rundown ID to trigger.
+ * @param {string} token - Authentication token.
+ * @param {string} deviceId - Device ID for authentication.
+ * @returns {Promise<void>}
  */
-export function rundownSelectedItemRun(rundownId) {
-    const url = new URL(`${apiHttp}${this.#baseUrl}`);
+export function sibHttpClientRundownSelectedItemRun(baseUrl, rundownId, token, deviceId) {
+  return new Promise((resolve, reject) => {
+    try {
+      const url = new URL(apiHttp + baseUrl);
 
-    if (!this.#passIsSet(this.#token)) {
+      if (!passIsSet(token)) {
         // http://localhost:8080/api/rundown/selected-run/4
         url.pathname = `${apiRundownSelectedRun}${rundownId}/`;
-    } else {
+      } else {
         // http://localhost:8080/api/rundown/selected-run/4/my_pass
-        url.pathname = `${apiRundownSelectedRun}${rundownId}/${this.#token}`;
+        url.pathname = `${apiRundownSelectedRun}${rundownId}/${token}`;
+      }
+
+      // Add deviceId as query parameter if available
+      if (passIsSet(deviceId)) {
+        url.searchParams.append('deviceId', deviceId);
+      }
+
+      logger.debug('Called url: ' + url.toString());
+
+      http
+        .get(url.toString(), (res) => {
+          // Reject on any non-2xx status code
+          if (res.statusCode < 200 || res.statusCode >= 300) {
+            logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString());
+            return reject(new Error(`HTTP Error ${res.statusCode}`));
+          }
+
+          res.on('end', () => {
+            try {
+              logger.debug('API. Rundown selected item run triggered successfully. Url: %s', url.toString());
+              resolve();
+            } catch (e) {
+              logger.warn('API. Rundown selected item run error: %s', e.message);
+              reject(e);
+            }
+          });
+        })
+        .on('error', (e) => {
+          logger.error("API, can't trigger rundown selected item run: %s.", e.message);
+          reject(e);
+        });
+    } catch (e) {
+      logger.error('Error constructing URL or making request: %s.', e.message);
+      reject(e);
     }
+  });
+}
 
-    // Add deviceId as query parameter if available
-    if (this.#deviceId) {
-        url.searchParams.set('deviceId', this.#deviceId);
-    }
-
-    console.log('Change rundown url: ' + url.toString());
-
-    fetch(url.toString(), {
-        method: 'get'
-    }).then(function (response) {
-        // No content
-    }).catch(function (err) {
-        //logger.error("API, can't get qb collection from API: %s.", e.message)
-    });}
