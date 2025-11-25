@@ -38,7 +38,7 @@ export const sibConnectionEvents = {
 	OnSibDatabaseChanges: 'sib_database_changed',
 
 	/**
-	 * Connect message from SIB received.
+	 * Quick buttons were updated.
 	 */
 	OnSibQuickButtonsUpdated: 'sib_quick_buttons_updated',
 
