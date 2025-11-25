@@ -2,7 +2,6 @@ import { parseApiMessageSibInfo } from '../../../infrastructure/parsers/parseApi
 import { defineFixture } from 'efate'
 import { faker } from '@faker-js/faker'
 import * as path from 'path'
-import { ApiMessageSibInfo } from '../../../infrastructure/sib-api/apiMessageSibInfo.js'
 
 describe('Sib info deserialization', () => {
 	const userFixture = defineFixture((t) => {
