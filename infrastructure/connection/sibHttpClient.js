@@ -217,48 +217,65 @@ export function sibHttpClientGetPngIconBase64(baseUrl, token, iconId, deviceId) 
 
 /**
  * Gets all teams at once.
- * @param {string} baseUrl
- * @param {string} token
+ * @param {string} baseUrl - Base URL of the API.
+ * @param {string} token - Authentication token.
+ * @param {string} deviceId - Device ID for authentication.
  * @returns {Promise<ApiSportTeamWithoutPlayers[]>}
  */
-export function sibHttpClientGetTeamsAsync(baseUrl, token) {
+export async function sibHttpClientGetTeams(baseUrl, token, deviceId) {
   return new Promise((resolve, reject) => {
-    let urlTeams
-    if (!passIsSet(token)) {
-      // http://localhost:8080/api/teams
-      urlTeams = apiHttp + baseUrl + apiTeams
-    } else {
-      // http://localhost:8080/api/teams/my_pass
-      urlTeams = apiHttp + baseUrl + apiTeams + token + '/'
-    }
+    try {
+      const url = new URL(apiHttp + baseUrl);
 
-    logger.debug('Called url: ' + urlTeams)
+      if (!passIsSet(token)) {
+        // http://localhost:8080/api/teams
+        url.pathname = apiTeams;
+      } else {
+        // http://localhost:8080/api/teams/my_pass
+        url.pathname = `${apiTeams}${token}/`;
+      }
 
-    let apiData
+      // Add deviceId as query parameter if available
+      if (passIsSet(deviceId)) {
+        url.searchParams.append('deviceId', deviceId);
+      }
 
-    http
-      .get(urlTeams, (res) => {
-        let rawData = ''
-        res.on('data', (chunk) => {
-          rawData += chunk
-        })
-        res.on('end', () => {
-          try {
-            logger.debug('Got teams from api.')
+      logger.debug('Called url: ' + url.toString());
 
-            apiData = parseApiSportTeamWithoutPlayersArray(rawData)
-            resolve(apiData)
-          } catch (e) {
-            logger.warn("API, can't parse teams from API: %s.", e.message)
-            reject(e)
+      let rawData = '';
+
+      http
+        .get(url.toString(), (res) => {
+          // Reject on any non-2xx status code
+          if (res.statusCode < 200 || res.statusCode >= 300) {
+            logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString());
+            return reject(new Error(`HTTP Error ${res.statusCode}`));
           }
+
+          res.on('data', (chunk) => {
+            rawData += chunk;
+          });
+
+          res.on('end', () => {
+            try {
+              logger.debug('Got teams from api.');
+              const apiData = parseApiSportTeamWithoutPlayersArray(rawData);
+              resolve(apiData);
+            } catch (e) {
+              logger.warn("API, can't parse teams from API: %s.", e.message);
+              reject(e);
+            }
+          });
         })
-      })
-      .on('error', (e) => {
-        logger.error("API, can't get teams from API: %s.", e.message)
-        reject(e)
-      })
-  })
+        .on('error', (e) => {
+          logger.error("API, can't get teams from API: %s.", e.message);
+          reject(e);
+        });
+    } catch (e) {
+      logger.error('Error constructing URL or making request: %s.', e.message);
+      reject(e);
+    }
+  });
 }
 
 /**

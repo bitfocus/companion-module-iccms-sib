@@ -4,7 +4,7 @@ import { logger } from '../../logger.js'
 import {
 	sibHttpClientGetQuickButtonCollectionsAsync,
 	sibHttpClientGetSibInfoAsync,
-	sibHttpClientGetTeamsAsync,
+	sibHttpClientGetTeams,
 } from './sibHttpClient.js'
 import { parseApiMessageSibInfo } from '../parsers/parseApiMessageSibInfo.js'
 
@@ -134,7 +134,7 @@ export class SibConnectionHttpPull extends EventEmitter {
 
 		// Teams
 		try {
-			const apiTeams = await sibHttpClientGetTeamsAsync(this.#sibConfig.sibIpPort, this.#sibConfig.token)
+			const apiTeams = await sibHttpClientGetTeams(this.#sibConfig.sibIpPort, this.#sibConfig.token)
 
 			if (!(JSON.stringify(this.#prevTeams) === JSON.stringify(apiTeams))) {
 				logger.debug('Connection. Teams updated.')
