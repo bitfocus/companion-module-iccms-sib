@@ -8,8 +8,9 @@ import { createPresetsFromTeamsArray } from './createPresetsFromTeamsArray.js'
  * @param {SibComputer} sibComputer
  * @param {SibIcons} sibIcons
  * @param {ApiSportTeamWithoutPlayers[]} allTeams
+ * @param {ApiRundownWithoutItemsArray} allRundowns
  */
-export function updatePresetsAtRuntime(cmpModule, sibComputer, sibIcons, allTeams) {
+export function updatePresetsAtRuntime(cmpModule, sibComputer, sibIcons, allTeams, allRundowns) {
   let presetsAll = {}
 
   // Collections for presets

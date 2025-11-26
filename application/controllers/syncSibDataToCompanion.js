@@ -62,7 +62,8 @@ updatePresetsAtRuntime(
   cmpModule,
   sibComputer,
   sibIcons,
-  allTeams
+  allTeams,
+  allRundowns
 )
 
 logger.debug(`controllerQuickButtonCollections. Done.`)
