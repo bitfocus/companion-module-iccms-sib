@@ -21,5 +21,5 @@ export const actionId = {
 	/**
 	 * Rundown control actions (select rundown, run line, select prev/next).
 	 */
-	RundownControl: 'sib_action_rundown_control',
+	Rundown: 'sib_action_rundown',
 }

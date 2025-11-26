@@ -147,7 +147,7 @@ export function updateActionsAtRuntime(
 
 	// Rundowns
 
-	my_actions[actionId.RundownControl] = {
+	my_actions[actionId.Rundown] = {
 		name: 'Rundown Control',
 		options: [
 			{

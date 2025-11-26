@@ -2,15 +2,17 @@ import { logger } from '../../logger.js'
 
 /**
  * Returns choices for rundown action.
- * @param {ApiRundownWithoutItemsDto[]} allRundowns
- * @returns {[]}
+ * @param {ApiRundownWithoutItemsArray} rundownsArray - Infrastructure object containing rundowns
+ * @returns {Array<{id: number, label: string}>}
  */
-export function getChoicesForRundownAction(allRundowns) {
+export function getChoicesForRundownAction(rundownsArray) {
 	let options = []
 
 	options.push({ id: -1, label: 'No rundown' })
 
-	if (!allRundowns) return options
+	if (!rundownsArray) return options
+
+	const allRundowns = rundownsArray.Rundowns
 
 	if (!Array.isArray(allRundowns) || !allRundowns.length) {
 		return options
