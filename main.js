@@ -130,9 +130,22 @@ class SibPluginInstance extends InstanceBase {
 				this.#sibComputer.setSibInfo(value)
 			})
 
-      this.#sibConnection.on(sibConnectionEvents.OnSibRundownUpdated, (value) => {
+      this.#sibConnection.on(sibConnectionEvents.OnSibRundownUpdated, async (value) => {
         logger.debug(`Got rundown data.`)
         this.#sibComputer.setSibRundowns(value)
+
+        let allTeams = this.#sibComputer.getSibTeams()
+        let allRundowns = this.#sibComputer.getSibRundowns()
+
+        await syncSibDataToCompanion(
+          this.#sibComputer,
+          this.#sibIcons,
+          value,
+          this,
+          this.#sibSocket,
+          allTeams,
+          allRundowns,
+        )
       })
 
 			this.#sibConnection.on(sibConnectionEvents.OnSibTeamsUpdated, async (value) => {
