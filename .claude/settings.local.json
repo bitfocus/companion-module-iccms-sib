@@ -1,7 +1,9 @@
 {
   "permissions": {
     "allow": [
-      "Bash(mv:*)"
+      "Bash(mv:*)",
+      "Bash(npm test:*)",
+      "Bash(yarn test:*)"
     ],
     "deny": [],
     "ask": []

@@ -9,7 +9,7 @@ import { SibConnectionHttpPull } from './infrastructure/connection/sibConnection
 import { updateVariableDefinitions } from './application/variables.js'
 import { updateFeedbacks } from './application/updateFeedbacks.js'
 import { sibConnectionEvents } from './infrastructure/connection/sibConnectionEvents.js'
-import { controllerQuickButtonCollections } from './application/controllers/controllerQuickButtonCollections.js'
+import { syncSibDataToCompanion } from './application/controllers/syncSibDataToCompanion.js'
 import { SibWebSocket } from './infrastructure/connection/sibWebSocket.js'
 import { updateActionsAtStartup } from './application/actions.js'
 import { sibHttpClientChangeTeamById } from './infrastructure/connection/sibHttpClient.js'
@@ -136,7 +136,7 @@ class SibPluginInstance extends InstanceBase {
 
 				let allTeams = this.#sibComputer.getSibTeams()
 
-				await controllerQuickButtonCollections(
+				await syncSibDataToCompanion(
 					this.#sibComputer,
 					this.#sibIcons,
 					value,
@@ -151,7 +151,7 @@ class SibPluginInstance extends InstanceBase {
 
 				let allTeams = this.#sibComputer.getSibTeams()
 
-				await controllerQuickButtonCollections(
+				await syncSibDataToCompanion(
 					this.#sibComputer,
 					this.#sibIcons,
 					value,

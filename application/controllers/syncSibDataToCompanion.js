@@ -1,7 +1,7 @@
 import { parseCollectionWithGroupsAndButtonsArray } from '../../infrastructure/parsers/parseCollectionWithGroupsAndButtonsArray.js'
 import { createPresetsFromCollectionsWithGroupsAndButtons } from '../presetFactory/createPresetsFromCollectionsWithGroupsAndButtons.js'
 import { logger } from '../../logger.js'
-import { updateActionsFromButtons } from '../actions.js'
+import { updateActionsAtRuntime } from '../actions.js'
 import {
 	sibHttpClientChangeTeamById,
 	sibHttpClientTriggerQuickButtonById,
@@ -9,29 +9,32 @@ import {
 import { createPresetsFromTeamsArray } from '../presetFactory/createPresetsFromTeamsArray.js'
 
 /**
- * Handles received QB and save data locally.
- * Sets companion presets and variables.
+ * Synchronizes SIB data to Companion module definitions.
+ * Handles QuickButton collections, teams, icons, and creates corresponding presets and actions.
+ *
  * @param {SibComputer} sibComputer
- * @param {SibIcons} sibIcons Holds all icons as name and converted value.
- * @param {string} apiCommand
+ * @param {SibIcons} sibIcons Holds all icons as name and converted value
+ * @param {string} apiCommand QuickButton collections from API
  * @param {SibPluginInstance} cmpModule
  * @param {SibWebSocket} sibSocket
- * @param {ApiSportTeamWithoutPlayers[]} allTeams all teams from api
+ * @param {ApiSportTeamWithoutPlayers[]} allTeams All teams from API
+ * @param {ApiRundownWithoutItemsDto[]} allRundowns all rundowns from api
  */
-export async function controllerQuickButtonCollections(
+export async function syncSibDataToCompanion(
 	sibComputer,
 	sibIcons,
 	apiCommand,
 	cmpModule,
 	sibSocket,
-	allTeams
+	allTeams,
+  allRundowns
 ) {
-	logger.debug('controllerQuickButtonCollections. Begin.')
+	logger.debug('syncSibDataToCompanion. Begin.')
 
 	let presetsAll = {}
 
 	if (typeof apiCommand !== 'object') {
-		logger.warn('controllerQuickButtonCollections. Parsed is not an object.')
+		logger.warn('syncSibDataToCompanion. Parsed is not an object.')
 		return null
 	}
 
@@ -66,8 +69,8 @@ export async function controllerQuickButtonCollections(
 
 	const sibConfig = sibComputer.getConnectionConfig()
 
-	// Send to module.
-	updateActionsFromButtons(
+	// Send it to the module.
+	updateActionsAtRuntime(
 		cmpModule,
 		sibComputer.getApiUrl(),
 		sibHttpClientTriggerQuickButtonById,
@@ -75,7 +78,8 @@ export async function controllerQuickButtonCollections(
 		sibSocket,
 		sibConfig,
 		sibHttpClientChangeTeamById,
-		allTeams
+		allTeams,
+    allRundowns
 	)
 	cmpModule.setPresetDefinitions(presetsAll)
 
