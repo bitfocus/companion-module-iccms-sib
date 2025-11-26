@@ -1,5 +1,6 @@
 import { createPresetsFromCollectionsWithGroupsAndButtons } from './createPresetsFromCollectionsWithGroupsAndButtons.js'
 import { createPresetsFromTeamsArray } from './createPresetsFromTeamsArray.js'
+import { createPresetsFromRundownsArray } from './createPresetsFromRundownsArray.js'
 
 /**
  * Aggregates and sets all presets on the Companion module.
@@ -26,6 +27,14 @@ export function updatePresetsAtRuntime(cmpModule, sibComputer, sibIcons, allTeam
   const teamPresets = createPresetsFromTeamsArray(allTeams)
   if (teamPresets != null) {
     for (const [key, pObject] of Object.entries(teamPresets)) {
+      presetsAll[key] = pObject
+    }
+  }
+
+  // Rundown presets
+  const rundownPresets = createPresetsFromRundownsArray(allRundowns, sibIcons)
+  if (rundownPresets != null) {
+    for (const [key, pObject] of Object.entries(rundownPresets)) {
       presetsAll[key] = pObject
     }
   }
