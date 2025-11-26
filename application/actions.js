@@ -30,7 +30,7 @@ import {
  * @param {SibConnection} sibConfig
  * @param sibHttpClientChangeTeamById http client to change team.
  * @param {ApiSportTeamWithoutPlayers[]} allTeams all teams from api
- * @param {ApiRundownWithoutItemsDto[]} allRundowns all rundowns from api
+ * @param {ApiRundownWithoutItemsArray} allRundowns all rundowns from api
  */
 export function updateActionsAtRuntime(
 	self,

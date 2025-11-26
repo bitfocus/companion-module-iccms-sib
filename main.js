@@ -130,11 +130,17 @@ class SibPluginInstance extends InstanceBase {
 				this.#sibComputer.setSibInfo(value)
 			})
 
+      this.#sibConnection.on(sibConnectionEvents.OnSibRundownUpdated, (value) => {
+        logger.debug(`Got rundown data.`)
+        this.#sibComputer.setSibRundowns(value)
+      })
+
 			this.#sibConnection.on(sibConnectionEvents.OnSibTeamsUpdated, async (value) => {
 				logger.debug(`Got teams data.`)
 				this.#sibComputer.setSibTeams(value)
 
 				let allTeams = this.#sibComputer.getSibTeams()
+				let allRundowns = this.#sibComputer.getSibRundowns()
 
 				await syncSibDataToCompanion(
 					this.#sibComputer,
@@ -142,7 +148,8 @@ class SibPluginInstance extends InstanceBase {
 					value,
 					this,
 					this.#sibSocket,
-					allTeams
+					allTeams,
+          allRundowns,
 				)
 			})
 
@@ -150,6 +157,7 @@ class SibPluginInstance extends InstanceBase {
 				logger.debug(`Got connected data.`)
 
 				let allTeams = this.#sibComputer.getSibTeams()
+        let allRundowns = this.#sibComputer.getSibRundowns()
 
 				await syncSibDataToCompanion(
 					this.#sibComputer,
@@ -157,7 +165,8 @@ class SibPluginInstance extends InstanceBase {
 					value,
 					this,
 					this.#sibSocket,
-					allTeams
+					allTeams,
+          allRundowns
 				)
 			})
 

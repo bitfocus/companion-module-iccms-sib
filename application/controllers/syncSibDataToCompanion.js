@@ -18,7 +18,7 @@ import { createPresetsFromTeamsArray } from '../presetFactory/createPresetsFromT
  * @param {SibPluginInstance} cmpModule
  * @param {SibWebSocket} sibSocket
  * @param {ApiSportTeamWithoutPlayers[]} allTeams All teams from API
- * @param {ApiRundownWithoutItemsDto[]} allRundowns all rundowns from api
+ * @param {ApiRundownWithoutItemsArray} allRundowns all rundowns from api
  */
 export async function syncSibDataToCompanion(
 	sibComputer,

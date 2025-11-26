@@ -194,7 +194,7 @@ export class SibComputer {
 	 * Set sib rundown array.
 	 * @param {ApiRundownWithoutItemsArray} rundownArray
 	 */
-	setSibRundownArray(rundownArray) {
+	setSibRundowns(rundownArray) {
 		if (typeof rundownArray == 'undefined') {
 			this.#sibRundownArray = undefined
 			logger.warn('CMP. Rundown array is undefined.')
@@ -214,7 +214,7 @@ export class SibComputer {
 	 * Get sib rundown array.
 	 * @returns {ApiRundownWithoutItemsArray}
 	 */
-	getSibRundownArray() {
+	getSibRundowns() {
 		let rundownCopy = []
 
 		if (!rundownCopy) return rundownCopy
