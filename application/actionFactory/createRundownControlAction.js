@@ -30,6 +30,20 @@ const ACTION_TYPE = {
 }
 
 /**
+ * Builds isVisibleExpression for showing the rundown dropdown
+ * based on selected action type.
+ * @param {string[]} actionTypes - Action types that should show the rundown dropdown
+ * @returns {string} Companion isVisibleExpression
+ * @private
+ */
+function buildShowRundownDropdownExpression(actionTypes) {
+    const conditions = actionTypes.map(
+        (actionType) => `$(this:${OPTION_ID.ACTION_TYPE}) == "${actionType}"`
+    );
+    return conditions.join(' || ');
+}
+
+/**
  * Creates the Rundown Control action definition.
  * @param {ApiRundownWithoutItemsArray} allRundowns
  * @param {SibConnection} sibConfig
@@ -60,9 +74,10 @@ export function createRundownControlAction(allRundowns, sibConfig, self) {
 				default: -1,
 				tooltip: 'Select rundown from list',
 				choices: getChoicesForRundownAction(allRundowns),
-				isVisible: (options) => {
-					return options.action_type === ACTION_TYPE.SELECT_RUNDOWN || options.action_type === ACTION_TYPE.RUN_LINE
-				},
+				isVisibleExpression: buildShowRundownDropdownExpression([
+					ACTION_TYPE.SELECT_RUNDOWN,
+					ACTION_TYPE.RUN_LINE,
+				]),
 			},
 		],
 		callback: async (event) => {
