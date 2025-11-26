@@ -1,12 +1,11 @@
 import { parseCollectionWithGroupsAndButtonsArray } from '../../infrastructure/parsers/parseCollectionWithGroupsAndButtonsArray.js'
-import { createPresetsFromCollectionsWithGroupsAndButtons } from '../presetFactory/createPresetsFromCollectionsWithGroupsAndButtons.js'
+import { updatePresetsAtRuntime } from '../presetFactory/updatePresetsAtRuntime.js'
 import { logger } from '../../logger.js'
 import { updateActionsAtRuntime } from '../actions.js'
 import {
 	sibHttpClientChangeTeamById,
 	sibHttpClientTriggerQuickButtonById,
 } from '../../infrastructure/connection/sibHttpClient.js'
-import { createPresetsFromTeamsArray } from '../presetFactory/createPresetsFromTeamsArray.js'
 
 /**
  * Synchronizes SIB data to Companion module definitions.
@@ -31,57 +30,40 @@ export async function syncSibDataToCompanion(
 ) {
 	logger.debug('syncSibDataToCompanion. Begin.')
 
-	let presetsAll = {}
+if (typeof apiCommand !== 'object') {
+  logger.warn('syncSibDataToCompanion. Parsed is not an object.')
+  return null
+}
 
-	if (typeof apiCommand !== 'object') {
-		logger.warn('syncSibDataToCompanion. Parsed is not an object.')
-		return null
-	}
+const parsedCollectionsJson = parseCollectionWithGroupsAndButtonsArray(apiCommand)
 
-	const parsedCollectionsJson = parseCollectionWithGroupsAndButtonsArray(apiCommand)
+logger.debug(`parsedCollectionsJson ${parsedCollectionsJson.length}`)
 
-	logger.debug(`parsedCollectionsJson ${parsedCollectionsJson.length}`)
+sibComputer.setSibCollections(parsedCollectionsJson)
+await sibIcons.updateIcons(parsedCollectionsJson, sibComputer.getConnectionConfig(), sibComputer.getSibVersion())
 
-	sibComputer.setSibCollections(parsedCollectionsJson)
-	await sibIcons.updateIcons(parsedCollectionsJson, sibComputer.getConnectionConfig(), sibComputer.getSibVersion())
+const sibConfig = sibComputer.getConnectionConfig()
 
-	// At this point, we have all correct data about open database.
-	// Get data that can be used in companion back and create its objects.
-	const collectionsForPreset = sibComputer.getCollectionsWithButtons()
+// Update actions first
+updateActionsAtRuntime(
+  cmpModule,
+  sibComputer.getApiUrl(),
+  sibHttpClientTriggerQuickButtonById,
+  parsedCollectionsJson,
+  sibSocket,
+  sibConfig,
+  sibHttpClientChangeTeamById,
+  allTeams,
+  allRundowns
+)
 
-	// Create presets and set to module.
-	const colPresets = createPresetsFromCollectionsWithGroupsAndButtons(collectionsForPreset, sibIcons)
+// Then update presets
+updatePresetsAtRuntime(
+  cmpModule,
+  sibComputer,
+  sibIcons,
+  allTeams
+)
 
-	if (colPresets != null) {
-		for (const [key, pObject] of Object.entries(colPresets)) {
-			presetsAll[key] = pObject
-		}
-	}
-
-	// Teams presets
-	const teamPresets = createPresetsFromTeamsArray(allTeams)
-
-	if (teamPresets != null) {
-		for (const [key, pObject] of Object.entries(teamPresets)) {
-			presetsAll[key] = pObject
-		}
-	}
-
-	const sibConfig = sibComputer.getConnectionConfig()
-
-	// Send it to the module.
-	updateActionsAtRuntime(
-		cmpModule,
-		sibComputer.getApiUrl(),
-		sibHttpClientTriggerQuickButtonById,
-		parsedCollectionsJson,
-		sibSocket,
-		sibConfig,
-		sibHttpClientChangeTeamById,
-		allTeams,
-    allRundowns
-	)
-	cmpModule.setPresetDefinitions(presetsAll)
-
-	logger.debug(`controllerQuickButtonCollections. Done.`)
+logger.debug(`controllerQuickButtonCollections. Done.`)
 }
