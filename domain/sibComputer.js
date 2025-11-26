@@ -1,4 +1,5 @@
 import {ApiMessageSibInfo} from '../infrastructure/sib-api/apiMessageSibInfo.js'
+import {ApiRundownWithoutItemsArray} from '../infrastructure/sib-api/ApiRundownWithoutItemsArray.js'
 import {logger} from '../logger.js'
 
 /**
@@ -215,23 +216,16 @@ export class SibComputer {
    * @returns {ApiRundownWithoutItemsArray}
    */
   getSibRundowns() {
-    let rundownCopy = []
-
-    if (!rundownCopy) return rundownCopy
-
-    if (!this.#sibRundownArray || !Array.isArray(this.#sibRundownArray.Rundowns) || !this.#sibRundownArray.Rundowns.length) {
-      return []
+    if (
+      !this.#sibRundownArray ||
+      !Array.isArray(this.#sibRundownArray.Rundowns) ||
+      !this.#sibRundownArray.Rundowns.length
+    ) {
+      return ApiRundownWithoutItemsArray.empty();
     }
-
-    this.#sibRundownArray.Rundowns.forEach((rundown) => {
-      try {
-        rundownCopy.push(JSON.parse(JSON.stringify(rundown)))
-      } catch (e) {
-        logger.error('CMP. Get rundowns loop, %s.', e)
-      }
-    })
-    // Return copy to prevent changed.
-    return rundownCopy
+    const copy = new ApiRundownWithoutItemsArray();
+    copy.Rundowns = JSON.parse(JSON.stringify(this.#sibRundownArray.Rundowns));
+    return copy;
   }
 
   /**

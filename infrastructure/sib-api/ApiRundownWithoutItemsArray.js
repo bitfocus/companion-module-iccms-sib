@@ -4,11 +4,18 @@
 export class ApiRundownWithoutItemsArray {
 
   /**
+   * Factory method: returns an instance with no rundowns.
+   * @returns {ApiRundownWithoutItemsArray}
+   */
+  static empty() {
+    return new ApiRundownWithoutItemsArray();
+  }
+
+  /**
    * All rundowns from api.
    * @typedef {ApiRundownWithoutItemsDto[]} Rundowns
    */
   Rundowns = [];
-
 
   /**
    * Replace current data with data from api.

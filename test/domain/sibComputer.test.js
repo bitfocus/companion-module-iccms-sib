@@ -1,4 +1,6 @@
 import { SibComputer } from '../../domain/sibComputer.js'
+import { ApiRundownWithoutItemsArray } from '../../infrastructure/sib-api/ApiRundownWithoutItemsArray.js'
+import { apiRundownWithoutItemsArray2Fixture } from '../fixtures/apiRundownWithoutItemsArray2Fixture.js'
 
 describe('SibComputer', () => {
   let sibComputer
@@ -8,35 +10,39 @@ describe('SibComputer', () => {
   })
 
   describe('setSibRundowns and getSibRundowns', () => {
-    test('should save and return a deep copy of the rundown data', () => {
+    test('should save and return a deep copy of the rundown data (2 rundowns)', () => {
+      // Use the fixture to create a reusable ApiRundownWithoutItemsArray-like object
+      const fixtureObj = apiRundownWithoutItemsArray2Fixture.create()
       const originalRundown = {
-        Rundowns: [
-          { id: 1, name: 'Rundown 1' },
-          { id: 2, name: 'Rundown 2' },
-        ],
+        Rundowns: fixtureObj.Rundowns
       }
 
       sibComputer.setSibRundowns(originalRundown)
       const returnedRundown = sibComputer.getSibRundowns()
 
-      // Ensure the returned rundown is deeply equal to the original
-      expect(returnedRundown).toEqual(originalRundown.Rundowns)
-
-      // Ensure the returned rundown is a deep copy
-      expect(returnedRundown).not.toBe(originalRundown.Rundowns)
-      expect(returnedRundown[0]).not.toBe(originalRundown.Rundowns[0])
-
-      // Modify the original rundown and ensure it does not affect the stored copy
-      originalRundown.Rundowns[0].name = 'Modified Rundown 1'
-      expect(sibComputer.getSibRundowns()[0].name).toBe('Rundown 1')
+      // Should return an instance of ApiRundownWithoutItemsArray
+      expect(returnedRundown).toBeInstanceOf(ApiRundownWithoutItemsArray)
+      // Rundowns array should have length 2 and match input
+      expect(returnedRundown.Rundowns).toHaveLength(2)
+      expect(returnedRundown.Rundowns).toEqual(originalRundown.Rundowns)
+      // Deep copy: not the same reference
+      expect(returnedRundown.Rundowns).not.toBe(originalRundown.Rundowns)
+      expect(returnedRundown.Rundowns[0]).not.toBe(originalRundown.Rundowns[0])
+      // Modifying returned rundown does not affect original
+      returnedRundown.Rundowns[0].name = 'Changed'
+      expect(originalRundown.Rundowns[0].name).not.toBe('Changed')
     })
 
     test('should handle undefined or invalid rundown data gracefully', () => {
       sibComputer.setSibRundowns(undefined)
-      expect(sibComputer.getSibRundowns()).toEqual([])
+      const result1 = sibComputer.getSibRundowns()
+      expect(result1).toBeInstanceOf(ApiRundownWithoutItemsArray)
+      expect(result1.Rundowns).toEqual([])
 
       sibComputer.setSibRundowns({ Rundowns: [] })
-      expect(sibComputer.getSibRundowns()).toEqual([])
+      const result2 = sibComputer.getSibRundowns()
+      expect(result2).toBeInstanceOf(ApiRundownWithoutItemsArray)
+      expect(result2.Rundowns).toEqual([])
     })
   })
 })
