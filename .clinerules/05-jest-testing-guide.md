@@ -9,12 +9,19 @@
 - **Efate Fixtures**: <https://www.npmjs.com/package/efate>
 - **Testing Best Practices**: <https://github.com/goldbergyoni/javascript-testing-best-practices>
 
+### Project Configuration
+
+- **Package Manager**: Yarn (use `yarn test`, not `npm test`)
+- **Test Runner**: Jest
+- **Module System**: ES Modules
+- **Versions**: See [package.json](../package.json)
+
 ### For Specific Topics
 
 - **Jest Matchers**: <https://jestjs.io/docs/using-matchers>
 - **Jest Expect API**: <https://jestjs.io/docs/expect>
 - **Jest Setup/Teardown**: <https://jestjs.io/docs/setup-teardown>
-- **Jest ES Modules**: <https://jestjs.io/docs/ecmascript-modules>
+- **Jest CLI Options**: <https://jestjs.io/docs/cli>
 - **Faker Date**: <https://fakerjs.dev/api/date>
 - **Faker System**: <https://fakerjs.dev/api/system>
 - **Faker String**: <https://fakerjs.dev/api/string>
@@ -515,23 +522,25 @@ Reference: <https://jestjs.io/docs/setup-teardown>
 
 ---
 
-## Rule 9: Code Coverage Considerations
+## Rule 9: Running Tests
 
-### Run Tests with Coverage
+**IMPORTANT**: This project uses **Yarn**, not npm. Always use `yarn test`, never `npm test`.
 
 ```bash
 # Run all tests
 yarn test
 
-# Run with coverage report
+# Run with coverage
 yarn test --coverage
 
-# Run specific test file
-yarn test parseApiMessageSibInfo.test.js
-
-# Run in watch mode
+# Run in watch mode (development)
 yarn test --watch
+
+# Run specific file
+yarn test filename.test.js
 ```
+
+**Reference**: For Jest CLI options, see [Jest CLI Documentation](https://jestjs.io/docs/cli)
 
 ### What to Test
 
@@ -703,16 +712,17 @@ describe('Feature or Component Name', () => {
 
 ## Summary: Key Principles
 
-1. **Structure**: Mirror source directory structure in `test/`
-2. **Naming**: Use `[filename].test.js` convention
-3. **Imports**: ES modules with `.js` extension
-4. **Organization**: Use `describe()` and `test()` with clear names
-5. **Pattern**: Follow Arrange-Act-Assert
-6. **Faker**: Use for variable data, not logic-dependent values
-7. **Fixtures**: Use efate for complex reusable data templates
-8. **Isolation**: Each test should be independent
-9. **Edge Cases**: Always test null, undefined, empty values
-10. **Matchers**: Use appropriate Jest matchers for assertions
+1. **Package Manager**: Use **Yarn**, not npm - always `yarn test`
+2. **Structure**: Mirror source directory structure in `test/`
+3. **Naming**: Use `[filename].test.js` convention
+4. **Imports**: ES modules with `.js` extension
+5. **Organization**: Use `describe()` and `test()` with clear names
+6. **Pattern**: Follow Arrange-Act-Assert
+7. **Faker**: Use for variable data, not logic-dependent values
+8. **Fixtures**: Use efate for complex reusable data templates
+9. **Isolation**: Each test should be independent
+10. **Edge Cases**: Always test null, undefined, empty values
+11. **Matchers**: Use appropriate Jest matchers for assertions
 
 ---
 

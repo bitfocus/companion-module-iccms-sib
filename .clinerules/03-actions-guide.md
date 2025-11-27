@@ -79,7 +79,11 @@ name: 'Perform Auto Transition'
 
 ## Rule 2: Option Types and Patterns
 
+**Documentation Reference**: [Companion Input Types](https://bitfocus.github.io/companion-module-base/index.html)
+
 ### Number Input
+
+**Type Reference**: [CompanionInputFieldNumber](https://bitfocus.github.io/companion-module-base/interfaces/CompanionInputFieldNumber.html)
 
 ```javascript
 {
@@ -96,6 +100,8 @@ name: 'Perform Auto Transition'
 
 ### Dropdown Selection
 
+**Type Reference**: [CompanionInputFieldDropdown](https://bitfocus.github.io/companion-module-base/interfaces/CompanionInputFieldDropdown.html)
+
 ```javascript
 {
     type: 'dropdown',
@@ -108,11 +114,19 @@ name: 'Perform Auto Transition'
         { id: 'media', label: 'Media Player' },
         { id: 'color', label: 'Color Generator' }
     ],
-    required: true
+    required: true,
+    minChoicesForSearch: 5  // ✅ Use this instead of deprecated 'allowCustom'
 }
 ```
 
+**⚠️ Deprecated Properties to AVOID**:
+
+- ❌ `allowCustom` - Use `minChoicesForSearch` instead
+- ❌ `choices` with `minSelection`/`maxSelection` - Use `multidropdown` type instead
+
 ### Dynamic Dropdown (Updates based on device state)
+
+**Type Reference**: [CompanionInputFieldDropdown](https://bitfocus.github.io/companion-module-base/interfaces/CompanionInputFieldDropdown.html)
 
 ```javascript
 {
@@ -130,6 +144,8 @@ name: 'Perform Auto Transition'
 
 ### Text Input
 
+**Type Reference**: [CompanionInputFieldTextInput](https://bitfocus.github.io/companion-module-base/interfaces/CompanionInputFieldTextInput.html)
+
 ```javascript
 {
     type: 'textinput',
@@ -141,7 +157,13 @@ name: 'Perform Auto Transition'
 }
 ```
 
+**⚠️ Deprecated Properties to AVOID**:
+
+- ❌ `regex` - Use `pattern` property instead
+
 ### Checkbox (Boolean)
+
+**Type Reference**: [CompanionInputFieldCheckbox](https://bitfocus.github.io/companion-module-base/interfaces/CompanionInputFieldCheckbox.html)
 
 ```javascript
 {
@@ -152,9 +174,161 @@ name: 'Perform Auto Transition'
 }
 ```
 
+### Multi-Dropdown (Multiple Selections)
+
+**Type Reference**: [CompanionInputFieldMultiDropdown](https://bitfocus.github.io/companion-module-base/interfaces/CompanionInputFieldMultiDropdown.html)
+
+```javascript
+{
+    type: 'multidropdown',
+    label: 'Select Inputs',
+    id: 'inputs',
+    default: [],
+    choices: [
+        { id: 'input1', label: 'Input 1' },
+        { id: 'input2', label: 'Input 2' },
+        { id: 'input3', label: 'Input 3' }
+    ],
+    minSelection: 1,
+    maxSelection: 3,
+    required: true
+}
+```
+
+### Color Picker
+
+**Type Reference**: [CompanionInputFieldColor](https://bitfocus.github.io/companion-module-base/interfaces/CompanionInputFieldColor.html)
+
+```javascript
+{
+    type: 'colorpicker',
+    label: 'Background Color',
+    id: 'bgcolor',
+    default: 0x000000  // Black
+}
+```
+
 ---
 
-## Rule 3: Action Implementation Patterns
+## Rule 3: Use Constants for Option IDs and Values
+
+**Best Practice**: Always define constants for option IDs and choice values. This prevents typos, improves maintainability, and enables better refactoring.
+
+**Reference Example**: [createRundownControlAction.js](application/actionFactory/createRundownControlAction.js)
+
+### Define Option ID Constants
+
+```javascript
+/**
+ * Option IDs for Camera Control action
+ * @private
+ */
+const OPTION_ID = {
+    CAMERA_NUMBER: 'camera_number',
+    PRESET_NUMBER: 'preset_number',
+    TRANSITION_TYPE: 'transition_type',
+}
+```
+
+### Define Choice Value Constants
+
+```javascript
+/**
+ * Transition types for Camera Control
+ * @private
+ */
+const TRANSITION_TYPE = {
+    CUT: 'cut',
+    FADE: 'fade',
+    AUTO: 'auto',
+}
+```
+
+### Use Constants in Action Definition
+
+```javascript
+export function createCameraControlAction() {
+    return {
+        name: 'Camera Control',
+        options: [
+            {
+                type: 'number',
+                label: 'Camera Number',
+                id: OPTION_ID.CAMERA_NUMBER,  // ✅ Use constant
+                default: 1,
+                min: 1,
+                max: 10,
+                required: true
+            },
+            {
+                type: 'dropdown',
+                label: 'Transition',
+                id: OPTION_ID.TRANSITION_TYPE,  // ✅ Use constant
+                default: TRANSITION_TYPE.CUT,   // ✅ Use constant
+                choices: [
+                    { id: TRANSITION_TYPE.CUT, label: 'Cut' },    // ✅ Use constant
+                    { id: TRANSITION_TYPE.FADE, label: 'Fade' },  // ✅ Use constant
+                    { id: TRANSITION_TYPE.AUTO, label: 'Auto' },  // ✅ Use constant
+                ]
+            }
+        ],
+        callback: async (event) => {
+            // ✅ Use constants to access options
+            const cameraNum = event.options[OPTION_ID.CAMERA_NUMBER]
+            const transition = event.options[OPTION_ID.TRANSITION_TYPE]
+
+            // ✅ Use constants in switch/if statements
+            switch (transition) {
+                case TRANSITION_TYPE.CUT:
+                    await performCut(cameraNum)
+                    break
+                case TRANSITION_TYPE.FADE:
+                    await performFade(cameraNum)
+                    break
+                case TRANSITION_TYPE.AUTO:
+                    await performAuto(cameraNum)
+                    break
+            }
+        }
+    }
+}
+```
+
+### Bad Practice Examples
+
+```javascript
+// ❌ BAD - Magic strings scattered throughout code
+{
+    type: 'dropdown',
+    label: 'Camera',
+    id: 'camera_num',  // ❌ Hard-coded string
+    default: 'cut',    // ❌ Hard-coded value
+    choices: [
+        { id: 'cut', label: 'Cut' },    // ❌ Hard-coded value
+        { id: 'fade', label: 'Fade' }   // ❌ Hard-coded value
+    ]
+}
+
+// ❌ BAD - Accessing with magic strings
+callback: async (event) => {
+    const camera = event.options['camera_num']  // ❌ Easy to mistype
+    if (event.options['transition'] === 'cut') {  // ❌ Easy to mistype
+        // ...
+    }
+}
+```
+
+### Benefits of Using Constants
+
+1. **Type Safety**: Catch typos at development time
+2. **Refactoring**: Change values in one place
+3. **Autocomplete**: IDE suggestions for available options
+4. **Documentation**: Constants are self-documenting
+5. **Maintenance**: Easier to find all usages
+
+---
+
+## Rule 4: Action Implementation Patterns
 
 ### Pattern 1: Simple Command
 
@@ -280,7 +454,112 @@ name: 'Perform Auto Transition'
 
 ---
 
-## Rule 4: Error Handling
+## Rule 5: Deprecated and Obsolete Properties
+
+**⚠️ CRITICAL**: Always check the [Companion Module Base documentation](https://bitfocus.github.io/companion-module-base/) for the latest API. Avoid using deprecated properties that will be removed in future versions.
+
+### Deprecated Input Field Properties
+
+#### Dropdown Fields
+
+```javascript
+// ❌ DEPRECATED - DO NOT USE
+{
+    type: 'dropdown',
+    id: 'source',
+    allowCustom: true  // ❌ REMOVED - Use minChoicesForSearch instead
+}
+
+// ✅ CORRECT - Use minChoicesForSearch
+{
+    type: 'dropdown',
+    id: 'source',
+    minChoicesForSearch: 5  // Shows search box when 5+ choices
+}
+
+// ❌ DEPRECATED - DO NOT USE
+{
+    type: 'dropdown',
+    id: 'inputs',
+    minSelection: 1,  // ❌ REMOVED - Use multidropdown type instead
+    maxSelection: 3   // ❌ REMOVED - Use multidropdown type instead
+}
+
+// ✅ CORRECT - Use multidropdown type
+{
+    type: 'multidropdown',
+    id: 'inputs',
+    minSelection: 1,
+    maxSelection: 3
+}
+```
+
+#### Text Input Fields
+
+```javascript
+// ❌ DEPRECATED - DO NOT USE
+{
+    type: 'textinput',
+    id: 'value',
+    regex: '/[0-9]+/'  // ❌ DEPRECATED - Use pattern instead
+}
+
+// ✅ CORRECT - Use pattern property
+{
+    type: 'textinput',
+    id: 'value',
+    pattern: '/[0-9]+/'
+}
+```
+
+### Deprecated Action/Callback Properties
+
+```javascript
+// ❌ DEPRECATED - DO NOT USE
+callback: async (action) => {
+    // ❌ OBSOLETE - Don't use action.options directly without constants
+    const value = action.options.myOption
+}
+
+// ✅ CORRECT - Use constants
+const OPTION_ID = {
+    MY_OPTION: 'myOption'
+}
+
+callback: async (action) => {
+    const value = action.options[OPTION_ID.MY_OPTION]
+}
+```
+
+### How to Check for Deprecated Properties
+
+1. **Check Documentation**: Always reference [CompanionInputField types](https://bitfocus.github.io/companion-module-base/index.html)
+2. **Check TypeScript Definitions**: Look for `@deprecated` JSDoc tags
+3. **Review Changelog**: Check Companion Module Base release notes
+4. **Test with Latest SDK**: Run your module with latest `@companion-module/base`
+
+### Common Deprecated Patterns to Avoid
+
+```javascript
+// ❌ AVOID - Old callback parameter name
+callback: async (action) => { }  // Some versions used 'event'
+
+// ✅ PREFER - Check current SDK docs
+callback: async (event) => { }  // Current versions may use 'event'
+
+// ❌ AVOID - Inline dynamic choices without proper structure
+choices: this.cameras  // Assuming it's an array of objects
+
+// ✅ PREFER - Properly structured choice objects
+choices: this.cameras.map(cam => ({
+    id: cam.id,
+    label: cam.name
+}))
+```
+
+---
+
+## Rule 6: Error Handling
 
 ### Always Use Try-Catch
 
@@ -323,7 +602,7 @@ callback: async (action) => {
 
 ---
 
-## Rule 5: State Management
+## Rule 7: State Management
 
 ### Update Module State After Actions
 
@@ -354,7 +633,7 @@ callback: async (action) => {
 
 ---
 
-## Rule 6: Action Organization
+## Rule 8: Action Organization
 
 ### Group Related Actions
 
@@ -381,7 +660,7 @@ getActionDefinitions() {
 
 ---
 
-## Rule 7: Working with Variables
+## Rule 9: Working with Variables
 
 ### Support Companion Variables in Text Fields
 
@@ -412,7 +691,7 @@ callback: async (action) => {
 
 ---
 
-## Rule 8: Async Best Practices
+## Rule 10: Async Best Practices
 
 ### Use Async/Await Pattern
 
@@ -438,7 +717,7 @@ callback: (action) => {
 
 ---
 
-## Rule 9: Common Patterns
+## Rule 11: Common Patterns
 
 ### Recall Preset/Snapshot
 
@@ -539,20 +818,26 @@ callback: (action) => {
 ## Summary: Key Principles
 
 1. **Descriptive IDs**: Use clear, hierarchical action IDs
-2. **Error Handling**: Always wrap commands in try-catch blocks
-3. **State Updates**: Update module state and trigger feedback checks
-4. **Validation**: Validate options before execution
-5. **Async/Await**: Use modern async patterns consistently
-6. **Logging**: Log both successes and failures appropriately
-7. **User Feedback**: Provide clear option labels and descriptions
-8. **Organization**: Group related actions logically
+2. **Documentation Links**: Reference official Companion Module Base documentation for each input type
+3. **Use Constants**: Define constants for option IDs and choice values to prevent typos
+4. **Avoid Deprecated APIs**: Check documentation for deprecated properties (allowCustom, regex, etc.)
+5. **Error Handling**: Always wrap commands in try-catch blocks
+6. **State Updates**: Update module state and trigger feedback checks
+7. **Validation**: Validate options before execution
+8. **Async/Await**: Use modern async patterns consistently
+9. **Logging**: Log both successes and failures appropriately
+10. **User Feedback**: Provide clear option labels and descriptions
+11. **Organization**: Group related actions logically
 
 ---
 
 ## When in Doubt
 
-1. **Check existing actions** in `actions.js` for patterns
-2. **Review device API** documentation for command format
-3. **Test thoroughly** with actual hardware when possible
-4. **Log extensively** during development for debugging
-5. **Handle errors gracefully** - don't crash the module
+1. **Check existing actions** in [actions.js](application/actions.js) for patterns
+2. **Check constants pattern** in [createRundownControlAction.js](application/actionFactory/createRundownControlAction.js)
+3. **Review Companion documentation** at [bitfocus.github.io/companion-module-base](https://bitfocus.github.io/companion-module-base/)
+4. **Verify no deprecated properties** - Check each input field type in the official documentation
+5. **Review device API** documentation for command format
+6. **Test thoroughly** with actual hardware when possible
+7. **Log extensively** during development for debugging
+8. **Handle errors gracefully** - don't crash the module
