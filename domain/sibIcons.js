@@ -7,7 +7,7 @@ import {sibHttpClientGetPngIconBase64} from '../infrastructure/connection/sibHtt
  */
 export class SibIcons {
   /**
-   * Info about current database.
+   * Info about the current database.
    * key is icon name, value is png icon as base64.
    * @type { Map }
    */
@@ -166,5 +166,37 @@ export class SibIcons {
 
     logger.debug('Icons. Missing icon: %s', iconId)
     return ''
+  }
+
+  /**
+   * Fetch a single icon by iconId from the remote source if not cached.
+   * @param {string} iconId
+   * @param {SibConnection} connectionCfg - Should have sibIpPort and token properties.
+   * @returns {Promise<string>} base64 encoded png icon or empty string.
+   */
+  async fetchIconById(iconId, connectionCfg) {
+    if (this.#icons.has(iconId)) {
+      logger.debug('Icons. fetchIconById: cache hit for %s', iconId)
+      return this.#icons.get(iconId)
+    }
+    try {
+      const base64png = await sibHttpClientGetPngIconBase64(
+        connectionCfg.sibIpPort,
+        connectionCfg.token,
+        iconId,
+        this.#deviceId
+      )
+      if (base64png !== '') {
+        this.#icons.set(iconId, base64png)
+        logger.debug('Icons. fetchIconById: fetched and cached %s', iconId)
+        return base64png
+      } else {
+        logger.debug('Icons. fetchIconById: icon not found or empty for %s', iconId)
+        return ''
+      }
+    } catch (error) {
+      logger.warn(`Icons. fetchIconById: error fetching icon ${iconId}: ${error}`)
+      return ''
+    }
   }
 }
