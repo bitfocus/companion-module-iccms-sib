@@ -11,7 +11,7 @@ import { getForegroundColorFromBackgroundColor } from './getForegroundColorFromB
  */
 export function createPresetsFromRundownsArray(allRundowns, sibIcons) {
   const presets = {}
-  const CATEGORY = 'Presets'
+  const CATEGORY = 'Rundowns'
 
   if (!allRundowns?.Rundowns?.length) return presets
 
@@ -54,7 +54,7 @@ export function createPresetsFromRundownsArray(allRundowns, sibIcons) {
       type: 'text',
       category: CATEGORY,
       name: rundown.RundownName,
-      text: rundown.RundownName,
+      text: "Move this button to the canvas to activate",
     }
 
     // Buttons
@@ -96,7 +96,7 @@ export function createPresetsFromRundownsArray(allRundowns, sibIcons) {
           {
             down: [
               {
-                actionId: actionId.RundownControl,
+                actionId: actionId.Rundown,
                 options,
               },
             ],
