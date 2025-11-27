@@ -61,14 +61,21 @@ export function createPresetsFromRundownsArray(allRundowns, sibIcons) {
     // Buttons
     for (const action of ACTION_TYPES) {
       const presetId = `rundown_${rundown.Id}_${action.id}`
+      // Helper to truncate rundown name if too long
+      function truncateName(name, maxLen = 16) {
+        return name.length > maxLen ? name.slice(0, maxLen - 1) + '…' : name
+      }
+      const truncatedName = truncateName(rundown.RundownName)
+
       // Use rundown color/icon if available
       let bgClrInt = parseBgColorToPresetBgColor(rundown.ColorHex)
       if (!bgClrInt || bgClrInt === 16711680) bgClrInt = action.bgcolor
       const fgColor = getForegroundColorFromBackgroundColor(bgClrInt)
 
       const style = {
-        text: action.text,
+        text: `${truncatedName}\\n${action.text}`,
         size: 'auto',
+        alignment: 'center:top',
         color: fgColor,
         bgcolor: bgClrInt,
         pngalignment: 'center:center',
@@ -80,6 +87,17 @@ export function createPresetsFromRundownsArray(allRundowns, sibIcons) {
       }else {
         logger.debug('Rundown preset. Missing icon: %s', rundown.IconId)
       }
+
+      // Preview style for preset browser
+      const previewStyle = {
+        text: `Rundown\\n${action.text}`,
+        size: 'auto',
+        alignment: 'center:top',
+        color: fgColor,
+        bgcolor: bgClrInt,
+        pngalignment: 'center:center',
+      }
+      if (style.png64) previewStyle.png64 = style.png64
 
       // Options for action
       const options = {
@@ -95,6 +113,7 @@ export function createPresetsFromRundownsArray(allRundowns, sibIcons) {
         category: CATEGORY,
         name: `${rundown.RundownName} - ${action.label}`,
         style,
+        previewStyle,
         steps: [
           {
             down: [
