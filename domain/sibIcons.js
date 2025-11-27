@@ -32,19 +32,21 @@ export class SibIcons {
   }
 
   /**
-   * Takes api object, extracts icons.
-   * @param {apiQuickButtonCollectionWithGroupsAndButtons[]} apiButtons all collections with groups and buttons.
+   * Updates icons by fetching and caching all icons in the provided iconIds set/array.
+   * @param {Iterable<string>} iconIds - Set or array of unique icon IDs to fetch.
    * @param {SibConnection} connectionCfg
    * @param {string} sibVersion
    * @returns {Promise<void>}
    */
-  async updateIcons(apiButtons, connectionCfg, sibVersion) {
+  async updateIcons(iconIds, connectionCfg, sibVersion) {
     if (typeof connectionCfg == 'undefined') {
       logger.warn('Icons, null connection string.')
+      return
     }
 
-    if (typeof apiButtons == 'undefined') {
+    if (typeof iconIds == 'undefined') {
       this.#icons.clear()
+      return
     }
 
     if (sibVersion.startsWith(this.#sibVersionWithIconApi)) {
@@ -55,58 +57,19 @@ export class SibIcons {
       return
     }
 
-    logger.debug('ICONS. Update icons. Known keys: %o.', this.#icons.keys())
+    logger.debug('ICONS. Update icons. Known keys: %o.', Array.from(this.#icons.keys()))
 
-    // Collect all unique icon names.
-    let uniqueSvgIcons = []
+    // Prepare icon ID lists
+    const allIconIds = Array.from(iconIds || [])
+    const knownIds = Array.from(this.#icons.keys())
+    const newIconIds = allIconIds.filter((value) => !knownIds.includes(value))
 
-    apiButtons.forEach((iCol) => {
-      if (!uniqueSvgIcons.includes(iCol.IconId)) {
-        uniqueSvgIcons.push(iCol.IconId)
-      }
-
-      iCol.Groups.forEach((iGroup) => {
-        if (!uniqueSvgIcons.includes(iGroup.IconId)) {
-          uniqueSvgIcons.push(iGroup.IconId)
-        }
-
-        iGroup.Buttons.forEach((iButton) => {
-          if (!uniqueSvgIcons.includes(iButton.IconId)) {
-            uniqueSvgIcons.push(iButton.IconId)
-          }
-        })
-      })
-    })
-
-    // Keys
-    const uniqueIconIds = uniqueSvgIcons
-    const knowsIds = Array.from(this.#icons.keys())
-
-    const newIconIds = uniqueIconIds.filter((value) => !knowsIds.includes(value))
-
-    logger.debug('ICONS. Unique icons in request: %o.', uniqueSvgIcons)
+    logger.debug('ICONS. Unique icons in request: %o.', allIconIds)
     logger.debug('ICONS. New icons to fetch: %o.', newIconIds)
 
     let convertedIcons = []
-    // Process values (parallel).
-    // let convertedIcons = await Promise.all(
-    // 	newIconIds.map(async (iconId) => {
-    // 		try {
-    // 			const base64png = await sibHttpClientGetPngIconBase64(connectionCfg.sibIpPort, connectionCfg.token, iconId, this.#deviceId)
 
-    // 			if (base64png !== '') {
-    // 				return { iconId: iconId, png64: base64png }
-    // 			} else {
-    // 				// Handle conversion errors and incompatible sib api.
-    // 				return null
-    // 			}
-    // 		} catch (error) {
-    // 			return null
-    // 		}
-    // 	})
-    // )
-
-    // Process values (sequentially).
+    // Fetch new icons sequentially
     for (const iconId of newIconIds) {
       try {
         const base64png = await sibHttpClientGetPngIconBase64(connectionCfg.sibIpPort, connectionCfg.token, iconId, this.#deviceId)
@@ -117,7 +80,6 @@ export class SibIcons {
         // handle error (skip or log)
       }
     }
-
 
     let fetchedIconIds = convertedIcons.filter((x) => x).map((a) => a['iconId'])
 
@@ -160,7 +122,7 @@ export class SibIcons {
    */
   getIconPngBase64(iconId) {
     if (this.#icons.has(iconId)) {
-      logger.debug('Icons. Got icon: %s', iconId)
+      logger.debug('Icons. Get icon: %s', iconId)
       return this.#icons.get(iconId)
     }
 

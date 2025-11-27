@@ -104,26 +104,32 @@ describe('Feature or Component Name', () => {
 
 ### Arrange-Act-Assert Pattern
 
-**ALWAYS** structure tests with clear sections:
+**ALWAYS** structure tests using the arrange, act, assert pattern, with clear comments and logical separation for each phase:
 
 ```javascript
 test('Deserialized correctly', () => {
-    // arrange - Set up test data
+    // arrange: Set up test data and environment
     let expected = {
         SportInTheBoxVersion: '2.8.7257.14899',
         ResponseDate: '2019-11-14T09:15:11',
         DatabasePath: 'E:\\SIB\\MySport.SIB2',
     }
 
-    // act - Execute the function under test
+    // act: Execute the function under test
     const actual = parseApiMessageSibInfo(expected)
 
-    // assert - Verify the results
+    // assert: Verify the results
     expect(actual.SportInTheBoxVersion).toBe(expected.SportInTheBoxVersion)
     expect(actual.ResponseDate).toBe(expected.ResponseDate)
     expect(actual.DatabasePath).toBe(expected.DatabasePath)
 })
 ```
+
+**Best Practice:**  
+- Use `// arrange`, `// act`, and `// assert` comments in every test.
+- Keep each phase focused and minimal.
+- If a test does not require all three phases (e.g., only act/assert), still use the comments for clarity.
+- This pattern improves readability, maintainability, and debugging of tests.
 
 ### Descriptive Test Names
 

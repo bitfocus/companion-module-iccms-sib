@@ -44,7 +44,7 @@ export class apiQuickButtonGroupWithButtons {
 	SvgIcon = ''
 
 	/**
-	 * Buttons in group.
+	 * Buttons in the group.
 	 * @type {apiQuickButtonInGroup[]}
 	 */
 	Buttons = undefined
