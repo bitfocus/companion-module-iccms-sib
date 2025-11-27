@@ -2,6 +2,7 @@ import { combineRgb } from '@companion-module/base'
 import { actionId } from '../actionId.js'
 import { parseBgColorToPresetBgColor } from './parseBgColorToPresetBgColor.js'
 import { getForegroundColorFromBackgroundColor } from './getForegroundColorFromBackgroundColor.js'
+import {logger} from "../../logger.js";
 
 /**
  * Generates Companion presets for all rundowns.
@@ -76,6 +77,8 @@ export function createPresetsFromRundownsArray(allRundowns, sibIcons) {
       // Add icon if available
       if (sibIcons?.hasIcon && rundown.IconId && sibIcons.hasIcon(rundown.IconId)) {
         style.png64 = sibIcons.getIconPngBase64(rundown.IconId)
+      }else {
+        logger.debug('Rundown preset. Missing icon: %s', rundown.IconId)
       }
 
       // Options for action
