@@ -134,47 +134,65 @@ export async function sibHttpClientGetSibInfoAsync(baseUrl, token, deviceId) {
 
 /**
  * Gets all collections with groups and buttons at once.
- * @param {string} baseUrl
- * @param {string} token
+ * @param {string} baseUrl - Base URL of the API.
+ * @param {string} token - Authentication token.
+ * @param {string} deviceId - Device ID for authentication.
  * @returns {Promise<apiQuickButtonCollectionWithGroupsAndButtons[]>}
  */
-export function sibHttpClientGetQuickButtonCollectionsAsync(baseUrl, token) {
+export async function sibHttpClientGetQuickButtonCollectionsAsync(baseUrl, token, deviceId) {
   return new Promise((resolve, reject) => {
-    let urlQb
-    if (!passIsSet(token)) {
-      // http://localhost:8080/api/iconPng/action
-      urlQb = apiHttp + baseUrl + apiQuickButtonCollectionsFull
-    } else {
-      // http://localhost:8080/api/iconPng/action/my_pass
-      urlQb = apiHttp + baseUrl + apiQuickButtonCollectionsFull + token + '/'
-    }
+    try {
+      const url = new URL(apiHttp + baseUrl);
 
-    logger.debug('Called url: ' + urlQb)
+      if (!passIsSet(token)) {
+        // http://localhost:8080/api/quickButtonCollectionsFull/
+        url.pathname = apiQuickButtonCollectionsFull;
+      } else {
+        // http://localhost:8080/api/quickButtonCollectionsFull/my_pass
+        url.pathname = `${apiQuickButtonCollectionsFull}${token}/`;
+      }
 
-    let apiData
+      // Add deviceId as query parameter if available
+      if (passIsSet(deviceId)) {
+        url.searchParams.append('deviceId', deviceId);
+      }
 
-    http
-      .get(urlQb, (res) => {
-        let rawData = ''
-        res.on('data', (chunk) => {
-          rawData += chunk
-        })
-        res.on('end', () => {
-          try {
-            logger.debug('Got collections from api.')
-            apiData = parseCollectionWithGroupsAndButtonsArray(rawData)
-            resolve(apiData)
-          } catch (e) {
-            logger.warn("API, can't parse qb collection from API: %s.", e.message)
-            reject(e)
+      logger.debug('Called url: ' + url.toString());
+
+      let rawData = '';
+
+      http
+        .get(url.toString(), (res) => {
+          // Reject on any non-2xx status code
+          if (res.statusCode < 200 || res.statusCode >= 300) {
+            logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString());
+            return reject(new Error(`HTTP Error ${res.statusCode}`));
           }
+
+          res.on('data', (chunk) => {
+            rawData += chunk;
+          });
+
+          res.on('end', () => {
+            try {
+              logger.debug('API. Got collections from API. Url: %s', url.toString());
+              const apiData = parseCollectionWithGroupsAndButtonsArray(rawData);
+              resolve(apiData);
+            } catch (e) {
+              logger.warn("API, can't parse qb collection from API: %s.", e.message);
+              reject(e);
+            }
+          });
         })
-      })
-      .on('error', (e) => {
-        logger.error("API, can't get qb collection from API: %s.", e.message)
-        reject(e)
-      })
-  })
+        .on('error', (e) => {
+          logger.error("API, can't get qb collection from API: %s.", e.message);
+          reject(e);
+        });
+    } catch (e) {
+      logger.error('Error constructing URL or making request: %s.', e.message);
+      reject(e);
+    }
+  });
 }
 
 /**
