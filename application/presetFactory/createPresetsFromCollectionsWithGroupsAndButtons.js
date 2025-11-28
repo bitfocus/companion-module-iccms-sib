@@ -22,7 +22,7 @@ export function createPresetsFromCollectionsWithGroupsAndButtons(collections, si
   }
 
   collections.forEach((qbCollection) => {
-    const collectionName = qbCollection.CollectionName || 'Unnamed_Collection'
+    const collectionName = qbCollection.Text || 'Unnamed_Collection'
     const collectionId = qbCollection.Id || 'noid'
     const sanitizedCollectionName = sanitizeName(collectionName)
     qbCollection.Groups.forEach((qbGroup) => {
