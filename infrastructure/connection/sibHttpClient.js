@@ -71,39 +71,65 @@ export function sibHttpClientTriggerQuickButtonById(baseUrl, triggerId, token) {
 
 /**
  * Gets current db info from api.
- * @param baseUrl
- * @returns {Promise<ApiMessageSibInfo>}
+ * @param {string} baseUrl - Base URL of the API.
+ * @param {string} token - Authentication token.
+ * @param {string} deviceId - Device ID for authentication.
+ * @returns {Promise<string>} Raw JSON string response
  */
-export function sibHttpClientGetSibInfoAsync(baseUrl) {
+export async function sibHttpClientGetSibInfoAsync(baseUrl, token, deviceId) {
   return new Promise((resolve, reject) => {
-    const fullUrl = apiHttp + baseUrl + apiHb
+    try {
+      const url = new URL(apiHttp + baseUrl);
 
-    logger.debug('Called url: ' + fullUrl)
+      if (!passIsSet(token)) {
+        // http://localhost:8080/api/hb/
+        url.pathname = apiHb;
+      } else {
+        // http://localhost:8080/api/hb/my_pass
+        url.pathname = `${apiHb}${token}`;
+      }
 
-    http
-      .get(fullUrl, (res) => {
-        let chunks_of_data = []
+      // Add deviceId as query parameter if available
+      if (passIsSet(deviceId)) {
+        url.searchParams.append('deviceId', deviceId);
+      }
 
-        res.on('data', (chunk) => {
-          chunks_of_data.push(chunk)
-        })
-        res.on('end', () => {
-          try {
-            logger.debug('Got db info from api.')
+      logger.debug('Called url: ' + url.toString());
 
-            let response_body = Buffer.concat(chunks_of_data)
-            resolve(response_body.toString())
-          } catch (e) {
-            logger.warn(`API. Db info end: %s.`, e.message)
-            reject(e)
+      let chunks_of_data = [];
+
+      http
+        .get(url.toString(), (res) => {
+          // Reject on any non-2xx status code
+          if (res.statusCode < 200 || res.statusCode >= 300) {
+            logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString());
+            return reject(new Error(`HTTP Error ${res.statusCode}`));
           }
+
+          res.on('data', (chunk) => {
+            chunks_of_data.push(chunk);
+          });
+
+          res.on('end', () => {
+            try {
+              logger.debug('API. Got db info from API. Url: %s', url.toString());
+              const response_body = Buffer.concat(chunks_of_data);
+              resolve(response_body.toString());
+            } catch (e) {
+              logger.warn('API. Db info processing error: %s', e.message);
+              reject(e);
+            }
+          });
         })
-      })
-      .on('error', (e) => {
-        logger.warn(`API. Db info error: %s.`, e.message)
-        reject(e)
-      })
-  })
+        .on('error', (e) => {
+          logger.error("API, can't get db info from API: %s.", e.message);
+          reject(e);
+        });
+    } catch (e) {
+      logger.error('Error constructing URL or making request: %s.', e.message);
+      reject(e);
+    }
+  });
 }
 
 /**
@@ -592,4 +618,3 @@ export async function sibHttpClientRundownSelect(baseUrl, rundownId, token, devi
     }
   });
 }
-

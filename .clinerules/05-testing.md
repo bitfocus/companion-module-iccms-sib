@@ -1,4 +1,4 @@
-# Jest and Faker Testing Guide
+# Testing Guide
 
 ## Documentation References
 
