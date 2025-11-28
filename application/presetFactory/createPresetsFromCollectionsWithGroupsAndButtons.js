@@ -1,4 +1,5 @@
 import { createPresetFromButton } from './createPresetFromButton.js'
+import { combineRgb } from '@companion-module/base'
 
 /**
  * Create presets from collection with groups and buttons.
@@ -16,32 +17,68 @@ export function createPresetsFromCollectionsWithGroupsAndButtons(collections, si
   }
   const presets = {}
 
-  // Helper to sanitize names (replace spaces with underscores)
+  // Forward slashes are used as separators, remove them from names.
   function sanitizeName(name) {
-    return (name || '').replace(/\s+/g, '_')
+    return (name || '').replace(/\//g, '')
   }
 
   collections.forEach((qbCollection) => {
     const collectionName = qbCollection.Text || 'Unnamed_Collection'
     const collectionId = qbCollection.Id || 'noid'
     const sanitizedCollectionName = sanitizeName(collectionName)
+    
+    // Create collection button at top level
+    const collectionCategory = 'QuickButtons'
+    presets[`collection_${collectionId}`] = {
+      type: 'button',
+      category: collectionCategory,
+      name: collectionName,
+      style: {
+        text: collectionName,
+        size: 'auto',
+        color: combineRgb(255, 255, 255),
+        bgcolor: combineRgb(0, 0, 0),
+      },
+      steps: [{ down: [], up: [] }],
+      feedbacks: [],
+    }
+    
     qbCollection.Groups.forEach((qbGroup) => {
       const groupName = qbGroup.ButtonText || 'Unnamed_Group'
       const sanitizedGroupName = sanitizeName(groupName)
-      const category = `QuickButtons/${sanitizedCollectionName}/${sanitizedGroupName}`
+      const groupId = qbGroup.Id || 'noid'
+      
+      // Create group button under collection
+      const groupCategory = `${collectionCategory}/${sanitizedCollectionName}`
+      presets[`group_${collectionId}_${groupId}`] = {
+        type: 'button',
+        category: groupCategory,
+        name: groupName,
+        style: {
+          text: groupName,
+          size: 'auto',
+          color: combineRgb(255, 255, 255),
+          bgcolor: combineRgb(0, 0, 0),
+        },
+        steps: [{ down: [], up: [] }],
+        feedbacks: [],
+      }
+      
+      // Create buttons under group
+      const buttonCategory = `${groupCategory}/${sanitizedGroupName}`
 
       // Header for the group
-      const headerId = `header_${collectionId}_${qbGroup.Id || 'noid'}`
+      const headerId = `header_${collectionId}_${groupId}`
       presets[headerId] = {
         type: 'text',
-        category,
+        category: buttonCategory,
         name: groupName,
         text: 'Move this button to the canvas to activate',
       }
 
-      // Buttons in group
+      // Individual buttons in group
       qbGroup.Buttons.forEach((qb) => {
-        const presetQb = createPresetFromButton(category, qb, sibIcons)
+        const presetQb = createPresetFromButton(buttonCategory, qb, sibIcons)
         if (presetQb != null) {
           presets[`preset_qb_${qb.Id}`] = presetQb
         }
