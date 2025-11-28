@@ -27,29 +27,13 @@ export function createPresetsFromCollectionsWithGroupsAndButtons(collections, si
     const collectionId = qbCollection.Id || 'noid'
     const sanitizedCollectionName = sanitizeName(collectionName)
     
-    // Create collection button at top level
-    const collectionCategory = 'QuickButtons'
-    presets[`collection_${collectionId}`] = {
-      type: 'button',
-      category: collectionCategory,
-      name: collectionName,
-      style: {
-        text: collectionName,
-        size: 'auto',
-        color: combineRgb(255, 255, 255),
-        bgcolor: combineRgb(0, 0, 0),
-      },
-      steps: [{ down: [], up: [] }],
-      feedbacks: [],
-    }
-    
     qbCollection.Groups.forEach((qbGroup) => {
       const groupName = qbGroup.ButtonText || 'Unnamed_Group'
       const sanitizedGroupName = sanitizeName(groupName)
       const groupId = qbGroup.Id || 'noid'
       
-      // Create group button under collection
-      const groupCategory = `${collectionCategory}/${sanitizedCollectionName}`
+      // Create group button under QuickButtons/CollectionName
+      const groupCategory = `QuickButtons/${sanitizedCollectionName}`
       presets[`group_${collectionId}_${groupId}`] = {
         type: 'button',
         category: groupCategory,

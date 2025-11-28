@@ -51,16 +51,11 @@ describe('Create preset from collection with groups and buttons', () => {
 
 		// assert
 		const actualKeys = Object.keys(actual)
-		// Now creates hierarchical structure: collection button, group button, header, and individual button
-		expect(actualKeys).toHaveLength(4)
-		expect(actualKeys).toContain('collection_111')
+		// Now creates hierarchical structure: group button, header, and individual button
+		expect(actualKeys).toHaveLength(3)
 		expect(actualKeys).toContain('group_111_11')
 		expect(actualKeys).toContain('header_111_11')
 		expect(actualKeys).toContain('preset_qb_1')
-		
-		// Verify collection button
-		expect(actual['collection_111'].type).toBe('button')
-		expect(actual['collection_111'].category).toBe('QuickButtons')
 		
 		// Verify group button
 		expect(actual['group_111_11'].type).toBe('button')
