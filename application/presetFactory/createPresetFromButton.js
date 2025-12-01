@@ -5,13 +5,20 @@ import { getForegroundColorFromBackgroundColor } from './getForegroundColorFromB
 import { logger } from '../../logger.js'
 
 /**
- * Create companion preset from qb collection with groups and buttons.
- * @param {string} parentGroupId group name with id
- * @param {apiQuickButtonInGroup} qb
- * @param {SibIcons} sibIcons
- * @returns {*} presets for setPresetDefinitions, <a href="https://github.com/bitfocus/companion-module-base/wiki/Presets">Presets</a>
+ * Creates a Companion button preset definition from a SIB API quick button object.
+ *
+ * Transforms a SIB quick button (apiQuickButtonInGroup) into a Companion preset definition,
+ * including style, icon, background/foreground color, and action mapping.
+ * Used for generating presets from SIB quick button collections/groups.
+ *
+ * @param {string} parentCategoryId - Category path for the preset (e.g., "Pages/Collection/Group").
+ * @param {apiQuickButtonInGroup} qb - Quick button object from the SIB API.
+ * {@see test/fixtures/TEST_ManyIcons-api-quickButtonCollectionsFull-QuickButton.json} for example structure.
+ * @param {SibIcons} sibIcons - Icon resolver for fetching PNG icons by ID.
+ * @returns {import('@companion-module/base').CompanionButtonPresetDefinition|null} Companion button preset definition for use with setPresetDefinitions, or null if input is invalid.
+ *          See {@link https://github.com/bitfocus/companion-module-base/wiki/Presets} for preset format.
  */
-export function createPresetFromButton(parentGroupId, qb, sibIcons) {
+export function createPresetFromButton(parentCategoryId, qb, sibIcons) {
 	if (typeof qb == 'undefined') {
 		return null
 	}
@@ -29,7 +36,7 @@ export function createPresetFromButton(parentGroupId, qb, sibIcons) {
 		 * This groups presets into categories in the ui. Try to create logical groups to help users find presets.
 		 * Collection is a top object and has no parent.
 		 */
-		category: parentGroupId,
+		category: parentCategoryId,
 
 		/**
 		 * A name for the preset. Shown to the user when they hover over it.

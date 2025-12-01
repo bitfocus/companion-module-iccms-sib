@@ -1,1 +1,1070 @@
-[{"Id":1,"CollectionId":"448fa284-737e-44c1-9a4c-0fdb2e790738","CollectionType":0,"Text":"QuickButtons","Order":0,"IconId":"window","BackgroundColorHex":"#00000000","Groups":[{"Id":1,"CollectionId":1,"GroupId":"6a7d7a44-cec5-47de-867a-b77f14d19ecc","Order":0,"ButtonText":"Group","IconId":"folder","BackgroundColorHex":"#00000000","Buttons":[{"Id":27,"EventId":27,"ButtonId":"56e702e4-4ac1-494e-a70d-b51496073f1f","ButtonText":"Button 0","Order":0,"IconId":"action","BackgroundColorHex":"#00000000","Shortcut":""},{"Id":28,"EventId":28,"ButtonId":"67343bb0-d4e3-410f-b3c5-5ce10f30f350","ButtonText":"Button 1","Order":1,"IconId":"foreground","BackgroundColorHex":"#000000","Shortcut":""},{"Id":29,"EventId":29,"ButtonId":"ae0890fd-5447-4108-8326-f45248982cc0","ButtonText":"Button 2","Order":2,"IconId":"MedialistLayer2","BackgroundColorHex":"#000000","Shortcut":""},{"Id":30,"EventId":30,"ButtonId":"f00d6d94-7187-467d-bafa-d6ebaffb8297","ButtonText":"Button 3","Order":3,"IconId":"background","BackgroundColorHex":"#000000","Shortcut":""},{"Id":31,"EventId":31,"ButtonId":"a75a9bc3-6154-46b3-8f5d-bde085f69b02","ButtonText":"Button 4","Order":4,"IconId":"controller","BackgroundColorHex":"#000000","Shortcut":""},{"Id":32,"EventId":32,"ButtonId":"83b3525e-70a0-4235-87df-e683713dc80b","ButtonText":"Button 5","Order":5,"IconId":"overlay_track","BackgroundColorHex":"#000000","Shortcut":""},{"Id":33,"EventId":33,"ButtonId":"f868c3f2-d301-462c-9a61-ca4a55a0ab5b","ButtonText":"Button 6","Order":6,"IconId":"overlay_track_manager","BackgroundColorHex":"#000000","Shortcut":""},{"Id":34,"EventId":34,"ButtonId":"e1fe6328-90e7-4531-b048-036efd42f971","ButtonText":"Button 7","Order":7,"IconId":"window","BackgroundColorHex":"#000000","Shortcut":""},{"Id":35,"EventId":35,"ButtonId":"3b83ab9f-00f2-47d6-87fd-eceb21ab323a","ButtonText":"Button 8","Order":8,"IconId":"ntcs_bars","BackgroundColorHex":"#000000","Shortcut":""},{"Id":36,"EventId":36,"ButtonId":"f25fd044-ea77-4055-b30b-301bc641f754","ButtonText":"Button 9","Order":9,"IconId":"video_card","BackgroundColorHex":"#000000","Shortcut":""},{"Id":37,"EventId":37,"ButtonId":"78c4834b-dbc8-4d2b-90e1-c018c33d0ec3","ButtonText":"Button 10","Order":10,"IconId":"video2","BackgroundColorHex":"#000000","Shortcut":""},{"Id":38,"EventId":38,"ButtonId":"d8bb88c8-f27d-410e-9727-43106b3d1a21","ButtonText":"Button 11","Order":11,"IconId":"camcoder","BackgroundColorHex":"#000000","Shortcut":""},{"Id":39,"EventId":39,"ButtonId":"99fbe007-6246-4e7f-b61c-8577a2f5bc7e","ButtonText":"Button 12","Order":12,"IconId":"record2","BackgroundColorHex":"#000000","Shortcut":""},{"Id":40,"EventId":40,"ButtonId":"9760c272-45e7-4917-a71b-3d1b851c5348","ButtonText":"Button 13","Order":13,"IconId":"graphic_editor","BackgroundColorHex":"#000000","Shortcut":""},{"Id":41,"EventId":41,"ButtonId":"fcb51bc1-2591-4d8f-b8b6-c5eedc824936","ButtonText":"Button 14","Order":14,"IconId":"combined_output","BackgroundColorHex":"#000000","Shortcut":""},{"Id":42,"EventId":42,"ButtonId":"9f3d43fe-ec86-4d4e-9756-77781ad5ffd9","ButtonText":"Button 15","Order":15,"IconId":"dmx","BackgroundColorHex":"#000000","Shortcut":""},{"Id":43,"EventId":43,"ButtonId":"e7d18113-3cfa-4170-9b2c-68bf9cda073c","ButtonText":"Button 16","Order":16,"IconId":"fade_out","BackgroundColorHex":"#000000","Shortcut":""},{"Id":44,"EventId":44,"ButtonId":"e064f78b-2403-43d6-9c44-e31afbf165b6","ButtonText":"Button 17","Order":17,"IconId":"play2","BackgroundColorHex":"#000000","Shortcut":""},{"Id":45,"EventId":45,"ButtonId":"b53bfa4c-5a9c-47de-bc91-4bc023d21fea","ButtonText":"Button 18","Order":18,"IconId":"pause2","BackgroundColorHex":"#000000","Shortcut":""},{"Id":46,"EventId":46,"ButtonId":"3da93b1a-bcf0-434d-bf78-0b05f94a19c4","ButtonText":"Button 19","Order":19,"IconId":"stop2","BackgroundColorHex":"#000000","Shortcut":""},{"Id":47,"EventId":47,"ButtonId":"07d6062d-df71-4e4f-a536-14814e04871d","ButtonText":"Button 20","Order":20,"IconId":"red_eye","BackgroundColorHex":"#000000","Shortcut":""},{"Id":48,"EventId":48,"ButtonId":"7d620e9f-34a2-4c39-b27a-ea27566a799d","ButtonText":"Button 21","Order":21,"IconId":"script","BackgroundColorHex":"#000000","Shortcut":""},{"Id":49,"EventId":49,"ButtonId":"9dcfb44f-1704-4a0a-8f0b-8397192da4e3","ButtonText":"Button 22","Order":22,"IconId":"video_screen","BackgroundColorHex":"#000000","Shortcut":""},{"Id":50,"EventId":50,"ButtonId":"bfdcdb69-706d-473b-8050-53fa3ca67586","ButtonText":"Button 23","Order":23,"IconId":"folder","BackgroundColorHex":"#000000","Shortcut":""},{"Id":51,"EventId":51,"ButtonId":"1e2f5acf-5987-419e-9487-3fa2d4d5831d","ButtonText":"Button 24","Order":24,"IconId":"close","BackgroundColorHex":"#000000","Shortcut":""},{"Id":52,"EventId":52,"ButtonId":"1f6891d4-b18d-4fb2-ae8f-ace805bd3878","ButtonText":"Button 25","Order":25,"IconId":"cancel","BackgroundColorHex":"#000000","Shortcut":""},{"Id":53,"EventId":53,"ButtonId":"bb702c19-a2c6-4f7d-8709-284b01638035","ButtonText":"Button 26","Order":26,"IconId":"item_file","BackgroundColorHex":"#000000","Shortcut":""},{"Id":54,"EventId":54,"ButtonId":"c57abcda-3457-4603-9f0a-4990bc426457","ButtonText":"Button 27","Order":27,"IconId":"item_video","BackgroundColorHex":"#000000","Shortcut":""},{"Id":55,"EventId":55,"ButtonId":"4d051625-0599-46a4-b054-9048ccea44be","ButtonText":"Button 28","Order":28,"IconId":"item_cg","BackgroundColorHex":"#000000","Shortcut":""},{"Id":56,"EventId":56,"ButtonId":"96b506fb-f41f-42ce-ad17-2fc57e77ec70","ButtonText":"Button 29","Order":29,"IconId":"item_webpage","BackgroundColorHex":"#000000","Shortcut":""},{"Id":57,"EventId":57,"ButtonId":"5f37fa59-b646-47d2-aa4b-5536e93c969d","ButtonText":"Button 30","Order":30,"IconId":"item_html_template","BackgroundColorHex":"#000000","Shortcut":""},{"Id":58,"EventId":58,"ButtonId":"16ad4551-82c4-46ed-97ec-afa4011dbbb2","ButtonText":"Button 31","Order":31,"IconId":"item_network_stream","BackgroundColorHex":"#000000","Shortcut":""},{"Id":59,"EventId":59,"ButtonId":"0deb5710-0401-43d6-a8b0-eab0a4efbd44","ButtonText":"Button 32","Order":32,"IconId":"playlist","BackgroundColorHex":"#000000","Shortcut":""},{"Id":60,"EventId":60,"ButtonId":"160bc921-fd01-4e6a-bed5-8d6e4c636ff3","ButtonText":"Button 33","Order":33,"IconId":"rundown","BackgroundColorHex":"#000000","Shortcut":""},{"Id":61,"EventId":61,"ButtonId":"973c2a26-331d-4d70-ac7d-ebf7b846ccf2","ButtonText":"Button 34","Order":34,"IconId":"CommonOk","BackgroundColorHex":"#000000","Shortcut":""},{"Id":62,"EventId":62,"ButtonId":"01c247c4-01f5-4480-8631-8a1e2de5fa2a","ButtonText":"Button 35","Order":35,"IconId":"CommonMinus","BackgroundColorHex":"#000000","Shortcut":""},{"Id":63,"EventId":63,"ButtonId":"414a0bfa-c5b7-4cf9-a556-4423b6febee1","ButtonText":"Button 36","Order":36,"IconId":"CommonPlus","BackgroundColorHex":"#000000","Shortcut":""},{"Id":64,"EventId":64,"ButtonId":"2aea14d1-3662-49b8-9c91-9df048fbf0b0","ButtonText":"Button 37","Order":37,"IconId":"VictoryCeremony","BackgroundColorHex":"#000000","Shortcut":""}]},{"Id":4,"CollectionId":1,"GroupId":"ac2a131c-d116-4463-ac2f-419283e90f64","Order":1,"ButtonText":"Buttons with colors","IconId":"folder","BackgroundColorHex":"#000000","Buttons":[{"Id":73,"EventId":73,"ButtonId":"1859d53d-1328-48d3-95d8-88687ba26874","ButtonText":"Button Gray","Order":0,"IconId":"action","BackgroundColorHex":"#000000","Shortcut":""},{"Id":74,"EventId":74,"ButtonId":"ca70e66c-0cdd-4912-ad99-e3f2caa134aa","ButtonText":"Button LightCoral","Order":1,"IconId":"action","BackgroundColorHex":"#FF9999FF","Shortcut":""},{"Id":75,"EventId":75,"ButtonId":"0e789f93-8465-4344-8515-1bea083f8322","ButtonText":"Button Khaki","Order":2,"IconId":"action","BackgroundColorHex":"#FFCC99FF","Shortcut":""},{"Id":76,"EventId":76,"ButtonId":"889c2f60-47f3-45d8-9cf2-37dce321d58e","ButtonText":"Button Yellow","Order":3,"IconId":"action","BackgroundColorHex":"#FFFF99FF","Shortcut":""},{"Id":77,"EventId":77,"ButtonId":"9f55cb20-dde1-44e2-bde4-fba080ce2870","ButtonText":"Button PaleGreen","Order":4,"IconId":"action","BackgroundColorHex":"#99FF99FF","Shortcut":""},{"Id":78,"EventId":78,"ButtonId":"d99a461d-5989-4975-9875-6bcae0860143","ButtonText":"Button LightSkyBlue","Order":5,"IconId":"action","BackgroundColorHex":"#99CCFFFF","Shortcut":""},{"Id":79,"EventId":79,"ButtonId":"f0944c76-7d2b-483f-a1fc-b3fe297bad51","ButtonText":"Button Plum","Order":6,"IconId":"action","BackgroundColorHex":"#CC99FFFF","Shortcut":""},{"Id":80,"EventId":80,"ButtonId":"abdc52ea-3836-4949-9493-09d1fb1d7d7e","ButtonText":"Button Violet","Order":7,"IconId":"action","BackgroundColorHex":"#FF99FEFF","Shortcut":""}]}]},{"Id":2,"CollectionId":"cfa30d15-e87e-4c37-913c-e21e04a3dc77","CollectionType":1,"Text":"Page ID 2 - Group colors","Order":1,"IconId":"window","BackgroundColorHex":"#000000","Groups":[{"Id":2,"CollectionId":2,"GroupId":"dff3b1cf-419e-409c-988f-709116292bb6","Order":0,"ButtonText":"Page 2 Group 1 - Grey","IconId":"folder","BackgroundColorHex":"#000000","Buttons":[{"Id":65,"EventId":65,"ButtonId":"c20e175b-021f-4714-bde8-10081f26bdf9","ButtonText":"Button 36","Order":0,"IconId":"action","BackgroundColorHex":"#000000","Shortcut":""}]},{"Id":7,"CollectionId":2,"GroupId":"449a76a1-d2a8-4fde-8686-c4335c8fe7b2","Order":1,"ButtonText":"Page 2 Group 2 - LightCoral","IconId":"folder","BackgroundColorHex":"#FF9999","Buttons":[{"Id":81,"EventId":81,"ButtonId":"2332826e-f606-44a2-ab4b-3395b76f0e2f","ButtonText":"Button 0","Order":0,"IconId":"action","BackgroundColorHex":"#00000000","Shortcut":""}]},{"Id":8,"CollectionId":2,"GroupId":"9cf781a3-a8e7-4cd3-8538-d019efb81a34","Order":2,"ButtonText":"Page 2 Group 3 - Khaki","IconId":"folder","BackgroundColorHex":"#FFCC99","Buttons":[{"Id":82,"EventId":82,"ButtonId":"077eaedc-7d1f-4cd4-b86b-ffbe2c3b2cd6","ButtonText":"Button 0","Order":0,"IconId":"action","BackgroundColorHex":"#00000000","Shortcut":""}]},{"Id":9,"CollectionId":2,"GroupId":"4c349fab-ed0b-4d1a-81ca-6165bd1f4749","Order":3,"ButtonText":"Page 2 Group 4 - Yellow","IconId":"folder","BackgroundColorHex":"#FFFF99","Buttons":[{"Id":83,"EventId":83,"ButtonId":"90c5af94-7642-44d6-9784-fa5fe126bb37","ButtonText":"Button 0","Order":0,"IconId":"action","BackgroundColorHex":"#00000000","Shortcut":""}]},{"Id":10,"CollectionId":2,"GroupId":"1ca517aa-efba-49c4-86e4-bd7459f672de","Order":4,"ButtonText":"Page 2 Group 5 - PaleGreen","IconId":"folder","BackgroundColorHex":"#99FF99","Buttons":[{"Id":84,"EventId":84,"ButtonId":"1e2f1bc4-bedf-4fa4-bc03-2c26c1039298","ButtonText":"Button 0","Order":0,"IconId":"action","BackgroundColorHex":"#00000000","Shortcut":""}]},{"Id":11,"CollectionId":2,"GroupId":"82cbb623-29b0-4752-a4e5-8185aa8cdaf1","Order":5,"ButtonText":"Page 2 Group 6 - LightSkyBlue","IconId":"folder","BackgroundColorHex":"#99CCFF","Buttons":[{"Id":85,"EventId":85,"ButtonId":"0e58abac-ea0c-4863-a9fc-17e9c22ba401","ButtonText":"Button 0","Order":0,"IconId":"action","BackgroundColorHex":"#00000000","Shortcut":""}]},{"Id":12,"CollectionId":2,"GroupId":"ff0d2199-9b4b-40d2-8045-c4e78124c120","Order":6,"ButtonText":"Page 2 Group 7 - Plum","IconId":"folder","BackgroundColorHex":"#000000","Buttons":[{"Id":86,"EventId":86,"ButtonId":"9e7ad269-27ad-402e-801a-234d7dbfe099","ButtonText":"Button 0","Order":0,"IconId":"action","BackgroundColorHex":"#00000000","Shortcut":""}]},{"Id":13,"CollectionId":2,"GroupId":"48cfa697-b26d-4c7f-9311-f5cb5475897e","Order":7,"ButtonText":"Page 2 Group 8 - Violet","IconId":"folder","BackgroundColorHex":"#FF99FE","Buttons":[{"Id":87,"EventId":87,"ButtonId":"dbd51452-55da-477f-90ad-6238bb42a95f","ButtonText":"Button 0","Order":0,"IconId":"action","BackgroundColorHex":"#00000000","Shortcut":""}]}]},{"Id":4,"CollectionId":"e187ede8-7698-472d-a75f-c8bab46c3eef","CollectionType":1,"Text":"Page ID 4 - Coral","Order":2,"IconId":"window","BackgroundColorHex":"#FF9999","Groups":[{"Id":5,"CollectionId":4,"GroupId":"3625b080-34c1-4b6b-9380-5eb2099c9bfa","Order":0,"ButtonText":"Page 4, Group 1","IconId":"folder","BackgroundColorHex":"#000000","Buttons":[{"Id":88,"EventId":88,"ButtonId":"2a961ab5-2de8-4f91-adf0-37ee1164744a","ButtonText":"Button 2","Order":0,"IconId":"foreground","BackgroundColorHex":"#000000","Shortcut":""}]}]},{"Id":5,"CollectionId":"99660a80-1bd4-4602-87a7-9755dba59c36","CollectionType":1,"Text":"Page ID 5 - Khaki","Order":3,"IconId":"window","BackgroundColorHex":"#FFCC99","Groups":[{"Id":6,"CollectionId":5,"GroupId":"214e851c-9e2c-4f95-9dc3-51392f909373","Order":0,"ButtonText":"Page 5, Group 1","IconId":"folder","BackgroundColorHex":"#000000","Buttons":[{"Id":92,"EventId":92,"ButtonId":"59d45284-ee2a-4d35-be75-7c21d1d0f4bf","ButtonText":"Button 0","Order":0,"IconId":"MedialistLayer2","BackgroundColorHex":"#000000","Shortcut":""}]}]},{"Id":6,"CollectionId":"d0997fd0-beff-49e3-a394-b1a38fe78035","CollectionType":1,"Text":"Page ID 6 - Yellow","Order":4,"IconId":"window","BackgroundColorHex":"#FFFF99","Groups":[{"Id":14,"CollectionId":6,"GroupId":"07fe5b4c-d7fc-4263-87f1-74dfe3c53550","Order":0,"ButtonText":"Page 6, Group 1","IconId":"folder","BackgroundColorHex":"#000000","Buttons":[{"Id":89,"EventId":89,"ButtonId":"ad3fcd80-fec9-4ea6-9e8c-b8e69c73cb56","ButtonText":"Button 0","Order":0,"IconId":"background","BackgroundColorHex":"#000000","Shortcut":""}]}]},{"Id":7,"CollectionId":"2eb34a06-accd-4fe6-af87-3e0a7ecaf137","CollectionType":1,"Text":"Page ID 7 - PaleGreen","Order":5,"IconId":"window","BackgroundColorHex":"#99FF99","Groups":[{"Id":15,"CollectionId":7,"GroupId":"b87836c9-cad6-4f4f-87eb-f2b35c94bec5","Order":0,"ButtonText":"Page 7, Group 1","IconId":"folder","BackgroundColorHex":"#000000","Buttons":[{"Id":93,"EventId":93,"ButtonId":"a644149d-3796-4cd3-8190-6c80adbd4d49","ButtonText":"Button 0","Order":0,"IconId":"controller","BackgroundColorHex":"#000000","Shortcut":""}]}]},{"Id":8,"CollectionId":"9ede1040-7d9d-4718-a448-bf93e4a9e560","CollectionType":1,"Text":"Page ID 8 - LightSkyBlue","Order":6,"IconId":"window","BackgroundColorHex":"#99CCFF","Groups":[{"Id":16,"CollectionId":8,"GroupId":"5d658ed5-25d8-4095-a804-de152c8ca8c0","Order":0,"ButtonText":"Page 8, Group 1","IconId":"folder","BackgroundColorHex":"#000000","Buttons":[{"Id":90,"EventId":90,"ButtonId":"14c23a5d-503f-46b8-a85c-6c7ee46904c4","ButtonText":"Button 0","Order":0,"IconId":"overlay_track","BackgroundColorHex":"#000000","Shortcut":""}]}]},{"Id":9,"CollectionId":"fb650cac-4d69-4160-9eec-33112c28d34e","CollectionType":1,"Text":"Page ID 9 - Plum","Order":7,"IconId":"window","BackgroundColorHex":"#CC99FF","Groups":[{"Id":17,"CollectionId":9,"GroupId":"207997eb-4c0d-45df-9a6c-29d4ca76e883","Order":0,"ButtonText":"Page 9, Group 1","IconId":"folder","BackgroundColorHex":"#000000","Buttons":[{"Id":91,"EventId":91,"ButtonId":"7cc50b56-2746-481e-b284-a37731990ae2","ButtonText":"Button 0","Order":0,"IconId":"overlay_track_manager","BackgroundColorHex":"#000000","Shortcut":""}]}]},{"Id":10,"CollectionId":"6b9765db-2de7-47f8-97af-04f6894e5040","CollectionType":1,"Text":"Page ID 10 - Violet","Order":8,"IconId":"window","BackgroundColorHex":"#FF99FE","Groups":[{"Id":18,"CollectionId":10,"GroupId":"efb15ffd-4804-4ab3-99c2-d4b9ed67a8ac","Order":0,"ButtonText":"Page 10, Group 1","IconId":"folder","BackgroundColorHex":"#000000","Buttons":[{"Id":94,"EventId":94,"ButtonId":"f9f409d5-46cd-4cde-9604-c19a39f14317","ButtonText":"Button 0","Order":0,"IconId":"window","BackgroundColorHex":"#000000","Shortcut":""}]}]},{"Id":-2,"CollectionId":"","CollectionType":2,"Text":"Sport","Order":-1,"IconId":"window","BackgroundColorHex":"#00000000","Groups":[{"Id":-1,"CollectionId":-1,"GroupId":"","Order":0,"ButtonText":"Icehockey","IconId":"ICEHOCKEY","BackgroundColorHex":"#000000","Buttons":[{"Id":1,"EventId":1,"ButtonId":"3abcc016-1f1a-4dca-9ea3-9540b7fcf057","ButtonText":"Next home match","Order":0,"IconId":"NextHomeMatch","BackgroundColorHex":"#000000","Shortcut":""},{"Id":2,"EventId":2,"ButtonId":"0543e6d9-6bae-4036-bc31-6100296e7121","ButtonText":"Other matches","Order":0,"IconId":"OtherMatches","BackgroundColorHex":"#000000","Shortcut":""},{"Id":3,"EventId":3,"ButtonId":"5822269e-81f5-4677-b0f8-2168218fd80d","ButtonText":"End of match","Order":0,"IconId":"EndOfMatch","BackgroundColorHex":"#000000","Shortcut":""},{"Id":4,"EventId":4,"ButtonId":"0ca64f4d-c0ec-41c4-b3b6-62f7a3d0e62e","ButtonText":"Pause","Order":0,"IconId":"Pause","BackgroundColorHex":"#000000","Shortcut":""},{"Id":5,"EventId":5,"ButtonId":"9907b32a-e314-427e-99ee-b0ac11015063","ButtonText":"Match countdown","Order":0,"IconId":"MatchCountdown","BackgroundColorHex":"#000000","Shortcut":""},{"Id":6,"EventId":6,"ButtonId":"5315f003-9110-490e-926d-f935e8c533a2","ButtonText":"Scoreboard","Order":0,"IconId":"Scoreboard","BackgroundColorHex":"#000000","Shortcut":""},{"Id":7,"EventId":7,"ButtonId":"4a486328-7dce-4f04-ab99-789fba1ad3fe","ButtonText":"Referees","Order":0,"IconId":"Referees","BackgroundColorHex":"#000000","Shortcut":""},{"Id":8,"EventId":8,"ButtonId":"57923be6-7aa0-4eb7-be21-706b76b19588","ButtonText":"Clear data","Order":0,"IconId":"RunningTimeClear","BackgroundColorHex":"#000000","Shortcut":""},{"Id":20,"EventId":20,"ButtonId":"c4ad8509-51a3-4ea4-8b05-e06b4efb03a9","ButtonText":"Goal","Order":0,"IconId":"Referees","BackgroundColorHex":"#000000","Shortcut":""},{"Id":21,"EventId":21,"ButtonId":"4fae01da-cfc6-4987-819d-881c0496e636","ButtonText":"10 min penalty","Order":0,"IconId":"PenaltyClock","BackgroundColorHex":"#000000","Shortcut":""},{"Id":23,"EventId":23,"ButtonId":"7cdf58b4-b433-4654-bc2d-e950d125f545","ButtonText":"Lineup all","Order":0,"IconId":"TeamPresentationLineUpAll","BackgroundColorHex":"#000000","Shortcut":""},{"Id":24,"EventId":24,"ButtonId":"343fb847-57d0-44ce-a35c-002367e0b1ff","ButtonText":"5 min penalty","Order":0,"IconId":"PenaltyClock","BackgroundColorHex":"#000000","Shortcut":""},{"Id":25,"EventId":25,"ButtonId":"b3228762-1cf0-42a2-8295-c4ea670ce7e4","ButtonText":"2 min penalty","Order":0,"IconId":"PenaltyClock","BackgroundColorHex":"#000000","Shortcut":""},{"Id":26,"EventId":26,"ButtonId":"cc3f9f5e-303b-4421-84ad-acaa5f3a28d0","ButtonText":"Name pres","Order":0,"IconId":"NamePresentation","BackgroundColorHex":"#000000","Shortcut":""}]},{"Id":-2,"CollectionId":-1,"GroupId":"","Order":0,"ButtonText":"Ice hockey user buttons","IconId":"FOOTBALL","BackgroundColorHex":"#000000","Buttons":[]}]}]
+[
+	{
+		"Id": 1,
+		"CollectionId": "448fa284-737e-44c1-9a4c-0fdb2e790738",
+		"CollectionType": 0,
+		"Text": "QuickButtons",
+		"Order": 0,
+		"IconId": "window",
+		"BackgroundColorHex": "#00000000",
+		"Groups": [
+			{
+				"Id": 1,
+				"CollectionId": 1,
+				"GroupId": "6a7d7a44-cec5-47de-867a-b77f14d19ecc",
+				"Order": 0,
+				"ButtonText": "Group",
+				"IconId": "folder",
+				"BackgroundColorHex": "#00000000",
+				"Buttons": [
+					{
+						"Id": 27,
+						"EventId": 27,
+						"ButtonId": "56e702e4-4ac1-494e-a70d-b51496073f1f",
+						"ButtonText": "Button 0",
+						"Order": 0,
+						"IconId": "action",
+						"BackgroundColorHex": "#00000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 28,
+						"EventId": 28,
+						"ButtonId": "67343bb0-d4e3-410f-b3c5-5ce10f30f350",
+						"ButtonText": "Button 1",
+						"Order": 1,
+						"IconId": "foreground",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 29,
+						"EventId": 29,
+						"ButtonId": "ae0890fd-5447-4108-8326-f45248982cc0",
+						"ButtonText": "Button 2",
+						"Order": 2,
+						"IconId": "MedialistLayer2",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 30,
+						"EventId": 30,
+						"ButtonId": "f00d6d94-7187-467d-bafa-d6ebaffb8297",
+						"ButtonText": "Button 3",
+						"Order": 3,
+						"IconId": "background",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 31,
+						"EventId": 31,
+						"ButtonId": "a75a9bc3-6154-46b3-8f5d-bde085f69b02",
+						"ButtonText": "Button 4",
+						"Order": 4,
+						"IconId": "controller",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 32,
+						"EventId": 32,
+						"ButtonId": "83b3525e-70a0-4235-87df-e683713dc80b",
+						"ButtonText": "Button 5",
+						"Order": 5,
+						"IconId": "overlay_track",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 33,
+						"EventId": 33,
+						"ButtonId": "f868c3f2-d301-462c-9a61-ca4a55a0ab5b",
+						"ButtonText": "Button 6",
+						"Order": 6,
+						"IconId": "overlay_track_manager",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 34,
+						"EventId": 34,
+						"ButtonId": "e1fe6328-90e7-4531-b048-036efd42f971",
+						"ButtonText": "Button 7",
+						"Order": 7,
+						"IconId": "window",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 35,
+						"EventId": 35,
+						"ButtonId": "3b83ab9f-00f2-47d6-87fd-eceb21ab323a",
+						"ButtonText": "Button 8",
+						"Order": 8,
+						"IconId": "ntcs_bars",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 36,
+						"EventId": 36,
+						"ButtonId": "f25fd044-ea77-4055-b30b-301bc641f754",
+						"ButtonText": "Button 9",
+						"Order": 9,
+						"IconId": "video_card",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 37,
+						"EventId": 37,
+						"ButtonId": "78c4834b-dbc8-4d2b-90e1-c018c33d0ec3",
+						"ButtonText": "Button 10",
+						"Order": 10,
+						"IconId": "video2",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 38,
+						"EventId": 38,
+						"ButtonId": "d8bb88c8-f27d-410e-9727-43106b3d1a21",
+						"ButtonText": "Button 11",
+						"Order": 11,
+						"IconId": "camcoder",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 39,
+						"EventId": 39,
+						"ButtonId": "99fbe007-6246-4e7f-b61c-8577a2f5bc7e",
+						"ButtonText": "Button 12",
+						"Order": 12,
+						"IconId": "record2",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 40,
+						"EventId": 40,
+						"ButtonId": "9760c272-45e7-4917-a71b-3d1b851c5348",
+						"ButtonText": "Button 13",
+						"Order": 13,
+						"IconId": "graphic_editor",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 41,
+						"EventId": 41,
+						"ButtonId": "fcb51bc1-2591-4d8f-b8b6-c5eedc824936",
+						"ButtonText": "Button 14",
+						"Order": 14,
+						"IconId": "combined_output",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 42,
+						"EventId": 42,
+						"ButtonId": "9f3d43fe-ec86-4d4e-9756-77781ad5ffd9",
+						"ButtonText": "Button 15",
+						"Order": 15,
+						"IconId": "dmx",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 43,
+						"EventId": 43,
+						"ButtonId": "e7d18113-3cfa-4170-9b2c-68bf9cda073c",
+						"ButtonText": "Button 16",
+						"Order": 16,
+						"IconId": "fade_out",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 44,
+						"EventId": 44,
+						"ButtonId": "e064f78b-2403-43d6-9c44-e31afbf165b6",
+						"ButtonText": "Button 17",
+						"Order": 17,
+						"IconId": "play2",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 45,
+						"EventId": 45,
+						"ButtonId": "b53bfa4c-5a9c-47de-bc91-4bc023d21fea",
+						"ButtonText": "Button 18",
+						"Order": 18,
+						"IconId": "pause2",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 46,
+						"EventId": 46,
+						"ButtonId": "3da93b1a-bcf0-434d-bf78-0b05f94a19c4",
+						"ButtonText": "Button 19",
+						"Order": 19,
+						"IconId": "stop2",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 47,
+						"EventId": 47,
+						"ButtonId": "07d6062d-df71-4e4f-a536-14814e04871d",
+						"ButtonText": "Button 20",
+						"Order": 20,
+						"IconId": "red_eye",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 48,
+						"EventId": 48,
+						"ButtonId": "7d620e9f-34a2-4c39-b27a-ea27566a799d",
+						"ButtonText": "Button 21",
+						"Order": 21,
+						"IconId": "script",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 49,
+						"EventId": 49,
+						"ButtonId": "9dcfb44f-1704-4a0a-8f0b-8397192da4e3",
+						"ButtonText": "Button 22",
+						"Order": 22,
+						"IconId": "video_screen",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 50,
+						"EventId": 50,
+						"ButtonId": "bfdcdb69-706d-473b-8050-53fa3ca67586",
+						"ButtonText": "Button 23",
+						"Order": 23,
+						"IconId": "folder",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 51,
+						"EventId": 51,
+						"ButtonId": "1e2f5acf-5987-419e-9487-3fa2d4d5831d",
+						"ButtonText": "Button 24",
+						"Order": 24,
+						"IconId": "close",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 52,
+						"EventId": 52,
+						"ButtonId": "1f6891d4-b18d-4fb2-ae8f-ace805bd3878",
+						"ButtonText": "Button 25",
+						"Order": 25,
+						"IconId": "cancel",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 53,
+						"EventId": 53,
+						"ButtonId": "bb702c19-a2c6-4f7d-8709-284b01638035",
+						"ButtonText": "Button 26",
+						"Order": 26,
+						"IconId": "item_file",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 54,
+						"EventId": 54,
+						"ButtonId": "c57abcda-3457-4603-9f0a-4990bc426457",
+						"ButtonText": "Button 27",
+						"Order": 27,
+						"IconId": "item_video",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 55,
+						"EventId": 55,
+						"ButtonId": "4d051625-0599-46a4-b054-9048ccea44be",
+						"ButtonText": "Button 28",
+						"Order": 28,
+						"IconId": "item_cg",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 56,
+						"EventId": 56,
+						"ButtonId": "96b506fb-f41f-42ce-ad17-2fc57e77ec70",
+						"ButtonText": "Button 29",
+						"Order": 29,
+						"IconId": "item_webpage",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 57,
+						"EventId": 57,
+						"ButtonId": "5f37fa59-b646-47d2-aa4b-5536e93c969d",
+						"ButtonText": "Button 30",
+						"Order": 30,
+						"IconId": "item_html_template",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 58,
+						"EventId": 58,
+						"ButtonId": "16ad4551-82c4-46ed-97ec-afa4011dbbb2",
+						"ButtonText": "Button 31",
+						"Order": 31,
+						"IconId": "item_network_stream",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 59,
+						"EventId": 59,
+						"ButtonId": "0deb5710-0401-43d6-a8b0-eab0a4efbd44",
+						"ButtonText": "Button 32",
+						"Order": 32,
+						"IconId": "playlist",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 60,
+						"EventId": 60,
+						"ButtonId": "160bc921-fd01-4e6a-bed5-8d6e4c636ff3",
+						"ButtonText": "Button 33",
+						"Order": 33,
+						"IconId": "rundown",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 61,
+						"EventId": 61,
+						"ButtonId": "973c2a26-331d-4d70-ac7d-ebf7b846ccf2",
+						"ButtonText": "Button 34",
+						"Order": 34,
+						"IconId": "CommonOk",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 62,
+						"EventId": 62,
+						"ButtonId": "01c247c4-01f5-4480-8631-8a1e2de5fa2a",
+						"ButtonText": "Button 35",
+						"Order": 35,
+						"IconId": "CommonMinus",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 63,
+						"EventId": 63,
+						"ButtonId": "414a0bfa-c5b7-4cf9-a556-4423b6febee1",
+						"ButtonText": "Button 36",
+						"Order": 36,
+						"IconId": "CommonPlus",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 64,
+						"EventId": 64,
+						"ButtonId": "2aea14d1-3662-49b8-9c91-9df048fbf0b0",
+						"ButtonText": "Button 37",
+						"Order": 37,
+						"IconId": "VictoryCeremony",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					}
+				]
+			},
+			{
+				"Id": 4,
+				"CollectionId": 1,
+				"GroupId": "ac2a131c-d116-4463-ac2f-419283e90f64",
+				"Order": 1,
+				"ButtonText": "Buttons with colors",
+				"IconId": "folder",
+				"BackgroundColorHex": "#000000",
+				"Buttons": [
+					{
+						"Id": 73,
+						"EventId": 73,
+						"ButtonId": "1859d53d-1328-48d3-95d8-88687ba26874",
+						"ButtonText": "Button Gray",
+						"Order": 0,
+						"IconId": "action",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 74,
+						"EventId": 74,
+						"ButtonId": "ca70e66c-0cdd-4912-ad99-e3f2caa134aa",
+						"ButtonText": "Button LightCoral",
+						"Order": 1,
+						"IconId": "action",
+						"BackgroundColorHex": "#FF9999FF",
+						"Shortcut": ""
+					},
+					{
+						"Id": 75,
+						"EventId": 75,
+						"ButtonId": "0e789f93-8465-4344-8515-1bea083f8322",
+						"ButtonText": "Button Khaki",
+						"Order": 2,
+						"IconId": "action",
+						"BackgroundColorHex": "#FFCC99FF",
+						"Shortcut": ""
+					},
+					{
+						"Id": 76,
+						"EventId": 76,
+						"ButtonId": "889c2f60-47f3-45d8-9cf2-37dce321d58e",
+						"ButtonText": "Button Yellow",
+						"Order": 3,
+						"IconId": "action",
+						"BackgroundColorHex": "#FFFF99FF",
+						"Shortcut": ""
+					},
+					{
+						"Id": 77,
+						"EventId": 77,
+						"ButtonId": "9f55cb20-dde1-44e2-bde4-fba080ce2870",
+						"ButtonText": "Button PaleGreen",
+						"Order": 4,
+						"IconId": "action",
+						"BackgroundColorHex": "#99FF99FF",
+						"Shortcut": ""
+					},
+					{
+						"Id": 78,
+						"EventId": 78,
+						"ButtonId": "d99a461d-5989-4975-9875-6bcae0860143",
+						"ButtonText": "Button LightSkyBlue",
+						"Order": 5,
+						"IconId": "action",
+						"BackgroundColorHex": "#99CCFFFF",
+						"Shortcut": ""
+					},
+					{
+						"Id": 79,
+						"EventId": 79,
+						"ButtonId": "f0944c76-7d2b-483f-a1fc-b3fe297bad51",
+						"ButtonText": "Button Plum",
+						"Order": 6,
+						"IconId": "action",
+						"BackgroundColorHex": "#CC99FFFF",
+						"Shortcut": ""
+					},
+					{
+						"Id": 80,
+						"EventId": 80,
+						"ButtonId": "abdc52ea-3836-4949-9493-09d1fb1d7d7e",
+						"ButtonText": "Button Violet",
+						"Order": 7,
+						"IconId": "action",
+						"BackgroundColorHex": "#FF99FEFF",
+						"Shortcut": ""
+					}
+				]
+			}
+		]
+	},
+	{
+		"Id": 2,
+		"CollectionId": "cfa30d15-e87e-4c37-913c-e21e04a3dc77",
+		"CollectionType": 1,
+		"Text": "Page ID 2 - Group colors",
+		"Order": 1,
+		"IconId": "window",
+		"BackgroundColorHex": "#000000",
+		"Groups": [
+			{
+				"Id": 2,
+				"CollectionId": 2,
+				"GroupId": "dff3b1cf-419e-409c-988f-709116292bb6",
+				"Order": 0,
+				"ButtonText": "Page 2 Group 1 - Grey",
+				"IconId": "folder",
+				"BackgroundColorHex": "#000000",
+				"Buttons": [
+					{
+						"Id": 65,
+						"EventId": 65,
+						"ButtonId": "c20e175b-021f-4714-bde8-10081f26bdf9",
+						"ButtonText": "Button 36",
+						"Order": 0,
+						"IconId": "action",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					}
+				]
+			},
+			{
+				"Id": 7,
+				"CollectionId": 2,
+				"GroupId": "449a76a1-d2a8-4fde-8686-c4335c8fe7b2",
+				"Order": 1,
+				"ButtonText": "Page 2 Group 2 - LightCoral",
+				"IconId": "folder",
+				"BackgroundColorHex": "#FF9999",
+				"Buttons": [
+					{
+						"Id": 81,
+						"EventId": 81,
+						"ButtonId": "2332826e-f606-44a2-ab4b-3395b76f0e2f",
+						"ButtonText": "Button 0",
+						"Order": 0,
+						"IconId": "action",
+						"BackgroundColorHex": "#00000000",
+						"Shortcut": ""
+					}
+				]
+			},
+			{
+				"Id": 8,
+				"CollectionId": 2,
+				"GroupId": "9cf781a3-a8e7-4cd3-8538-d019efb81a34",
+				"Order": 2,
+				"ButtonText": "Page 2 Group 3 - Khaki",
+				"IconId": "folder",
+				"BackgroundColorHex": "#FFCC99",
+				"Buttons": [
+					{
+						"Id": 82,
+						"EventId": 82,
+						"ButtonId": "077eaedc-7d1f-4cd4-b86b-ffbe2c3b2cd6",
+						"ButtonText": "Button 0",
+						"Order": 0,
+						"IconId": "action",
+						"BackgroundColorHex": "#00000000",
+						"Shortcut": ""
+					}
+				]
+			},
+			{
+				"Id": 9,
+				"CollectionId": 2,
+				"GroupId": "4c349fab-ed0b-4d1a-81ca-6165bd1f4749",
+				"Order": 3,
+				"ButtonText": "Page 2 Group 4 - Yellow",
+				"IconId": "folder",
+				"BackgroundColorHex": "#FFFF99",
+				"Buttons": [
+					{
+						"Id": 83,
+						"EventId": 83,
+						"ButtonId": "90c5af94-7642-44d6-9784-fa5fe126bb37",
+						"ButtonText": "Button 0",
+						"Order": 0,
+						"IconId": "action",
+						"BackgroundColorHex": "#00000000",
+						"Shortcut": ""
+					}
+				]
+			},
+			{
+				"Id": 10,
+				"CollectionId": 2,
+				"GroupId": "1ca517aa-efba-49c4-86e4-bd7459f672de",
+				"Order": 4,
+				"ButtonText": "Page 2 Group 5 - PaleGreen",
+				"IconId": "folder",
+				"BackgroundColorHex": "#99FF99",
+				"Buttons": [
+					{
+						"Id": 84,
+						"EventId": 84,
+						"ButtonId": "1e2f1bc4-bedf-4fa4-bc03-2c26c1039298",
+						"ButtonText": "Button 0",
+						"Order": 0,
+						"IconId": "action",
+						"BackgroundColorHex": "#00000000",
+						"Shortcut": ""
+					}
+				]
+			},
+			{
+				"Id": 11,
+				"CollectionId": 2,
+				"GroupId": "82cbb623-29b0-4752-a4e5-8185aa8cdaf1",
+				"Order": 5,
+				"ButtonText": "Page 2 Group 6 - LightSkyBlue",
+				"IconId": "folder",
+				"BackgroundColorHex": "#99CCFF",
+				"Buttons": [
+					{
+						"Id": 85,
+						"EventId": 85,
+						"ButtonId": "0e58abac-ea0c-4863-a9fc-17e9c22ba401",
+						"ButtonText": "Button 0",
+						"Order": 0,
+						"IconId": "action",
+						"BackgroundColorHex": "#00000000",
+						"Shortcut": ""
+					}
+				]
+			},
+			{
+				"Id": 12,
+				"CollectionId": 2,
+				"GroupId": "ff0d2199-9b4b-40d2-8045-c4e78124c120",
+				"Order": 6,
+				"ButtonText": "Page 2 Group 7 - Plum",
+				"IconId": "folder",
+				"BackgroundColorHex": "#000000",
+				"Buttons": [
+					{
+						"Id": 86,
+						"EventId": 86,
+						"ButtonId": "9e7ad269-27ad-402e-801a-234d7dbfe099",
+						"ButtonText": "Button 0",
+						"Order": 0,
+						"IconId": "action",
+						"BackgroundColorHex": "#00000000",
+						"Shortcut": ""
+					}
+				]
+			},
+			{
+				"Id": 13,
+				"CollectionId": 2,
+				"GroupId": "48cfa697-b26d-4c7f-9311-f5cb5475897e",
+				"Order": 7,
+				"ButtonText": "Page 2 Group 8 - Violet",
+				"IconId": "folder",
+				"BackgroundColorHex": "#FF99FE",
+				"Buttons": [
+					{
+						"Id": 87,
+						"EventId": 87,
+						"ButtonId": "dbd51452-55da-477f-90ad-6238bb42a95f",
+						"ButtonText": "Button 0",
+						"Order": 0,
+						"IconId": "action",
+						"BackgroundColorHex": "#00000000",
+						"Shortcut": ""
+					}
+				]
+			}
+		]
+	},
+	{
+		"Id": 4,
+		"CollectionId": "e187ede8-7698-472d-a75f-c8bab46c3eef",
+		"CollectionType": 1,
+		"Text": "Page ID 4 - Coral",
+		"Order": 2,
+		"IconId": "window",
+		"BackgroundColorHex": "#FF9999",
+		"Groups": [
+			{
+				"Id": 5,
+				"CollectionId": 4,
+				"GroupId": "3625b080-34c1-4b6b-9380-5eb2099c9bfa",
+				"Order": 0,
+				"ButtonText": "Page 4, Group 1",
+				"IconId": "folder",
+				"BackgroundColorHex": "#000000",
+				"Buttons": [
+					{
+						"Id": 88,
+						"EventId": 88,
+						"ButtonId": "2a961ab5-2de8-4f91-adf0-37ee1164744a",
+						"ButtonText": "Button 2",
+						"Order": 0,
+						"IconId": "foreground",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					}
+				]
+			}
+		]
+	},
+	{
+		"Id": 5,
+		"CollectionId": "99660a80-1bd4-4602-87a7-9755dba59c36",
+		"CollectionType": 1,
+		"Text": "Page ID 5 - Khaki",
+		"Order": 3,
+		"IconId": "window",
+		"BackgroundColorHex": "#FFCC99",
+		"Groups": [
+			{
+				"Id": 6,
+				"CollectionId": 5,
+				"GroupId": "214e851c-9e2c-4f95-9dc3-51392f909373",
+				"Order": 0,
+				"ButtonText": "Page 5, Group 1",
+				"IconId": "folder",
+				"BackgroundColorHex": "#000000",
+				"Buttons": [
+					{
+						"Id": 92,
+						"EventId": 92,
+						"ButtonId": "59d45284-ee2a-4d35-be75-7c21d1d0f4bf",
+						"ButtonText": "Button 0",
+						"Order": 0,
+						"IconId": "MedialistLayer2",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					}
+				]
+			}
+		]
+	},
+	{
+		"Id": 6,
+		"CollectionId": "d0997fd0-beff-49e3-a394-b1a38fe78035",
+		"CollectionType": 1,
+		"Text": "Page ID 6 - Yellow",
+		"Order": 4,
+		"IconId": "window",
+		"BackgroundColorHex": "#FFFF99",
+		"Groups": [
+			{
+				"Id": 14,
+				"CollectionId": 6,
+				"GroupId": "07fe5b4c-d7fc-4263-87f1-74dfe3c53550",
+				"Order": 0,
+				"ButtonText": "Page 6, Group 1",
+				"IconId": "folder",
+				"BackgroundColorHex": "#000000",
+				"Buttons": [
+					{
+						"Id": 89,
+						"EventId": 89,
+						"ButtonId": "ad3fcd80-fec9-4ea6-9e8c-b8e69c73cb56",
+						"ButtonText": "Button 0",
+						"Order": 0,
+						"IconId": "background",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					}
+				]
+			}
+		]
+	},
+	{
+		"Id": 7,
+		"CollectionId": "2eb34a06-accd-4fe6-af87-3e0a7ecaf137",
+		"CollectionType": 1,
+		"Text": "Page ID 7 - PaleGreen",
+		"Order": 5,
+		"IconId": "window",
+		"BackgroundColorHex": "#99FF99",
+		"Groups": [
+			{
+				"Id": 15,
+				"CollectionId": 7,
+				"GroupId": "b87836c9-cad6-4f4f-87eb-f2b35c94bec5",
+				"Order": 0,
+				"ButtonText": "Page 7, Group 1",
+				"IconId": "folder",
+				"BackgroundColorHex": "#000000",
+				"Buttons": [
+					{
+						"Id": 93,
+						"EventId": 93,
+						"ButtonId": "a644149d-3796-4cd3-8190-6c80adbd4d49",
+						"ButtonText": "Button 0",
+						"Order": 0,
+						"IconId": "controller",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					}
+				]
+			}
+		]
+	},
+	{
+		"Id": 8,
+		"CollectionId": "9ede1040-7d9d-4718-a448-bf93e4a9e560",
+		"CollectionType": 1,
+		"Text": "Page ID 8 - LightSkyBlue",
+		"Order": 6,
+		"IconId": "window",
+		"BackgroundColorHex": "#99CCFF",
+		"Groups": [
+			{
+				"Id": 16,
+				"CollectionId": 8,
+				"GroupId": "5d658ed5-25d8-4095-a804-de152c8ca8c0",
+				"Order": 0,
+				"ButtonText": "Page 8, Group 1",
+				"IconId": "folder",
+				"BackgroundColorHex": "#000000",
+				"Buttons": [
+					{
+						"Id": 90,
+						"EventId": 90,
+						"ButtonId": "14c23a5d-503f-46b8-a85c-6c7ee46904c4",
+						"ButtonText": "Button 0",
+						"Order": 0,
+						"IconId": "overlay_track",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					}
+				]
+			}
+		]
+	},
+	{
+		"Id": 9,
+		"CollectionId": "fb650cac-4d69-4160-9eec-33112c28d34e",
+		"CollectionType": 1,
+		"Text": "Page ID 9 - Plum",
+		"Order": 7,
+		"IconId": "window",
+		"BackgroundColorHex": "#CC99FF",
+		"Groups": [
+			{
+				"Id": 17,
+				"CollectionId": 9,
+				"GroupId": "207997eb-4c0d-45df-9a6c-29d4ca76e883",
+				"Order": 0,
+				"ButtonText": "Page 9, Group 1",
+				"IconId": "folder",
+				"BackgroundColorHex": "#000000",
+				"Buttons": [
+					{
+						"Id": 91,
+						"EventId": 91,
+						"ButtonId": "7cc50b56-2746-481e-b284-a37731990ae2",
+						"ButtonText": "Button 0",
+						"Order": 0,
+						"IconId": "overlay_track_manager",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					}
+				]
+			}
+		]
+	},
+	{
+		"Id": 10,
+		"CollectionId": "6b9765db-2de7-47f8-97af-04f6894e5040",
+		"CollectionType": 1,
+		"Text": "Page ID 10 - Violet",
+		"Order": 8,
+		"IconId": "window",
+		"BackgroundColorHex": "#FF99FE",
+		"Groups": [
+			{
+				"Id": 18,
+				"CollectionId": 10,
+				"GroupId": "efb15ffd-4804-4ab3-99c2-d4b9ed67a8ac",
+				"Order": 0,
+				"ButtonText": "Page 10, Group 1",
+				"IconId": "folder",
+				"BackgroundColorHex": "#000000",
+				"Buttons": [
+					{
+						"Id": 94,
+						"EventId": 94,
+						"ButtonId": "f9f409d5-46cd-4cde-9604-c19a39f14317",
+						"ButtonText": "Button 0",
+						"Order": 0,
+						"IconId": "window",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					}
+				]
+			}
+		]
+	},
+	{
+		"Id": -2,
+		"CollectionId": "",
+		"CollectionType": 2,
+		"Text": "Sport",
+		"Order": -1,
+		"IconId": "window",
+		"BackgroundColorHex": "#00000000",
+		"Groups": [
+			{
+				"Id": -1,
+				"CollectionId": -1,
+				"GroupId": "",
+				"Order": 0,
+				"ButtonText": "Icehockey",
+				"IconId": "ICEHOCKEY",
+				"BackgroundColorHex": "#000000",
+				"Buttons": [
+					{
+						"Id": 1,
+						"EventId": 1,
+						"ButtonId": "3abcc016-1f1a-4dca-9ea3-9540b7fcf057",
+						"ButtonText": "Next home match",
+						"Order": 0,
+						"IconId": "NextHomeMatch",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 2,
+						"EventId": 2,
+						"ButtonId": "0543e6d9-6bae-4036-bc31-6100296e7121",
+						"ButtonText": "Other matches",
+						"Order": 0,
+						"IconId": "OtherMatches",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 3,
+						"EventId": 3,
+						"ButtonId": "5822269e-81f5-4677-b0f8-2168218fd80d",
+						"ButtonText": "End of match",
+						"Order": 0,
+						"IconId": "EndOfMatch",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 4,
+						"EventId": 4,
+						"ButtonId": "0ca64f4d-c0ec-41c4-b3b6-62f7a3d0e62e",
+						"ButtonText": "Pause",
+						"Order": 0,
+						"IconId": "Pause",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 5,
+						"EventId": 5,
+						"ButtonId": "9907b32a-e314-427e-99ee-b0ac11015063",
+						"ButtonText": "Match countdown",
+						"Order": 0,
+						"IconId": "MatchCountdown",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 6,
+						"EventId": 6,
+						"ButtonId": "5315f003-9110-490e-926d-f935e8c533a2",
+						"ButtonText": "Scoreboard",
+						"Order": 0,
+						"IconId": "Scoreboard",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 7,
+						"EventId": 7,
+						"ButtonId": "4a486328-7dce-4f04-ab99-789fba1ad3fe",
+						"ButtonText": "Referees",
+						"Order": 0,
+						"IconId": "Referees",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 8,
+						"EventId": 8,
+						"ButtonId": "57923be6-7aa0-4eb7-be21-706b76b19588",
+						"ButtonText": "Clear data",
+						"Order": 0,
+						"IconId": "RunningTimeClear",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 20,
+						"EventId": 20,
+						"ButtonId": "c4ad8509-51a3-4ea4-8b05-e06b4efb03a9",
+						"ButtonText": "Goal",
+						"Order": 0,
+						"IconId": "Referees",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 21,
+						"EventId": 21,
+						"ButtonId": "4fae01da-cfc6-4987-819d-881c0496e636",
+						"ButtonText": "10 min penalty",
+						"Order": 0,
+						"IconId": "PenaltyClock",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 23,
+						"EventId": 23,
+						"ButtonId": "7cdf58b4-b433-4654-bc2d-e950d125f545",
+						"ButtonText": "Lineup all",
+						"Order": 0,
+						"IconId": "TeamPresentationLineUpAll",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 24,
+						"EventId": 24,
+						"ButtonId": "343fb847-57d0-44ce-a35c-002367e0b1ff",
+						"ButtonText": "5 min penalty",
+						"Order": 0,
+						"IconId": "PenaltyClock",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 25,
+						"EventId": 25,
+						"ButtonId": "b3228762-1cf0-42a2-8295-c4ea670ce7e4",
+						"ButtonText": "2 min penalty",
+						"Order": 0,
+						"IconId": "PenaltyClock",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					},
+					{
+						"Id": 26,
+						"EventId": 26,
+						"ButtonId": "cc3f9f5e-303b-4421-84ad-acaa5f3a28d0",
+						"ButtonText": "Name pres",
+						"Order": 0,
+						"IconId": "NamePresentation",
+						"BackgroundColorHex": "#000000",
+						"Shortcut": ""
+					}
+				]
+			},
+			{
+				"Id": -2,
+				"CollectionId": -1,
+				"GroupId": "",
+				"Order": 0,
+				"ButtonText": "Ice hockey user buttons",
+				"IconId": "FOOTBALL",
+				"BackgroundColorHex": "#000000",
+				"Buttons": []
+			}
+		]
+	}
+]
