@@ -35,7 +35,11 @@ export function createPresetsFromCollectionsWithGroupsAndButtons(collections, si
 
   collections.forEach((qbCollection) => {
 
-    const collectionCategory = `${CATEGORY}/${sanitizeName(qbCollection.Text || 'Unnamed_Page')}`
+    // Special case: CollectionType === 0 should not have Pages prefix
+    const collectionCategory =
+      qbCollection.CollectionType === 0
+        ? sanitizeName(qbCollection.Text || 'Unnamed_Page')
+        : `${CATEGORY}/${sanitizeName(qbCollection.Text || 'Unnamed_Page')}`
     const collectionId = qbCollection.Id || -1
     const collectionName = qbCollection.Text || 'Unnamed_Page'
 

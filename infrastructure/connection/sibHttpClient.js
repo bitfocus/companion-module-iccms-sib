@@ -214,14 +214,23 @@ export async function sibHttpClientGetQuickButtonCollectionsAsync(baseUrl, token
 }
 
 /**
- * Get BASE&¤ encoded png icon from sib instance by id.
- * @param {string} baseUrl
- * @param {string} token
- * @param {string} iconId matches QuickButtonIconId class in sib
- * @param {string} deviceId plugin id for auth.
- * @returns {Promise<string>}
+ * Get BASE64-encoded PNG icon from SIB instance by icon id.
+ *
+ * @param {string} baseUrl - Base URL of the API.
+ * @param {string} token - Authentication token.
+ * @param {string} iconId - Icon ID (matches QuickButtonIconId class in SIB).
+ * @param {string} deviceId - Plugin/device ID for authentication.
+ * @param {number} [width=72] - Optional icon width in pixels. Default is 72. Use 72 for both square and rectangular icons.
+ * @param {number} [height=58] - Optional icon height in pixels. Default is 58. Use 72 for square icons, 58 for rectangular icons.
+ * @returns {Promise<string>} Base64-encoded PNG image data.
+ *
+ * @example
+ * // Default (rectangular, 72x58)
+ * sibHttpClientGetPngIconBase64(baseUrl, token, iconId, deviceId)
+ * // Square icon (72x72)
+ * sibHttpClientGetPngIconBase64(baseUrl, token, iconId, deviceId, 72, 72)
  */
-export function sibHttpClientGetPngIconBase64(baseUrl, token, iconId, deviceId) {
+export function sibHttpClientGetPngIconBase64(baseUrl, token, iconId, deviceId, width = 72, height = 58) {
   return new Promise((resolve, reject) => {
     try {
       const iconBase64 = convertIconIdToBase64(iconId);
@@ -232,8 +241,8 @@ export function sibHttpClientGetPngIconBase64(baseUrl, token, iconId, deviceId) 
         url.pathname += `/${token}`;
       }
 
-      url.searchParams.append('w', '144');
-      url.searchParams.append('h', '144');
+      url.searchParams.append('w', String(width));
+      url.searchParams.append('h', String(height));
 
       if (passIsSet(deviceId)) {
         url.searchParams.append('deviceId', deviceId);
