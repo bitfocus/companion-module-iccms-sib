@@ -1,56 +1,41 @@
-import { SibIcons } from '../../../domain/sibIcons.js'
-import { apiQuickButtonInGroup } from '../../../infrastructure/sib-api/apiQuickButtonInGroup.js'
-import { apiQuickButtonGroupWithButtons } from '../../../infrastructure/sib-api/apiQuickButtonGroupWithButtons.js'
-import { apiQuickButtonCollectionWithGroupsAndButtons } from '../../../infrastructure/sib-api/apiQuickButtonCollectionWithGroupsAndButtons.js'
 import { getChoicesForTriggerEventAction } from '../../../application/presetFactory/getChoicesForTriggerEventAction.js'
+import { apiQuickButtonCollectionWithGroupsAndButtonsFixture } from '../../fixtures/apiQuickButtonCollectionWithGroupsAndButtonsFixture.js'
 
-describe('Choices are created from collection with buttons', () => {
-	test('Two choices are returned for collection with one button.', () => {
-		// arrange
-		const sibIcons = new SibIcons()
+describe('getChoicesForTriggerEventAction', () => {
+  test('has all QuickButtons from all groups in all collections', () => {
+    // arrange
+    const collections = [
+      apiQuickButtonCollectionWithGroupsAndButtonsFixture.create(),
+      apiQuickButtonCollectionWithGroupsAndButtonsFixture.create()
+    ]
 
-		// Buttons
-		const apiButton = new apiQuickButtonInGroup()
-		apiButton.Id = 1
-		apiButton.EventId = 10
-		apiButton.ButtonId = '10'
-		apiButton.ButtonText = 'b_text'
-		apiButton.Order = 0
-		apiButton.BackgroundColorHex = ''
-		apiButton.IconId = 'IconId'
-		apiButton.SvgIcon = ''
+    // act
+    const actual = getChoicesForTriggerEventAction(collections)
 
-		// groups
-		let apiGrp = new apiQuickButtonGroupWithButtons()
-		apiGrp.Id = 11
-		apiGrp.CollectionType = 1
-		apiGrp.ButtonText = 'g_text'
-		apiGrp.Order = 1
-		apiGrp.BackgroundColorHex = ''
-		apiGrp.IconId = 'iconId'
-		apiGrp.SvgIcon = ''
-		apiGrp.Buttons = Array(1).fill(apiButton)
+    // assert
+    // Assert first option is Select QuickButton
+    expect(actual[0]).toEqual({ id: -1, label: 'Select QuickButton' })
 
-		// collections
-		let apiC = new apiQuickButtonCollectionWithGroupsAndButtons()
+    // Collect all EventIds from fixture data
+    const expectedEventIds = []
+    collections.forEach((col) => {
+      const groups = Array.isArray(col.Groups) ? col.Groups : []
+      groups.forEach((grp) => {
+        const buttons = Array.isArray(grp.Buttons) ? grp.Buttons : []
+        buttons.forEach((btn) => {
+          expectedEventIds.push(btn.EventId ?? 0)
+        })
+      })
+    })
 
-		apiC.Id = 111
-		apiC.CollectionType = 1
-		apiC.Text = 'c_text'
-		apiC.Order = 1
-		apiC.BackgroundColorHex = ''
-		apiC.IconId = 'iconId'
-		apiC.SvgIcon = ''
-		apiC.Groups = Array(1).fill(apiGrp)
+    // Collect all ids from output (skip the first select option and non-number ids)
+    const actualIds = actual
+      .map((opt) => opt.id)
+      .filter((id) => typeof id === 'number')
 
-		const apiColArray = []
-		apiColArray.push(apiC)
-
-		// act
-		const actual = getChoicesForTriggerEventAction(apiColArray)
-
-		// assert
-		const actualKeys = Object.keys(actual)
-		expect(actualKeys).toHaveLength(2)
-	})
+    // Assert every expected EventId is present in the output
+    expectedEventIds.forEach((eventId) => {
+      expect(actualIds).toContain(eventId)
+    })
+  })
 })
