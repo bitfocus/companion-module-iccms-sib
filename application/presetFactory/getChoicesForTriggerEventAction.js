@@ -1,9 +1,10 @@
 import { logger } from '../../logger.js'
 
 /**
- * Returns choices for action preset.
+ * Returns dropdown choices for QuickButton events for use in Companion actions.
  * @param {apiQuickButtonCollectionWithGroupsAndButtons[]} qbCollections
- * @returns {[]}
+ * @returns {Array}
+ * @see test/fixtures/TEST_ManyIcons-api-quickButtonCollectionsFull.json
  */
 export function getChoicesForTriggerEventAction(qbCollections) {
 	let options = []

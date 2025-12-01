@@ -3,11 +3,12 @@ import { getChoicesForTriggerEventAction } from '../presetFactory/getChoicesForT
 import { logger } from '../../logger.js'
 
 /**
- * Creates the Trigger Event action definition.
+ * Creates a Companion action definition for firing a QuickButton event.
  * @param {apiQuickButtonCollectionWithGroupsAndButtons[]} qbCollections
  * @param {string} restBaseUrl
  * @param {Function} sibHttpClientTriggerQbById
- * @returns {object} Action definition
+ * @returns {object}
+ * @see test/fixtures/TEST_ManyIcons-api-quickButtonCollectionsFull.json
  */
 export function createTriggerEventAction(qbCollections, restBaseUrl, sibHttpClientTriggerQbById) {
 	return {
