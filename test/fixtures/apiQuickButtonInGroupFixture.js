@@ -3,7 +3,17 @@ import { faker } from '@faker-js/faker'
 import { ICON_ID_CHOICES_FIXTURE } from './iconIdChoicesFixture.js'
 
 /**
- * Usage: apiQuickButtonInGroupFixture.create()
+ * Factory fixture for creating test data of type {@link apiQuickButtonInGroup}.
+ *
+ * Generates a single quick button for testing within a group context.
+ * Creates a button with icon, text, color, and event ID.
+ *
+ * @returns {apiQuickButtonInGroup} A button object with all button properties.
+ *          See {@link test/fixtures/TEST_ManyIcons-api-quickButtonCollectionsFull.json} for example structure.
+ *
+ * @example
+ * const button = apiQuickButtonInGroupFixture.create();
+ * // { Id: 42, ButtonText: 'My Button', IconId: 'action', BackgroundColorHex: '#FF00FF', ... }
  */
 export const apiQuickButtonInGroupFixture = defineFixture((t) => {
   t['Id'].as(() => faker.number.int({ min: 1, max: 100 }))

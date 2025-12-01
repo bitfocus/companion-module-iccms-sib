@@ -133,11 +133,29 @@ export async function sibHttpClientGetSibInfoAsync(baseUrl, token, deviceId) {
 }
 
 /**
- * Gets all collections with groups and buttons at once.
- * @param {string} baseUrl - Base URL of the API.
- * @param {string} token - Authentication token.
- * @param {string} deviceId - Device ID for authentication.
- * @returns {Promise<apiQuickButtonCollectionWithGroupsAndButtons[]>}
+ * Gets all quick button collections with groups and buttons from the SIB API.
+ *
+ * Fetches the complete quick button collection structure including nested groups and buttons.
+ * Each collection contains groups, and each group contains buttons with icons and styling.
+ * Returns an array of collections that can be used to generate presets.
+ *
+ * @param {string} baseUrl - Base URL of the API (e.g., 'localhost:8080').
+ * @param {string} token - Authentication token. If not set, requests are made without token.
+ * @param {string} deviceId - Device ID for authentication as query parameter.
+ * @returns {Promise<apiQuickButtonCollectionWithGroupsAndButtons[]>} Array of collections with nested groups and buttons.
+ *          See {@link test/fixtures/TEST_ManyIcons-api-quickButtonCollectionsFull.json} for example data structure.
+ *
+ * @example
+ * const collections = await sibHttpClientGetQuickButtonCollectionsAsync('localhost:8080', 'token123', 'device-id');
+ * collections.forEach(collection => {
+ *   console.log(collection.Text); // Collection name
+ *   collection.Groups.forEach(group => {
+ *     console.log(group.ButtonText); // Group name
+ *     group.Buttons.forEach(button => {
+ *       console.log(button.ButtonText); // Button name
+ *     });
+ *   });
+ * });
  */
 export async function sibHttpClientGetQuickButtonCollectionsAsync(baseUrl, token, deviceId) {
   return new Promise((resolve, reject) => {

@@ -4,7 +4,17 @@ import { apiQuickButtonInGroupFixture } from './apiQuickButtonInGroupFixture.js'
 import { ICON_ID_CHOICES_FIXTURE } from './iconIdChoicesFixture.js'
 
 /**
- * Usage: apiQuickButtonGroupWithButtonsFixture.create()
+ * Factory fixture for creating test data of type {@link apiQuickButtonGroupWithButtons}.
+ *
+ * Generates a quick button group with buttons for testing.
+ * Creates a group with 2 buttons, each with icons and colors.
+ *
+ * @returns {apiQuickButtonGroupWithButtons} A group object with nested buttons.
+ *          See {@link test/fixtures/TEST_ManyIcons-api-quickButtonCollectionsFull.json} for example structure.
+ *
+ * @example
+ * const group = apiQuickButtonGroupWithButtonsFixture.create();
+ * // { Id: 42, ButtonText: 'My Group', Buttons: [...], BackgroundColorHex: '#FF00FF', ... }
  */
 export const apiQuickButtonGroupWithButtonsFixture = defineFixture((t) => {
   t['Id'].as(() => faker.number.int({ min: 1, max: 100 }))

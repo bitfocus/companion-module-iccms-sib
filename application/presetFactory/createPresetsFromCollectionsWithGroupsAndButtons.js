@@ -5,14 +5,17 @@ import { getForegroundColorFromBackgroundColor } from './getForegroundColorFromB
 import { logger } from '../../logger.js'
 
 /**
- * Create presets from collection with groups and buttons.
- * All presets are grouped under "QuickButtons/{collectionId}_{collectionName}/{groupName}".
- * Spaces in names are replaced with underscores.
- * Adds a header for each group.
+ * Creates Companion preset definitions from SIB quick button collections.
  *
- * @param {apiQuickButtonCollectionWithGroupsAndButtons[]} collections
- * @param {SibIcons} sibIcons
- * @returns {*} presets for setPresetDefinitions, <a href="https://github.com/bitfocus/companion-module-base/wiki/Presets">Presets</a>
+ * Transforms quick button collections into preset definitions organized by collection and group.
+ * Creates headers for each collection and group with icons and colors, plus individual button presets.
+ * Category structure: Pages > Collection > Group. Forward slashes in names are removed.
+ *
+ * @param {apiQuickButtonCollectionWithGroupsAndButtons[]} collections - Array of collections from SIB API.
+ *        Example: {@link test/fixtures/TEST_ManyIcons-api-quickButtonCollectionsFull.json}
+ * @param {SibIcons} sibIcons - Icon resolver for fetching PNG icons by ID.
+ * @returns {Object} Preset definitions: collection headers, group headers, and button presets.
+ *        See {@link https://github.com/bitfocus/companion-module-base/wiki/Presets} for format.
  */
 export function createPresetsFromCollectionsWithGroupsAndButtons(collections, sibIcons) {
   if (!Array.isArray(collections) || !collections) {
@@ -30,10 +33,10 @@ export function createPresetsFromCollectionsWithGroupsAndButtons(collections, si
     const collectionId = qbCollection.Id || 'noid'
     const sanitizedCollectionName = sanitizeName(collectionName)
     
-    // Special case: if collection name is "QuickButtons", don't duplicate it
-    const collectionCategory = sanitizedCollectionName === 'QuickButtons' 
-      ? 'QuickButtons'
-      : `QuickButtons/${sanitizedCollectionName}`
+    // Special case: if collection name is "Pages", don't duplicate it
+    const collectionCategory = sanitizedCollectionName === 'Pages'
+      ? 'Pages'
+      : `Pages/${sanitizedCollectionName}`
     
     // Parse background color for collection header
     let collectionBgClr = parseBgColorToPresetBgColor(qbCollection.BackgroundColorHex)
