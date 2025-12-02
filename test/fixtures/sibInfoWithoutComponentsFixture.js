@@ -1,5 +1,5 @@
-import { defineFixture } from 'efate'
-import { faker } from '@faker-js/faker'
+import {defineFixture} from 'efate'
+import {faker} from '@faker-js/faker'
 import * as path from 'path'
 
 /**
@@ -13,7 +13,7 @@ import * as path from 'path'
  * // { SportInTheBoxVersion: '2.8.7257.14899', ResponseDate: '2019-11-14T09:15:11', DatabasePath: 'E:\\SIB\\MySport.SIB2' }
  */
 export const sibInfoWithoutComponentsFixture = defineFixture((t) => {
-  t['SportInTheBoxVersion'].asDate()
+  t['SportInTheBoxVersion'].as(() => faker.system.semver())
   t['ResponseDate'].as(() => faker.date.anytime().toISOString())
   t['DatabasePath'].as(() => faker.system.directoryPath() + path.sep + faker.system.commonFileName('SIB2'))
 })
