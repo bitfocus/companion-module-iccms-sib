@@ -3,7 +3,7 @@ import { sibConnectionEvents } from './sibConnectionEvents.js'
 import { logger } from '../../logger.js'
 import {
   sibHttpClientGetQuickButtonCollectionsAsync, sibHttpClientGetRundownsWithoutItems,
-  sibHttpClientGetSibInfoAsync,
+  sibHttpClientGetSibInfo,
   sibHttpClientGetTeams,
 } from './sibHttpClient.js'
 import { parseApiMessageSibInfo } from '../parsers/parseApiMessageSibInfo.js'
@@ -122,7 +122,7 @@ export class SibConnectionHttpPull extends EventEmitter {
 		let sinInfo
 
 		try {
-			sinInfo = await sibHttpClientGetSibInfoAsync(this.#sibConfig.sibIpPort, this.#deviceId)
+			sinInfo = await sibHttpClientGetSibInfo(this.#sibConfig.sibIpPort, this.#deviceId)
 
 			if (!(JSON.stringify(this.#prevSibInfo) === JSON.stringify(sinInfo))) {
 				logger.debug('Connection. Db info updated. %o', sinInfo)

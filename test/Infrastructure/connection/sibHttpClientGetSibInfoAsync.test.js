@@ -1,10 +1,10 @@
-import { sibHttpClientGetSibInfoAsync } from '../../../infrastructure/connection/sibHttpClient.js';
+import { sibHttpClientGetSibInfo } from '../../../infrastructure/connection/sibHttpClient.js';
 import * as http from 'http';
 import { jest } from '@jest/globals';
 
 jest.mock('http');
 
-describe('sibHttpClientGetSibInfoAsync', () => {
+describe('sibHttpClientGetSibInfo', () => {
   const mockBaseUrl = 'localhost:8080';
   const mockToken = 'test_token';
   const mockDeviceId = 'device_123';
@@ -49,7 +49,7 @@ describe('sibHttpClientGetSibInfoAsync', () => {
     });
 
     // act
-    const result = await sibHttpClientGetSibInfoAsync(
+    const result = await sibHttpClientGetSibInfo(
       mockBaseUrl,
       mockToken,
       mockDeviceId
@@ -94,7 +94,7 @@ describe('sibHttpClientGetSibInfoAsync', () => {
     });
 
     // act
-    await sibHttpClientGetSibInfoAsync(
+    await sibHttpClientGetSibInfo(
       mockBaseUrl,
       null, // No token
       mockDeviceId
@@ -138,7 +138,7 @@ describe('sibHttpClientGetSibInfoAsync', () => {
     });
 
     // act
-    await sibHttpClientGetSibInfoAsync(
+    await sibHttpClientGetSibInfo(
       mockBaseUrl,
       mockToken,
       mockDeviceId
@@ -168,7 +168,7 @@ describe('sibHttpClientGetSibInfoAsync', () => {
 
     // act & assert
     await expect(
-      sibHttpClientGetSibInfoAsync(
+      sibHttpClientGetSibInfo(
         mockBaseUrl,
         mockToken,
         mockDeviceId
@@ -203,7 +203,7 @@ describe('sibHttpClientGetSibInfoAsync', () => {
     });
 
     // act
-    const result = await sibHttpClientGetSibInfoAsync(
+    const result = await sibHttpClientGetSibInfo(
       mockBaseUrl,
       mockToken,
       mockDeviceId

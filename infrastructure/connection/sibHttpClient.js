@@ -75,7 +75,7 @@ export function sibHttpClientTriggerQuickButtonById(baseUrl, triggerId, token) {
  * @param {string} deviceId - Device ID for authentication.
  * @returns {Promise<string>} Raw JSON string response
  */
-export async function sibHttpClientGetSibInfoAsync(baseUrl, deviceId) {
+export async function sibHttpClientGetSibInfo(baseUrl, deviceId) {
   return new Promise((resolve, reject) => {
     try {
       const url = new URL(apiHttp + baseUrl);
@@ -133,10 +133,10 @@ export async function sibHttpClientGetSibInfoAsync(baseUrl, deviceId) {
  * Returns an array of collections that can be used to generate presets.
  *
  * @param {string} baseUrl - Base URL of the API (e.g., 'localhost:8080').
- * @param {string} token - Authentication token. If not set, requests are made without token.
+ * @param {string} token - Authentication token. If not set, requests are made without the token.
  * @param {string} deviceId - Device ID for authentication as query parameter.
  * @returns {Promise<apiQuickButtonCollectionWithGroupsAndButtons[]>} Array of collections with nested groups and buttons.
- *          See {@link test/fixtures/TEST_ManyIcons-api-quickButtonCollectionsFull.json} for example data structure.
+ *          See {@link ../test/fixtures/TEST_ManyIcons-api-quickButtonCollectionsFull.json} for example data structure.
  *
  * @example
  * const collections = await sibHttpClientGetQuickButtonCollectionsAsync('localhost:8080', 'token123', 'device-id');

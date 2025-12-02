@@ -8,19 +8,26 @@ import { ApiMessageSibInfo } from '../sib-api/apiMessageSibInfo.js'
  * @returns {ApiMessageSibInfo | null}
  */
 export function parseApiMessageSibInfo(apiSibInfo) {
-	if (typeof apiSibInfo == 'undefined') {
-		return null
-	}
+  if (typeof apiSibInfo === 'undefined' || apiSibInfo === null) {
+    return null
+  }
 
-	const apiObj = new ApiMessageSibInfo()
+  let obj = apiSibInfo
+  if (typeof apiSibInfo === 'string') {
+    try {
+      obj = JSON.parse(apiSibInfo)
+    } catch {
+      return null
+    }
+  }
 
-	const sibVersion = objectPath.get(apiSibInfo, 'SportInTheBoxVersion', '')
-	const respData = objectPath.get(apiSibInfo, 'ResponseDate', '')
-	const dbPath = objectPath.get(apiSibInfo, 'DatabasePath', '')
+  const apiObj = new ApiMessageSibInfo()
 
-	apiObj.SportInTheBoxVersion = sibVersion
-	apiObj.ResponseDate = respData
-	apiObj.DatabasePath = dbPath
+  apiObj.SportInTheBoxVersion = objectPath.get(obj, 'SportInTheBoxVersion', '')
+  apiObj.ResponseDate = objectPath.get(obj, 'ResponseDate', '')
+  apiObj.DatabasePath = objectPath.get(obj, 'DatabasePath', '')
+  apiObj.LogOnName = objectPath.get(obj, 'LogOnName', '')
+  apiObj.ComponentLastModified = objectPath.get(obj, 'ComponentLastModified', { QuickButton: '', Rundown: '', Team: '' })
 
-	return apiObj
+  return apiObj
 }
