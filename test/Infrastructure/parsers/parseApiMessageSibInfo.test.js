@@ -1,5 +1,6 @@
 import {parseApiMessageSibInfo} from '../../../infrastructure/parsers/parseApiMessageSibInfo.js'
 import {sibInfoWithoutComponentsFixture} from '../../fixtures/sibInfoWithoutComponentsFixture.js'
+import {sibInfoWithComponentsFixture} from '../../fixtures/sibInfoWithComponentsFixture.js'
 import {faker} from '@faker-js/faker'
 import * as path from 'path'
 
@@ -20,7 +21,36 @@ describe('Sib info deserialization', () => {
     expect(actual.SportInTheBoxVersion).toBe(expected.SportInTheBoxVersion)
     expect(actual.ResponseDate).toBe(expected.ResponseDate)
     expect(actual.DatabasePath).toBe(expected.DatabasePath)
+})
+
+describe('Sib info deserialization with components', () => {
+  test('Deserializes LogOnName and ComponentLastModified', () => {
+    // arrange
+    const expected = sibInfoWithComponentsFixture.create()
+
+    // act
+    const actual = parseApiMessageSibInfo(expected)
+
+    // assert
+    expect(actual.SportInTheBoxVersion).toBe(expected.SportInTheBoxVersion)
+    expect(actual.ResponseDate).toBe(expected.ResponseDate)
+    expect(actual.DatabasePath).toBe(expected.DatabasePath)
+    expect(actual.LogOnName).toBe(expected.LogOnName)
+    expect(actual.ComponentLastModified).toEqual(expected.ComponentLastModified)
   })
+
+  test('Deserializes only new properties', () => {
+    // arrange
+    const expected = sibInfoWithComponentsFixture.create()
+
+    // act
+    const actual = parseApiMessageSibInfo(expected)
+
+    // assert
+    expect(actual.LogOnName).toBe(expected.LogOnName)
+    expect(actual.ComponentLastModified).toEqual(expected.ComponentLastModified)
+  })
+})
 
   test('Deserialized correctly v2', () => {
     // arrange
