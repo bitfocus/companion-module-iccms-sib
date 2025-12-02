@@ -72,22 +72,15 @@ export function sibHttpClientTriggerQuickButtonById(baseUrl, triggerId, token) {
 /**
  * Gets current db info from api.
  * @param {string} baseUrl - Base URL of the API.
- * @param {string} token - Authentication token.
  * @param {string} deviceId - Device ID for authentication.
  * @returns {Promise<string>} Raw JSON string response
  */
-export async function sibHttpClientGetSibInfoAsync(baseUrl, token, deviceId) {
+export async function sibHttpClientGetSibInfoAsync(baseUrl, deviceId) {
   return new Promise((resolve, reject) => {
     try {
       const url = new URL(apiHttp + baseUrl);
-
-      if (!passIsSet(token)) {
-        // http://localhost:8080/api/hb/
-        url.pathname = apiHb;
-      } else {
-        // http://localhost:8080/api/hb/my_pass
-        url.pathname = `${apiHb}${token}`;
-      }
+      // http://localhost:8080/api/hb/
+      url.pathname = apiHb;
 
       // Add deviceId as query parameter if available
       if (passIsSet(deviceId)) {

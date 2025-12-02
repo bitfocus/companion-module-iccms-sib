@@ -122,7 +122,7 @@ export class SibConnectionHttpPull extends EventEmitter {
 		let sinInfo
 
 		try {
-			sinInfo = await sibHttpClientGetSibInfoAsync(this.#sibConfig.sibIpPort)
+			sinInfo = await sibHttpClientGetSibInfoAsync(this.#sibConfig.sibIpPort, this.#deviceId)
 
 			if (!(JSON.stringify(this.#prevSibInfo) === JSON.stringify(sinInfo))) {
 				logger.debug('Connection. Db info updated. %o', sinInfo)

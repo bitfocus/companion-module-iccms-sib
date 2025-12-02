@@ -3,7 +3,7 @@ import { ApiMessageSibInfo } from '../sib-api/apiMessageSibInfo.js'
 
 /**
  * Parse groups with buttons and correct serialization values.
- * Convert colors to look good in plugin.
+ * Convert colors to look good in the plugin.
  * @param {*} apiSibInfo
  * @returns {ApiMessageSibInfo | null}
  */
