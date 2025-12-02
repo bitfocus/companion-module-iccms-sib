@@ -1,5 +1,5 @@
 /**
- * Api info from about open database.
+ * Api info from about the open database.
  */
 export class ApiMessageSibInfo {
   /**
@@ -26,12 +26,14 @@ export class ApiMessageSibInfo {
   /**
    * User logon name.
    * @type {string}
-   * @example 'DMITRI-LEGION\\dmitr'
+   * @example 'DMITRI-LEGION\\dmitri'
    */
   LogOnName = ''
 
   /**
    * Last modified timestamps for components.
+   * @remarks created 2025-15.
+   *
    * @type {{QuickButton: string, Rundown: string, Team: string}}
    * @example { QuickButton: '2025-12-02T11:34:51.6038616Z', Rundown: '2025-12-02T11:34:52.9350453Z', Team: '2025-12-02T12:34:41.5824480Z' }
    */

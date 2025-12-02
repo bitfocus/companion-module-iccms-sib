@@ -1,6 +1,6 @@
 import EventEmitter from 'events'
-import { sibConnectionEvents } from './sibConnectionEvents.js'
-import { logger } from '../../logger.js'
+import {sibConnectionEvents} from './sibConnectionEvents.js'
+import {logger} from '../../logger.js'
 import {
   sibHttpClientGetQuickButtonCollectionsAsync, sibHttpClientGetRundownsWithoutItems,
   sibHttpClientGetSibInfo,
@@ -11,37 +11,38 @@ import {
  * Abstraction to connect to SIB2 with HTTP pulling of sib api.
  */
 export class SibConnectionHttpPull extends EventEmitter {
-	isInitialized = false
+  isInitialized = false
 
-	/**
-	 * Connection properties to sib.
-	 * @type {SibConnection}
-	 */
-	#sibConfig
+  /**
+   * Connection properties to sib.
+   * @type {SibConnection}
+   */
+  #sibConfig
 
-	/**
-	 * Pulling timer
-	 * @type {NodeJS.Timer|NodeJS.Timeout|number}
-	 */
-	#pullTimer
+  /**
+   * Pulling timer
+   * @type {NodeJS.Timer|NodeJS.Timeout|number}
+   */
+  #pullTimer
 
-	/**
-	 * Previous db info.
-	 * Compare and don't raise if same.
-	 */
-	#prevSibInfo
+  /**
+   * Previous db info.
+   * Compare and don't raise if same.
+   * @type {ApiMessageSibInfo}
+   */
+  #prevSibInfo
 
-	/**
-	 * Previous qb collections.
-	 * Compare and don't raise if same.
-	 */
-	#prevCollections
+  /**
+   * Previous qb collections.
+   * Compare and don't raise if same.
+   */
+  #prevCollections
 
-	/**
-	 * Previous teams collections.
-	 * Compare and don't raise if same.
-	 */
-	#prevTeams
+  /**
+   * Previous teams collections.
+   * Compare and don't raise if same.
+   */
+  #prevTeams
 
   /**
    * Previous rundowns.
@@ -58,127 +59,163 @@ export class SibConnectionHttpPull extends EventEmitter {
   #deviceId
 
   /**
-	 * Connect to WebSocket.
-	 * Tries to reconnect if the connection fails (sib is not running).
-	 * @param {SibConnection} config
-	 */
-	async connectToSib(config) {
-		logger.debug('Connect start to %o', config)
+   * Connect to WebSocket.
+   * Tries to reconnect if the connection fails (sib is not running).
+   * @param {SibConnection} config
+   */
+  async connectToSib(config) {
+    logger.debug('Connect start to %o', config)
 
-		this.emit(sibConnectionEvents.OnSibConnecting)
+    this.emit(sibConnectionEvents.OnSibConnecting)
 
-		this.#sibConfig = config
+    this.#sibConfig = config
     this.#deviceId = "companion-module-iccms-sib"
 
-		// Will time out gui sometimes. Make the first call not to wait for a timer.
-		setImmediate(async () => {
-			await this.#apiTimerTick()
-		})
+    // Will time out gui sometimes. Make the first call not to wait for a timer.
+    setImmediate(async () => {
+      await this.#apiTimerTick()
+    })
 
-		clearInterval(this.#pullTimer)
-		this.#pullTimer = null
+    clearInterval(this.#pullTimer)
+    this.#pullTimer = null
 
-		this.#pullTimer = setInterval(async () => {
-			await this.#apiTimerTick()
-		}, this.#sibConfig.pullIntervall)
+    this.#pullTimer = setInterval(async () => {
+      await this.#apiTimerTick()
+    }, this.#sibConfig.pullIntervall)
 
-		this.emit(sibConnectionEvents.OnSibConnected)
+    this.emit(sibConnectionEvents.OnSibConnected)
 
-		this.isInitialized = true
+    this.isInitialized = true
 
-		logger.debug('Connect done.')
-	}
+    logger.debug('Connect done.')
+  }
 
-	/**
-	 * Close connection to sib.
-	 */
-	disconnectFromSib() {
-		logger.debug('Disconnect from sib.')
+  /**
+   * Close connection to sib.
+   */
+  disconnectFromSib() {
+    logger.debug('Disconnect from sib.')
 
-		this.isInitialized = false
-		clearInterval(this.#pullTimer)
+    this.isInitialized = false
+    clearInterval(this.#pullTimer)
 
-		this.emit(sibConnectionEvents.OnSibDisconnected, '')
-	}
+    this.emit(sibConnectionEvents.OnSibDisconnected, '')
+  }
 
-	/**
-	 * Try to connect to sib and reconnect if fails.
-	 */
-	async #apiTimerTick() {
-		logger.debug('Timer tick. Get data from sib api from %o.', this.#sibConfig.sibIp)
+  /**
+   * Try to connect to sib and reconnect if fails.
+   */
+  async #apiTimerTick() {
+    logger.debug('Timer tick. Get data from sib api from %o.', this.#sibConfig.sibIp);
 
-		if (!this.#sibConfig.isValid()) {
-			logger.debug('Sib config is not valid.')
-			this.emit(sibConnectionEvents.OnSibBadConfig, 'Enter SIB Ip in settings.')
-			return
-		}
-
-		let sinInfo
-
-		try {
-			sinInfo = await sibHttpClientGetSibInfo(this.#sibConfig.sibIpPort, this.#deviceId)
-
-			if (!(JSON.stringify(this.#prevSibInfo) === JSON.stringify(sinInfo))) {
-				logger.debug('Connection. Db info updated. %o', sinInfo)
-
-				this.#prevSibInfo = sinInfo
-				this.emit(sibConnectionEvents.OnSibDatabaseChanges, sinInfo)
-			}
-		} catch (error) {
-			logger.debug('Sib request for info failed, %s.', error)
-			this.emit(sibConnectionEvents.OnSibError, 'Connection to SIB failed. Check that SIB is running.')
-			return
-		}
-
-		// Teams
-		try {
-			const apiTeams = await sibHttpClientGetTeams(this.#sibConfig.sibIpPort, this.#sibConfig.token, this.#deviceId)
-
-			if (!(JSON.stringify(this.#prevTeams) === JSON.stringify(apiTeams))) {
-				logger.debug('Connection. Teams updated.')
-
-				this.#prevTeams = apiTeams
-				this.emit(sibConnectionEvents.OnSibTeamsUpdated, apiTeams)
-			}
-		} catch (error) {
-			logger.error('Sib request for teams failed, %s', error)
-			this.emit(sibConnectionEvents.OnSibError, 'Request to sib failed. Check password in settings.')
-		}
-
-		// qb collections.
-		try {
-			const apiCollections = await sibHttpClientGetQuickButtonCollectionsAsync(
-				this.#sibConfig.sibIpPort,
-				this.#sibConfig.token,
-        this.#deviceId)
-
-			if (!(JSON.stringify(this.#prevCollections) === JSON.stringify(apiCollections))) {
-				logger.debug('Connection. Collections updated.')
-
-				this.#prevCollections = apiCollections
-				this.emit(sibConnectionEvents.OnSibQuickButtonsUpdated, apiCollections)
-			}
-		} catch (error) {
-			logger.error('Sib request for collections failed, %s', error)
-			this.emit(sibConnectionEvents.OnSibError, 'Request to sib failed. Check password in settings.')
-		}
-
-    try{
-      const apiRundowns = await sibHttpClientGetRundownsWithoutItems(this.#sibConfig.sibIpPort, this.#sibConfig.token, this.#deviceId)
-      if (!(JSON.stringify(this.#prevRundowns) === JSON.stringify(apiRundowns))) {
-        logger.debug('Connection. Rundowns updated.')
-
-        this.#prevRundowns = apiRundowns
-        this.emit(sibConnectionEvents.OnSibRundownUpdated, apiRundowns)
-      }
-
-    }catch (error) {
-      logger.error('Sib request for rundowns failed, %s', error)
-      this.emit(sibConnectionEvents.OnSibError, 'Request to sib failed. Check password in settings.')
+    if (!this.#sibConfig.isValid()) {
+      logger.debug('Sib config is not valid.');
+      this.emit(sibConnectionEvents.OnSibBadConfig, 'Enter SIB Ip in settings.');
+      return;
     }
 
-		this.emit(sibConnectionEvents.OnSibConnected)
+    let sinInfo;
+    let prevComponent = (this.#prevSibInfo && this.#prevSibInfo.ComponentLastModified) ? this.#prevSibInfo.ComponentLastModified : null;
+    let currComponent;
 
-		logger.debug('Timer tick. Done.')
-	}
+    try {
+      sinInfo = await sibHttpClientGetSibInfo(this.#sibConfig.sibIpPort, this.#deviceId);
+
+      currComponent = sinInfo && sinInfo.ComponentLastModified ? sinInfo.ComponentLastModified : null;
+
+      // Always emit db info changes if changed
+      if (!(JSON.stringify(this.#prevSibInfo) === JSON.stringify(sinInfo))) {
+        logger.debug('Connection. Db info updated. %o', sinInfo);
+
+        this.emit(sibConnectionEvents.OnSibDatabaseChanges, sinInfo);
+      }
+
+      // Determine if we have component timestamps for selective updates
+      const hasPrev = !!prevComponent;
+      const hasCurr = !!currComponent;
+
+      // If either missing, fallback to fetching all (legacy behavior)
+      const selective = hasPrev && hasCurr;
+
+      // Track which components to update
+      let shouldUpdateTeams = true;
+      let shouldUpdateQuickButtons = true;
+      let shouldUpdateRundowns = true;
+
+      if (selective) {
+        shouldUpdateTeams = prevComponent.Team !== currComponent.Team;
+        shouldUpdateQuickButtons = prevComponent.QuickButton !== currComponent.QuickButton;
+        shouldUpdateRundowns = prevComponent.Rundown !== currComponent.Rundown;
+      }
+
+      // Teams
+      if (shouldUpdateTeams) {
+        try {
+          const apiTeams = await sibHttpClientGetTeams(this.#sibConfig.sibIpPort, this.#sibConfig.token, this.#deviceId);
+
+          if (!(JSON.stringify(this.#prevTeams) === JSON.stringify(apiTeams))) {
+            logger.debug('Connection. Teams updated.');
+
+            this.#prevTeams = apiTeams;
+            this.emit(sibConnectionEvents.OnSibTeamsUpdated, apiTeams);
+          }
+        } catch (error) {
+          logger.error('Sib request for teams failed, %s', error);
+          this.emit(sibConnectionEvents.OnSibError, 'Request to sib failed. Check password in settings.');
+        }
+      }
+
+      // QuickButton Collections
+      if (shouldUpdateQuickButtons) {
+        try {
+          const apiCollections = await sibHttpClientGetQuickButtonCollectionsAsync(
+            this.#sibConfig.sibIpPort,
+            this.#sibConfig.token,
+            this.#deviceId
+          );
+
+          if (!(JSON.stringify(this.#prevCollections) === JSON.stringify(apiCollections))) {
+            logger.debug('Connection. Collections updated.');
+
+            this.#prevCollections = apiCollections;
+            this.emit(sibConnectionEvents.OnSibQuickButtonsUpdated, apiCollections);
+          }
+        } catch (error) {
+          logger.error('Sib request for collections failed, %s', error);
+          this.emit(sibConnectionEvents.OnSibError, 'Request to sib failed. Check password in settings.');
+        }
+      }
+
+      // Rundowns
+      if (shouldUpdateRundowns) {
+        try {
+          const apiRundowns = await sibHttpClientGetRundownsWithoutItems(
+            this.#sibConfig.sibIpPort,
+            this.#sibConfig.token,
+            this.#deviceId
+          );
+          if (!(JSON.stringify(this.#prevRundowns) === JSON.stringify(apiRundowns))) {
+            logger.debug('Connection. Rundowns updated.');
+
+            this.#prevRundowns = apiRundowns;
+            this.emit(sibConnectionEvents.OnSibRundownUpdated, apiRundowns);
+          }
+        } catch (error) {
+          logger.error('Sib request for rundowns failed, %s', error);
+          this.emit(sibConnectionEvents.OnSibError, 'Request to sib failed. Check password in settings.');
+        }
+      }
+
+      // Save latest SIB info for next tick
+      this.#prevSibInfo = sinInfo;
+
+      this.emit(sibConnectionEvents.OnSibConnected);
+
+      logger.debug('Timer tick. Done.');
+    } catch (error) {
+      logger.debug('Sib request for info failed, %s.', error);
+      this.emit(sibConnectionEvents.OnSibError, 'Connection to SIB failed. Check that SIB is running.');
+      return;
+    }
+  }
 }
