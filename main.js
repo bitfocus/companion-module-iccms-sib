@@ -124,7 +124,6 @@ class SibPluginInstance extends InstanceBase {
 			})
 
 			// Data updates.
-
 			this.#sibConnection.on(sibConnectionEvents.OnSibDatabaseChanges, (value) => {
 				logger.debug(`Got connected data.`)
 				this.#sibComputer.setSibInfo(value)

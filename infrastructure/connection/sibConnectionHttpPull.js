@@ -6,12 +6,6 @@ import {
   sibHttpClientGetSibInfo,
   sibHttpClientGetTeams,
 } from './sibHttpClient.js'
-import { parseApiMessageSibInfo } from '../parsers/parseApiMessageSibInfo.js'
-
-// https://nodejs.dev/en/api/v18/events/
-// https://nodejs.dev/en/learn/the-nodejs-event-emitter/
-// https://borzecki.github.io/blog/jest-event-emitters/
-// https://stackoverflow.com/questions/8898399/node-js-inheriting-from-eventemitter?rq=3
 
 /**
  * Abstraction to connect to SIB2 with HTTP pulling of sib api.
@@ -65,7 +59,7 @@ export class SibConnectionHttpPull extends EventEmitter {
 
   /**
 	 * Connect to WebSocket.
-	 * Tries to reconnect if connection fails (sib is not running).
+	 * Tries to reconnect if the connection fails (sib is not running).
 	 * @param {SibConnection} config
 	 */
 	async connectToSib(config) {
@@ -76,7 +70,7 @@ export class SibConnectionHttpPull extends EventEmitter {
 		this.#sibConfig = config
     this.#deviceId = "companion-module-iccms-sib"
 
-		// Will time out gui sometimes. Make first call not to wait for timer.
+		// Will time out gui sometimes. Make the first call not to wait for a timer.
 		setImmediate(async () => {
 			await this.#apiTimerTick()
 		})
@@ -127,9 +121,6 @@ export class SibConnectionHttpPull extends EventEmitter {
 			if (!(JSON.stringify(this.#prevSibInfo) === JSON.stringify(sinInfo))) {
 				logger.debug('Connection. Db info updated. %o', sinInfo)
 
-				// TODO: check why parsing fails
-				let x = parseApiMessageSibInfo(sinInfo)
-
 				this.#prevSibInfo = sinInfo
 				this.emit(sibConnectionEvents.OnSibDatabaseChanges, sinInfo)
 			}
@@ -141,7 +132,7 @@ export class SibConnectionHttpPull extends EventEmitter {
 
 		// Teams
 		try {
-			const apiTeams = await sibHttpClientGetTeams(this.#sibConfig.sibIpPort, this.#sibConfig.token)
+			const apiTeams = await sibHttpClientGetTeams(this.#sibConfig.sibIpPort, this.#sibConfig.token, this.#deviceId)
 
 			if (!(JSON.stringify(this.#prevTeams) === JSON.stringify(apiTeams))) {
 				logger.debug('Connection. Teams updated.')
@@ -158,8 +149,8 @@ export class SibConnectionHttpPull extends EventEmitter {
 		try {
 			const apiCollections = await sibHttpClientGetQuickButtonCollectionsAsync(
 				this.#sibConfig.sibIpPort,
-				this.#sibConfig.token
-			)
+				this.#sibConfig.token,
+        this.#deviceId)
 
 			if (!(JSON.stringify(this.#prevCollections) === JSON.stringify(apiCollections))) {
 				logger.debug('Connection. Collections updated.')
