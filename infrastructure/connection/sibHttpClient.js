@@ -3,6 +3,7 @@
 import {logger} from '../../logger.js'
 import * as http from 'http'
 import {ApiMessageSibInfo} from '../sib-api/apiMessageSibInfo.js'
+import {parseApiMessageSibInfo} from '../parsers/parseApiMessageSibInfo.js'
 import {parseCollectionWithGroupsAndButtonsArray} from '../parsers/parseCollectionWithGroupsAndButtonsArray.js'
 import {ApiSportTeamWithoutPlayers} from '../sib-api/apiSportTeamWithoutPlayers.js'
 
@@ -73,7 +74,7 @@ export function sibHttpClientTriggerQuickButtonById(baseUrl, triggerId, token) {
  * Gets current db info from api.
  * @param {string} baseUrl - Base URL of the API.
  * @param {string} deviceId - Device ID for authentication.
- * @returns {Promise<string>} Raw JSON string response
+ * @returns {Promise<ApiMessageSibInfo>} Parsed SIB info object
  */
 export async function sibHttpClientGetSibInfo(baseUrl, deviceId) {
   return new Promise((resolve, reject) => {
@@ -107,7 +108,8 @@ export async function sibHttpClientGetSibInfo(baseUrl, deviceId) {
             try {
               logger.debug('API. Got db info from API. Url: %s', url.toString());
               const response_body = Buffer.concat(chunks_of_data);
-              resolve(response_body.toString());
+              const parsed = parseApiMessageSibInfo(response_body.toString());
+              resolve(parsed);
             } catch (e) {
               logger.warn('API. Db info processing error: %s', e.message);
               reject(e);
