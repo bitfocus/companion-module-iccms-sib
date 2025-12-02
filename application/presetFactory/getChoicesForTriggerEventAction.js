@@ -13,16 +13,32 @@ export function getChoicesForTriggerEventAction(qbCollections) {
     return []
   }
   options.push({ id: -1, label: 'Select QuickButton' })
+  options.push({ id: '__sep__', label: '────────────' })
 
-  // Helper to build ASCII-art prefix
-  function makePrefix(levels) {
-    // levels: array of booleans, each representing if the node at that level is last
-    // Always use '└─ ' or '├─ ' for each level, matching test expectation
-    let prefix = ''
-    for (let i = 0; i < levels.length; ++i) {
-      prefix += levels[i] ? '└─ ' : '├─ '
-    }
-    return prefix
+  // Map hex color to colored emoji square
+  function colorEmoji(hex) {
+    if (!hex) return ''
+    const c = hex.replace('#', '').toUpperCase()
+    // Simple mapping for common colors
+    if (c.startsWith('FF0000')) return '🟥'
+    if (c.startsWith('00FF00') || c.startsWith('00CC00')) return '🟩'
+    if (c.startsWith('0000FF') || c.startsWith('0033CC')) return '🟦'
+    if (c.startsWith('FFFF00')) return '🟨'
+    if (c.startsWith('FFA500') || c.startsWith('FFCC99')) return '🟧'
+    if (c.startsWith('800080') || c.startsWith('CC99FF')) return '🟪'
+    if (c.startsWith('000000')) return '⬛'
+    if (c.startsWith('FFFFFF')) return '⬜'
+    return '⬛'
+  }
+
+  // Prefix for group level: folder emoji + EN SPACE
+  function makeGroupPrefix() {
+    return '\u2002' + '📁' + '\u2002'
+  }
+
+  // Prefix for button level: color + bullet + EN SPACE
+  function makeButtonPrefix(bg) {
+    return '\u2002' +colorEmoji(bg) + '•' + '\u2002'
   }
 
   qbCollections.forEach((collection, cIdx) => {
@@ -31,7 +47,7 @@ export function getChoicesForTriggerEventAction(qbCollections) {
     const groups = Array.isArray(collection.Groups) ? collection.Groups : []
     const isLastCollection = cIdx === qbCollections.length - 1
 
-    // Collection node
+    // Collection node (no prefix)
     options.push({
       id: `col_${collectionId}`,
       label: collectionName,
@@ -46,18 +62,16 @@ export function getChoicesForTriggerEventAction(qbCollections) {
       // Group node
       options.push({
         id: `col_${collectionId}_grp_${groupId}`,
-        label: makePrefix([isLastGroup]) + groupName,
+        label: makeGroupPrefix() + groupName,
       })
 
       buttons.forEach((button, bIdx) => {
         const buttonName = button.ButtonText || `Button ${bIdx + 1}`
         const eventId = button.EventId ?? 0
-        const isLastButton = bIdx === buttons.length - 1
-
         // Button node
         options.push({
           id: eventId,
-          label: makePrefix([isLastGroup, isLastButton]) + buttonName,
+          label: makeButtonPrefix(button.BackgroundColorHex) + buttonName,
         })
       })
     })

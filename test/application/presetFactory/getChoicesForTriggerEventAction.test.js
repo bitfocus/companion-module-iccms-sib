@@ -2,7 +2,7 @@ import { getChoicesForTriggerEventAction } from '../../../application/presetFact
 import { apiQuickButtonCollectionWithGroupsAndButtonsFixture } from '../../fixtures/apiQuickButtonCollectionWithGroupsAndButtonsFixture.js'
 
 describe('getChoicesForTriggerEventAction', () => {
-  test('has all QuickButtons from all groups in all collections', () => {
+  test('has all quickbuttons from collections', () => {
     // arrange
     const collections = [
       apiQuickButtonCollectionWithGroupsAndButtonsFixture.create(),
@@ -38,4 +38,5 @@ describe('getChoicesForTriggerEventAction', () => {
       expect(actualIds).toContain(eventId)
     })
   })
+
 })
