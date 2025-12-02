@@ -1,12 +1,12 @@
 import { sibHttpClientGetSibInfo } from '../../../infrastructure/connection/sibHttpClient.js';
 import * as http from 'http';
 import { jest } from '@jest/globals';
+import {sibInfoWithComponentsFixture} from "../../fixtures/sibInfoWithComponentsFixture.js";
 
 jest.mock('http');
 
 describe('sibHttpClientGetSibInfo', () => {
   const mockBaseUrl = 'localhost:8080';
-  const mockToken = 'test_token';
   const mockDeviceId = 'device_123';
   const mockResponseData = JSON.stringify({
     SportInTheBoxVersion: '2.8.7257.14899',
@@ -20,51 +20,6 @@ describe('sibHttpClientGetSibInfo', () => {
 
   afterEach(() => {
     jest.resetAllMocks();
-  });
-
-  it('should construct the correct URL with token', async () => {
-    // arrange
-    const mockEmitter = {
-      on: jest.fn(function (event, callback) {
-        if (event === 'end') {
-          callback();
-        }
-        return this;
-      }),
-    };
-
-    http.get.mockImplementation((_, callback) => {
-      callback({
-        statusCode: 200,
-        on: jest.fn(function (event, listener) {
-          if (event === 'data') {
-            listener(Buffer.from(mockResponseData));
-          } else if (event === 'end') {
-            listener();
-          }
-          return this;
-        }),
-      });
-      return mockEmitter;
-    });
-
-    // act
-    const result = await sibHttpClientGetSibInfo(
-      mockBaseUrl,
-      mockToken,
-      mockDeviceId
-    );
-
-    // assert
-    expect(http.get).toHaveBeenCalledWith(
-      expect.stringContaining('/api/hb/'),
-      expect.any(Function)
-    );
-    expect(http.get).toHaveBeenCalledWith(
-      expect.stringContaining(`${mockToken}`),
-      expect.any(Function)
-    );
-    expect(result).toBe(mockResponseData);
   });
 
   it('should construct the correct URL without token', async () => {
@@ -96,7 +51,6 @@ describe('sibHttpClientGetSibInfo', () => {
     // act
     await sibHttpClientGetSibInfo(
       mockBaseUrl,
-      null, // No token
       mockDeviceId
     );
 
@@ -140,7 +94,6 @@ describe('sibHttpClientGetSibInfo', () => {
     // act
     await sibHttpClientGetSibInfo(
       mockBaseUrl,
-      mockToken,
       mockDeviceId
     );
 
@@ -166,11 +119,10 @@ describe('sibHttpClientGetSibInfo', () => {
       return mockEmitter;
     });
 
-    // act & assert
+    // act and assert
     await expect(
       sibHttpClientGetSibInfo(
         mockBaseUrl,
-        mockToken,
         mockDeviceId
       )
     ).rejects.toThrow('Network error');
@@ -178,6 +130,8 @@ describe('sibHttpClientGetSibInfo', () => {
 
   it('should resolve successfully with valid response', async () => {
     // arrange
+    const httpResponse = sibInfoWithComponentsFixture.create()
+
     const mockEmitter = {
       on: jest.fn(function (event, callback) {
         if (event === 'end') {
@@ -192,7 +146,7 @@ describe('sibHttpClientGetSibInfo', () => {
         statusCode: 200,
         on: jest.fn(function (event, listener) {
           if (event === 'data') {
-            listener(Buffer.from(mockResponseData));
+            listener(Buffer.from(JSON.stringify(httpResponse)));
           } else if (event === 'end') {
             listener();
           }
@@ -205,12 +159,11 @@ describe('sibHttpClientGetSibInfo', () => {
     // act
     const result = await sibHttpClientGetSibInfo(
       mockBaseUrl,
-      mockToken,
       mockDeviceId
     );
 
     // assert
     expect(result).toBeDefined();
-    expect(result).toBe(mockResponseData);
+    expect(result).toEqual(httpResponse);
   });
 });
