@@ -19,56 +19,62 @@ export function getChoicesForTriggerEventAction(qbCollections) {
   function colorEmoji(hex) {
     if (!hex) return ''
     const c = hex.replace('#', '').toUpperCase()
-    // Simple mapping for common colors
-    if (c.startsWith('FF0000')) return '🟥'
-    if (c.startsWith('00FF00') || c.startsWith('00CC00')) return '🟩'
-    if (c.startsWith('0000FF') || c.startsWith('0033CC')) return '🟦'
-    if (c.startsWith('FFFF00')) return '🟨'
-    if (c.startsWith('FFA500') || c.startsWith('FFCC99')) return '🟧'
-    if (c.startsWith('800080') || c.startsWith('CC99FF')) return '🟪'
-    if (c.startsWith('000000')) return '⬛'
-    if (c.startsWith('FFFFFF')) return '⬜'
-    return '⬛'
+    // Handle all fixture colors
+    if (c.startsWith('000000')) return '◻️'
+    if (c.startsWith('FF9999')) return '🟥'
+    if (c.startsWith('FFCC99')) return '🟧'
+    if (c.startsWith('FFFF99')) return '🟨'
+    if (c.startsWith('99FF99')) return '🟩'
+    if (c.startsWith('99CCFF')) return '🟦'
+    if (c.startsWith('CC99FF')) return '🟪'
+    if (c.startsWith('FF99FE')) return '🟫'
+    return '◻️'
   }
 
-  // Prefix for group level: folder emoji + EN SPACE
-  function makeGroupPrefix() {
-    return '\u2002' + '📁' + '\u2002'
+  // Use EM SPACE (U+2003) for spacing
+  const EM_SPACE = '\u2003'
+
+  // Prefix for collection level: books emoji + EM SPACE
+  function makeCollectionPrefix() {
+    return '📚' + EM_SPACE
   }
 
-  // Prefix for button level: color + bullet + EN SPACE
+  // Prefix for group level: color + EM SPACE + folder emoji + EM SPACE
+  function makeGroupPrefix(bg) {
+    return EM_SPACE + '◦' + EM_SPACE + '📁'
+  }
+
+  // Prefix for button level: color + EM SPACE + white bullet + EM SPACE
   function makeButtonPrefix(bg) {
-    return '\u2002' +colorEmoji(bg) + '•' + '\u2002'
+    return EM_SPACE + '◦' + EM_SPACE + '◦' + EM_SPACE + colorEmoji(bg)
   }
 
   qbCollections.forEach((collection, cIdx) => {
     const collectionName = collection.Text || `Collection ${cIdx + 1}`
-    const collectionId = collection.CollectionId ?? collection.Id ?? `col_${cIdx}`
+    const collectionId = collection.Id ?? `col_${cIdx}`
     const groups = Array.isArray(collection.Groups) ? collection.Groups : []
-    const isLastCollection = cIdx === qbCollections.length - 1
 
-    // Collection node (no prefix)
+    // Collection node (with books prefix)
     options.push({
       id: `col_${collectionId}`,
-      label: collectionName,
+      label: makeCollectionPrefix() + collectionName,
     })
 
     groups.forEach((group, gIdx) => {
       const groupName = group.ButtonText || `Group ${gIdx + 1}`
       const groupId = group.GroupId ?? group.Id ?? `grp_${gIdx}`
       const buttons = Array.isArray(group.Buttons) ? group.Buttons : []
-      const isLastGroup = gIdx === groups.length - 1
 
-      // Group node
+      // Group node (with color and folder prefix)
       options.push({
         id: `col_${collectionId}_grp_${groupId}`,
-        label: makeGroupPrefix() + groupName,
+        label: makeGroupPrefix(group.BackgroundColorHex) + groupName,
       })
 
       buttons.forEach((button, bIdx) => {
         const buttonName = button.ButtonText || `Button ${bIdx + 1}`
         const eventId = button.EventId ?? 0
-        // Button node
+        // Button node (with color and bullet prefix)
         options.push({
           id: eventId,
           label: makeButtonPrefix(button.BackgroundColorHex) + buttonName,

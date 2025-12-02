@@ -19,3 +19,4 @@ export const ICON_ID_CHOICES_FIXTURE = [
   'play2',
   'controller'
 ]
+
