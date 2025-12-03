@@ -6,9 +6,11 @@ import {ApiMessageSibInfo} from '../sib-api/apiMessageSibInfo.js'
 import {parseApiMessageSibInfo} from '../parsers/parseApiMessageSibInfo.js'
 import {parseCollectionWithGroupsAndButtonsArray} from '../parsers/parseCollectionWithGroupsAndButtonsArray.js'
 import {ApiSportTeamWithoutPlayers} from '../sib-api/apiSportTeamWithoutPlayers.js'
+import {ApiSportTeamLogo} from '../sib-api/apiSportTeamLogo.js'
 
 import {parseApiSportTeamWithoutPlayersArray} from '../parsers/parseApiSportTeamWithoutPlayersArray.js'
 import {parseApiRundownWithoutItemsArray} from '../parsers/parseApiRundownWithoutItemsArray.js'
+import {parseApiSportTeamLogo} from '../parsers/parseApiSportTeamLogo.js'
 
 const apiHttp = 'http://'
 const apiHb = '/api/hb/'
@@ -17,6 +19,7 @@ const apiQuickButtonCollectionsFull = '/api/quickButtonCollectionsFull/'
 const apiIcon = '/api/iconPng/'
 const apiTeams = '/api/teams/'
 const apiTeam = '/api/team/'
+const apiTeamLogo = '/api/team-logo/'
 const apiMatch = '/api/match/'
 const apiRundownWithoutItems = '/api/rundown-without-items/'
 const apiRundownSelectedRun = '/api/rundown/selected-run/'
@@ -650,6 +653,70 @@ export async function sibHttpClientRundownSelect(baseUrl, rundownId, token, devi
         })
         .on('error', (e) => {
           logger.error("API, can't trigger rundown select: %s.", e.message);
+          reject(e);
+        });
+    } catch (e) {
+      logger.error('Error constructing URL or making request: %s.', e.message);
+      reject(e);
+    }
+  });
+}
+
+/**
+ * Gets team logo by team ID.
+ * @param {string} baseUrl - Base URL of the API.
+ * @param {number} teamId - The team ID to fetch logo for.
+ * @param {string} token - Authentication token.
+ * @param {string} deviceId - Device ID for authentication.
+ * @returns {Promise<ApiSportTeamLogo>}
+ */
+export async function sibHttpClientGetTeamLogo(baseUrl, teamId, token, deviceId) {
+  return new Promise((resolve, reject) => {
+    try {
+      const url = new URL(apiHttp + baseUrl);
+
+      if (!passIsSet(token)) {
+        // http://localhost:8080/api/team-logo/1/
+        url.pathname = `${apiTeamLogo}${teamId}/`;
+      } else {
+        // http://localhost:8080/api/team-logo/1/my_pass
+        url.pathname = `${apiTeamLogo}${teamId}/${token}`;
+      }
+
+      // Add deviceId as query parameter if available
+      if (passIsSet(deviceId)) {
+        url.searchParams.append('deviceId', deviceId);
+      }
+
+      logger.debug('Called url: ' + url.toString());
+
+      let rawData = '';
+
+      http
+        .get(url.toString(), (res) => {
+          // Reject on any non-2xx status code
+          if (res.statusCode < 200 || res.statusCode >= 300) {
+            logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString());
+            return reject(new Error(`HTTP Error ${res.statusCode}`));
+          }
+
+          res.on('data', (chunk) => {
+            rawData += chunk;
+          });
+
+          res.on('end', () => {
+            try {
+              logger.debug('API. Got team logo from API. TeamId: %s', teamId);
+              const apiData = parseApiSportTeamLogo(rawData);
+              resolve(apiData);
+            } catch (e) {
+              logger.warn("API, can't parse team logo from API: %s.", e.message);
+              reject(e);
+            }
+          });
+        })
+        .on('error', (e) => {
+          logger.error("API, can't get team logo from API: %s.", e.message);
           reject(e);
         });
     } catch (e) {
