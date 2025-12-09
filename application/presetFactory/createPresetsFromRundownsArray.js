@@ -11,6 +11,7 @@ import {logger} from "../../logger.js";
  * @returns {object} presets dictionary
  */
 export function createPresetsFromRundownsArray(allRundowns, sibIcons) {
+  logger.debug('[createPresetsFromRundownsArray] Start creating rundown presets')
   const presets = {}
   const CATEGORY = 'Rundowns'
 
@@ -130,5 +131,6 @@ export function createPresetsFromRundownsArray(allRundowns, sibIcons) {
     }
   }
 
+  logger.debug('[createPresetsFromRundownsArray] Finished creating rundown presets')
   return presets
 }

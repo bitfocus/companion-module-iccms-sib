@@ -13,6 +13,7 @@ import { syncSibDataToCompanion } from './application/controllers/syncSibDataToC
 import { SibWebSocket } from './infrastructure/connection/sibWebSocket.js'
 import { updateActionsAtStartup } from './application/actions.js'
 import { sibHttpClientChangeTeamById } from './infrastructure/connection/sibHttpClient.js'
+import { parseCollectionWithGroupsAndButtonsArray } from './infrastructure/parsers/parseCollectionWithGroupsAndButtonsArray.js'
 
 /**
  * When your module is started, first the constructor will be called, followed by your upgrade scripts and then the init method.
@@ -135,11 +136,12 @@ class SibPluginInstance extends InstanceBase {
 
         let allTeams = this.#sibComputer.getSibTeams()
         let allRundowns = this.#sibComputer.getSibRundowns()
+        let qbCollections = this.#sibComputer.getCollectionsWithButtons()
 
         await syncSibDataToCompanion(
           this.#sibComputer,
           this.#sibIcons,
-          value,
+          qbCollections,
           this,
           this.#sibSocket,
           allTeams,
@@ -153,11 +155,12 @@ class SibPluginInstance extends InstanceBase {
 
 				let allTeams = this.#sibComputer.getSibTeams()
 				let allRundowns = this.#sibComputer.getSibRundowns()
+				let qbCollections = this.#sibComputer.getCollectionsWithButtons()
 
 				await syncSibDataToCompanion(
 					this.#sibComputer,
 					this.#sibIcons,
-					value,
+					qbCollections,
 					this,
 					this.#sibSocket,
 					allTeams,
@@ -166,7 +169,10 @@ class SibPluginInstance extends InstanceBase {
 			})
 
 			this.#sibConnection.on(sibConnectionEvents.OnSibQuickButtonsUpdated, async (value) => {
-				logger.debug(`Got connected data.`)
+				logger.debug(`Got QuickButtons data.`)
+
+				const qbCollections = parseCollectionWithGroupsAndButtonsArray(value)
+				this.#sibComputer.setSibCollections(qbCollections)
 
 				let allTeams = this.#sibComputer.getSibTeams()
         let allRundowns = this.#sibComputer.getSibRundowns()
@@ -174,7 +180,7 @@ class SibPluginInstance extends InstanceBase {
 				await syncSibDataToCompanion(
 					this.#sibComputer,
 					this.#sibIcons,
-					value,
+					qbCollections,
 					this,
 					this.#sibSocket,
 					allTeams,

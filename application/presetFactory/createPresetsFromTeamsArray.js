@@ -2,6 +2,7 @@ import { combineRgb } from '@companion-module/base'
 import { actionId } from '../actionId.js'
 import { colord } from 'colord'
 import { apiSportTeamType } from '../../infrastructure/sib-api/apiSportTeamType.js'
+import { logger } from '../../logger.js'
 
 /**
  * Create team presets with header and two buttons (home/guest) per team, under "Teams" category.
@@ -9,6 +10,7 @@ import { apiSportTeamType } from '../../infrastructure/sib-api/apiSportTeamType.
  * @returns {object} presets dictionary
  */
 export function createPresetsFromTeamsArray(teams) {
+  logger.debug('[createPresetsFromTeamsArray] Start creating team presets')
   if (!Array.isArray(teams) || !teams) {
     return {}
   }
@@ -101,5 +103,6 @@ export function createPresetsFromTeamsArray(teams) {
     presets[guestButtonId] = makeTeamButton(apiSportTeamType.Guest)
   }
 
+  logger.debug('[createPresetsFromTeamsArray] Finished creating team presets')
   return presets
 }

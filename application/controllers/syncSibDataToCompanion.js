@@ -1,6 +1,3 @@
-import {
-  parseCollectionWithGroupsAndButtonsArray
-} from '../../infrastructure/parsers/parseCollectionWithGroupsAndButtonsArray.js'
 import {updatePresetsAtRuntime} from '../presetFactory/updatePresetsAtRuntime.js'
 import {logger} from '../../logger.js'
 import {updateActionsAtRuntime} from '../actions.js'
@@ -16,7 +13,7 @@ import {
  *
  * @param {SibComputer} sibComputer
  * @param {SibIcons} sibIcons Holds all icons as name and converted value
- * @param {string} apiCommand QuickButton collections from API
+ * @param {apiQuickButtonCollectionWithGroupsAndButtons[]} qbCollections Already parsed QuickButton collections
  * @param {SibPluginInstance} cmpModule
  * @param {SibWebSocket} sibSocket
  * @param {ApiSportTeamWithoutPlayers[]} allTeams All teams from API
@@ -25,7 +22,7 @@ import {
 export async function syncSibDataToCompanion(
   sibComputer,
   sibIcons,
-  apiCommand,
+  qbCollections,
   cmpModule,
   sibSocket,
   allTeams,
@@ -33,16 +30,13 @@ export async function syncSibDataToCompanion(
 ) {
   logger.debug('syncSibDataToCompanion. Begin.')
 
-  if (typeof apiCommand !== 'object') {
-    logger.warn('syncSibDataToCompanion. Parsed is not an object.')
+  if (!Array.isArray(qbCollections)) {
+    logger.warn('syncSibDataToCompanion. qbCollections is not an array.')
     return null
   }
 
-  const qbCollections = parseCollectionWithGroupsAndButtonsArray(apiCommand)
-
   logger.debug(`qbCollections ${qbCollections.length}`)
 
-  sibComputer.setSibCollections(qbCollections)
   const iconIds = getAllUniqueIconIdsFromQbCollectionsAndRundowns(qbCollections, allRundowns)
 
   await sibIcons.updateIcons(iconIds, sibComputer.getConnectionConfig(), sibComputer.getSibVersion())
@@ -71,5 +65,5 @@ export async function syncSibDataToCompanion(
     allRundowns
   )
 
-  logger.debug(`controllerQuickButtonCollections. Done.`)
+  logger.debug(`syncSibDataToCompanion. Done.`)
 }

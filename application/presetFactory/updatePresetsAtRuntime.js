@@ -1,6 +1,7 @@
 import { createPresetsFromCollectionsWithGroupsAndButtons } from './createPresetsFromCollectionsWithGroupsAndButtons.js'
 import { createPresetsFromTeamsArray } from './createPresetsFromTeamsArray.js'
 import { createPresetsFromRundownsArray } from './createPresetsFromRundownsArray.js'
+import { logger } from '../../logger.js'
 
 /**
  * Aggregates and sets all presets on the Companion module.
@@ -12,6 +13,7 @@ import { createPresetsFromRundownsArray } from './createPresetsFromRundownsArray
  * @param {ApiRundownWithoutItemsArray} allRundowns
  */
 export function updatePresetsAtRuntime(cmpModule, sibComputer, sibIcons, allTeams, allRundowns) {
+  logger.debug('[updatePresetsAtRuntime] Start updating presets at runtime')
   let presetsAll = {}
 
   // Collections for presets
@@ -40,4 +42,5 @@ export function updatePresetsAtRuntime(cmpModule, sibComputer, sibIcons, allTeam
   }
 
   cmpModule.setPresetDefinitions(presetsAll)
+  logger.debug('[updatePresetsAtRuntime] Finished updating presets at runtime')
 }

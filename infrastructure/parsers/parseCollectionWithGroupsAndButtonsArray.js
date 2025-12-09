@@ -16,12 +16,8 @@ export function parseCollectionWithGroupsAndButtonsArray(collectionsJson) {
 		msgValue = collectionsJson
 	}
 
-	// if (!Array.isArray(collectionsJson)) {
-	// 	logger.error('collectionsJson is not array.')
-	// 	return []
-	// }
-
 	let collectionObjects = []
+
 
 	try {
 		msgValue.forEach((element) => {
@@ -36,14 +32,8 @@ export function parseCollectionWithGroupsAndButtonsArray(collectionsJson) {
 		})
 	} catch (e) {
 		logger.error('Collection loop. %s.', e)
+		logger.error('collectionsJson on error: %O', collectionsJson)
 	}
-
-	//logger.warn(JSON.stringify(collectionObjects))
-
-	//const jsonString = JSON.stringify(collectionObjects)
-	//let parsed = JSON.parse(jsonString)
-
-	//logger.warn(JSON.stringify(parsed))
 
 	return collectionObjects
 }
