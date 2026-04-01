@@ -88,6 +88,7 @@ class SibPluginInstance extends InstanceBase {
 			const sibReconnect = config[configFieldId.Reconnect]
 			const sibDebug = config[configFieldId.DebugMessages]
 			const sibReset = config[configFieldId.ResetVariables]
+			const sibDisableDataFetch = config[configFieldId.DisableDataFetch]
 
 			if (sibDebug) {
 				logger.level = 'debug'
@@ -95,7 +96,7 @@ class SibPluginInstance extends InstanceBase {
 				logger.level = 'error'
 			}
 
-			this.#sibConfig = new SibConnection(sibHost, sibPort, sibPass, sibReconnect, sibDebug, sibReset, sibToken)
+			this.#sibConfig = new SibConnection(sibHost, sibPort, sibPass, sibReconnect, sibDebug, sibReset, sibToken, sibDisableDataFetch)
 
 			this.#sibComputer = new SibComputer()
 			this.#sibIcons = new SibIcons()
@@ -296,6 +297,7 @@ class SibPluginInstance extends InstanceBase {
 		const sibReconnect = config[configFieldId.Reconnect]
 		const sibDebug = config[configFieldId.DebugMessages]
 		const sibReset = config[configFieldId.ResetVariables]
+		const sibDisableDataFetch = config[configFieldId.DisableDataFetch]
 
 		if (sibDebug) {
 			logger.level = 'debug'
@@ -303,7 +305,7 @@ class SibPluginInstance extends InstanceBase {
 			logger.level = 'error'
 		}
 
-		this.#sibConfig = new SibConnection(sibHost, sibPort, sibPass, sibReconnect, sibDebug, sibReset, sibToken)
+		this.#sibConfig = new SibConnection(sibHost, sibPort, sibPass, sibReconnect, sibDebug, sibReset, sibToken, sibDisableDataFetch)
 
 		this.#sibComputer.setConnectionConfig(this.#sibConfig)
 		await this.#sibConnection.connectToSib(this.#sibConfig)
@@ -383,6 +385,14 @@ class SibPluginInstance extends InstanceBase {
 				isVisible: () => false,
 				label: 'Reset variables',
 				tooltip: 'Reset variables on init and on connect',
+				width: 6,
+				default: false,
+			},
+			{
+				type: 'checkbox',
+				id: configFieldId.DisableDataFetch,
+				label: 'Disable data fetching',
+				tooltip: 'Only fetch heartbeat and database info. Disables teams, quick buttons, and rundowns polling.',
 				width: 6,
 				default: false,
 			},

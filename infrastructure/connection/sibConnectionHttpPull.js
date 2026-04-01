@@ -149,6 +149,13 @@ export class SibConnectionHttpPull extends EventEmitter {
         this.emit(sibConnectionEvents.OnSibDatabaseChanges, sinInfo);
       }
 
+      if (this.#sibConfig.disableDataFetch === true) {
+        logger.debug('Data fetching disabled. Skipping heavy API calls.');
+        this.#prevSibInfo = sinInfo;
+        this.emit(sibConnectionEvents.OnSibConnected);
+        return;
+      }
+
       // Determine if we have component timestamps for selective updates
       const hasPrev = !!prevComponent;
       const hasCurr = !!currComponent;

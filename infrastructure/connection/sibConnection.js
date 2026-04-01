@@ -11,8 +11,9 @@ export class SibConnection {
 	 * @param {boolean} printDebug
 	 * @param {boolean} resetVars
 	 * @param {string} helperToken
+	 * @param {boolean} disableDataFetch - disable heavy API calls (teams, quick buttons, rundowns).
 	 */
-	constructor(sibIp, sibPort, token, reconnect, printDebug, resetVars, helperToken) {
+	constructor(sibIp, sibPort, token, reconnect, printDebug, resetVars, helperToken, disableDataFetch) {
 		this.sibIp = sibIp
 		this.sibPort = sibPort
 		this.token = token
@@ -29,6 +30,7 @@ export class SibConnection {
 		this.debugMessages = printDebug
 		this.resetVariables = resetVars
 		this.pullIntervall = 10000
+		this.disableDataFetch = !!disableDataFetch
 	}
 
 	/**
