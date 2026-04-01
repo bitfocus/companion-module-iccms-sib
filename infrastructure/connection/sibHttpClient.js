@@ -12,6 +12,16 @@ import {parseApiSportTeamWithoutPlayersArray} from '../parsers/parseApiSportTeam
 import {parseApiRundownWithoutItemsArray} from '../parsers/parseApiRundownWithoutItemsArray.js'
 import {parseApiSportTeamLogo} from '../parsers/parseApiSportTeamLogo.js'
 
+/**
+ * Error thrown when SIB responds with 429 Too Many Requests.
+ */
+export class SibRateLimitError extends Error {
+  constructor() {
+    super('SIB rate limit exceeded (429)')
+    this.name = 'SibRateLimitError'
+  }
+}
+
 const apiHttp = 'http://'
 const apiHb = '/api/hb/'
 const apiQuickButton = '/api/quickbutton'
@@ -97,6 +107,10 @@ export async function sibHttpClientGetSibInfo(baseUrl, deviceId) {
 
       http
         .get(url.toString(), (res) => {
+          if (res.statusCode === 429) {
+            logger.warn('API. Rate limited (429). Url: %s', url.toString());
+            return reject(new SibRateLimitError());
+          }
           // Reject on any non-2xx status code
           if (res.statusCode < 200 || res.statusCode >= 300) {
             logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString());
@@ -179,6 +193,10 @@ export async function sibHttpClientGetQuickButtonCollectionsAsync(baseUrl, token
 
       http
         .get(url.toString(), (res) => {
+          if (res.statusCode === 429) {
+            logger.warn('API. Rate limited (429). Url: %s', url.toString());
+            return reject(new SibRateLimitError());
+          }
           // Reject on any non-2xx status code
           if (res.statusCode < 200 || res.statusCode >= 300) {
             logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString());
@@ -252,6 +270,10 @@ export function sibHttpClientGetPngIconBase64(baseUrl, token, iconId, deviceId, 
         .get(url.toString(), (res) => {
           let chunks_of_data = [];
 
+          if (res.statusCode === 429) {
+            logger.warn('API. Rate limited (429). Icon: %s, url: %s', iconId, url.toString());
+            return reject(new SibRateLimitError());
+          }
           // Reject on any non-2xx status code
           if (res.statusCode < 200 || res.statusCode >= 300) {
             logger.error('API. HTTP Error %s. Icon: %s, url: %s', res.statusCode, iconId, url.toString());
@@ -315,6 +337,10 @@ export async function sibHttpClientGetTeams(baseUrl, token, deviceId) {
 
       http
         .get(url.toString(), (res) => {
+          if (res.statusCode === 429) {
+            logger.warn('API. Rate limited (429). Url: %s', url.toString());
+            return reject(new SibRateLimitError());
+          }
           // Reject on any non-2xx status code
           if (res.statusCode < 200 || res.statusCode >= 300) {
             logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString());
@@ -404,6 +430,10 @@ export async function sibHttpClientGetRundownsWithoutItems(baseUrl, token, devic
 
       http
         .get(url.toString(), (res) => {
+          if (res.statusCode === 429) {
+            logger.warn('API. Rate limited (429). Url: %s', url.toString());
+            return reject(new SibRateLimitError());
+          }
           // Reject on any non-2xx status code
           if (res.statusCode < 200 || res.statusCode >= 300) {
             logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString());
@@ -466,6 +496,10 @@ export async function sibHttpClientRundownSelectedItemRun(baseUrl, rundownId, to
 
       http
         .get(url.toString(), (res) => {
+          if (res.statusCode === 429) {
+            logger.warn('API. Rate limited (429). Url: %s', url.toString());
+            return reject(new SibRateLimitError());
+          }
           // Reject on any non-2xx status code
           if (res.statusCode < 200 || res.statusCode >= 300) {
             logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString());
@@ -522,6 +556,10 @@ export async function sibHttpClientRundownSelectPreviousItem(baseUrl, token, dev
 
       http
         .get(url.toString(), (res) => {
+          if (res.statusCode === 429) {
+            logger.warn('API. Rate limited (429). Url: %s', url.toString());
+            return reject(new SibRateLimitError());
+          }
           // Reject on any non-2xx status code
           if (res.statusCode < 200 || res.statusCode >= 300) {
             logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString());
@@ -578,6 +616,10 @@ export async function sibHttpClientRundownSelectNextItem(baseUrl, token, deviceI
 
       http
         .get(url.toString(), (res) => {
+          if (res.statusCode === 429) {
+            logger.warn('API. Rate limited (429). Url: %s', url.toString());
+            return reject(new SibRateLimitError());
+          }
           // Reject on any non-2xx status code
           if (res.statusCode < 200 || res.statusCode >= 300) {
             logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString());
@@ -635,6 +677,10 @@ export async function sibHttpClientRundownSelect(baseUrl, rundownId, token, devi
 
       http
         .get(url.toString(), (res) => {
+          if (res.statusCode === 429) {
+            logger.warn('API. Rate limited (429). Url: %s', url.toString());
+            return reject(new SibRateLimitError());
+          }
           // Reject on any non-2xx status code
           if (res.statusCode < 200 || res.statusCode >= 300) {
             logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString());
@@ -694,6 +740,10 @@ export async function sibHttpClientGetTeamLogo(baseUrl, teamId, token, deviceId)
 
       http
         .get(url.toString(), (res) => {
+          if (res.statusCode === 429) {
+            logger.warn('API. Rate limited (429). Url: %s', url.toString());
+            return reject(new SibRateLimitError());
+          }
           // Reject on any non-2xx status code
           if (res.statusCode < 200 || res.statusCode >= 300) {
             logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString());

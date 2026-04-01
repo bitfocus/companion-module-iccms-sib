@@ -2,6 +2,7 @@ import EventEmitter from 'events'
 import {sibConnectionEvents} from './sibConnectionEvents.js'
 import {logger} from '../../logger.js'
 import {
+  SibRateLimitError,
   sibHttpClientGetQuickButtonCollectionsAsync, sibHttpClientGetRundownsWithoutItems,
   sibHttpClientGetSibInfo,
   sibHttpClientGetTeams,
@@ -78,19 +79,11 @@ export class SibConnectionHttpPull extends EventEmitter {
     this.#deviceId = "companion-module-iccms-sib"
     this.#teamLogos = new TeamLogos()
 
-    // Will time out gui sometimes. Make the first call not to wait for a timer.
-    setImmediate(async () => {
-      await this.#apiTimerTick()
-    })
-
-    clearInterval(this.#pullTimer)
+    clearTimeout(this.#pullTimer)
     this.#pullTimer = null
 
-    this.#pullTimer = setInterval(async () => {
-      await this.#apiTimerTick()
-    }, this.#sibConfig.pullIntervall)
-
-    this.emit(sibConnectionEvents.OnSibConnected)
+    await this.#apiTimerTick()
+    this.#scheduleNextTick()
 
     this.isInitialized = true
 
@@ -104,9 +97,20 @@ export class SibConnectionHttpPull extends EventEmitter {
     logger.debug('Disconnect from sib.')
 
     this.isInitialized = false
-    clearInterval(this.#pullTimer)
+    clearTimeout(this.#pullTimer)
 
     this.emit(sibConnectionEvents.OnSibDisconnected, '')
+  }
+
+  /**
+   * Schedule the next timer tick after the current one completes.
+   * Uses setTimeout to ensure ticks never overlap.
+   */
+  #scheduleNextTick() {
+    this.#pullTimer = setTimeout(async () => {
+      await this.#apiTimerTick()
+      this.#scheduleNextTick()
+    }, this.#sibConfig.pullIntervall)
   }
 
   /**
@@ -195,6 +199,12 @@ export class SibConnectionHttpPull extends EventEmitter {
             this.emit(sibConnectionEvents.OnSibTeamsUpdated, apiTeams);
           }
         } catch (error) {
+          if (error instanceof SibRateLimitError) {
+            logger.warn('Rate limited by SIB on teams. Skipping remaining calls.');
+            this.emit(sibConnectionEvents.OnSibError, 'Rate limited by SIB. Waiting for next tick.');
+            this.#prevSibInfo = sinInfo;
+            return;
+          }
           logger.error('Sib request for teams failed, %s', error);
           this.emit(sibConnectionEvents.OnSibError, 'Request to sib failed. Check password in settings.');
         }
@@ -216,6 +226,12 @@ export class SibConnectionHttpPull extends EventEmitter {
             this.emit(sibConnectionEvents.OnSibQuickButtonsUpdated, apiCollections);
           }
         } catch (error) {
+          if (error instanceof SibRateLimitError) {
+            logger.warn('Rate limited by SIB on collections. Skipping remaining calls.');
+            this.emit(sibConnectionEvents.OnSibError, 'Rate limited by SIB. Waiting for next tick.');
+            this.#prevSibInfo = sinInfo;
+            return;
+          }
           logger.error('Sib request for collections failed, %s', error);
           this.emit(sibConnectionEvents.OnSibError, 'Request to sib failed. Check password in settings.');
         }
@@ -236,6 +252,12 @@ export class SibConnectionHttpPull extends EventEmitter {
             this.emit(sibConnectionEvents.OnSibRundownUpdated, apiRundowns);
           }
         } catch (error) {
+          if (error instanceof SibRateLimitError) {
+            logger.warn('Rate limited by SIB on rundowns. Skipping remaining calls.');
+            this.emit(sibConnectionEvents.OnSibError, 'Rate limited by SIB. Waiting for next tick.');
+            this.#prevSibInfo = sinInfo;
+            return;
+          }
           logger.error('Sib request for rundowns failed, %s', error);
           this.emit(sibConnectionEvents.OnSibError, 'Request to sib failed. Check password in settings.');
         }
@@ -248,6 +270,11 @@ export class SibConnectionHttpPull extends EventEmitter {
 
       logger.debug('Timer tick. Done.');
     } catch (error) {
+      if (error instanceof SibRateLimitError) {
+        logger.warn('Rate limited by SIB on heartbeat. Waiting for next tick.');
+        this.emit(sibConnectionEvents.OnSibError, 'Rate limited by SIB. Waiting for next tick.');
+        return;
+      }
       logger.debug('Sib request for info failed, %s.', error);
       this.emit(sibConnectionEvents.OnSibError, 'Connection to SIB failed. Check that SIB is running.');
       return;

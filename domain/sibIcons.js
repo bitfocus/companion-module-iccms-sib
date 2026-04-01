@@ -1,5 +1,5 @@
 import {logger} from '../logger.js'
-import {sibHttpClientGetPngIconBase64} from '../infrastructure/connection/sibHttpClient.js'
+import {sibHttpClientGetPngIconBase64, SibRateLimitError} from '../infrastructure/connection/sibHttpClient.js'
 
 /**
  * Used to store svg icons that are used by sib as dictionary locally.
@@ -36,17 +36,17 @@ export class SibIcons {
    * @param {Iterable<string>} iconIds - Set or array of unique icon IDs to fetch.
    * @param {SibConnection} connectionCfg
    * @param {string} sibVersion
-   * @returns {Promise<void>}
+   * @returns {Promise<boolean>} true if all icons fetched, false if interrupted by rate limit (429).
    */
   async updateIcons(iconIds, connectionCfg, sibVersion) {
     if (typeof connectionCfg == 'undefined') {
       logger.warn('Icons, null connection string.')
-      return
+      return true
     }
 
     if (typeof iconIds == 'undefined') {
       this.#icons.clear()
-      return
+      return true
     }
 
     if (sibVersion.startsWith(this.#sibVersionWithIconApi)) {
@@ -54,7 +54,7 @@ export class SibIcons {
         'ICONS. Sib needs to be update to get icons: %s. Version with icons was released Aug 2023.',
         sibVersion
       )
-      return
+      return true
     }
 
     logger.debug('ICONS. Update icons. Known keys: %o.', Array.from(this.#icons.keys()))
@@ -68,6 +68,7 @@ export class SibIcons {
     logger.debug('ICONS. New icons to fetch: %o.', newIconIds)
 
     let convertedIcons = []
+    let rateLimited = false
 
     // Fetch new icons sequentially
     for (const iconId of newIconIds) {
@@ -77,7 +78,11 @@ export class SibIcons {
           convertedIcons.push({iconId, png64: base64png})
         }
       } catch (error) {
-        // handle error (skip or log)
+        if (error instanceof SibRateLimitError) {
+          logger.warn('ICONS. Rate limited by SIB. Stopping icon fetch, will retry later.')
+          rateLimited = true
+          break
+        }
       }
     }
 
@@ -105,6 +110,8 @@ export class SibIcons {
     })
 
     logger.debug('ICONS. Icons after update: %o.', Array.from(this.#icons.keys()))
+
+    return !rateLimited
   }
 
   /**
@@ -157,7 +164,11 @@ export class SibIcons {
         return ''
       }
     } catch (error) {
-      logger.warn(`Icons. fetchIconById: error fetching icon ${iconId}: ${error}`)
+      if (error instanceof SibRateLimitError) {
+        logger.warn(`Icons. fetchIconById: rate limited by SIB for icon ${iconId}`)
+      } else {
+        logger.warn(`Icons. fetchIconById: error fetching icon ${iconId}: ${error}`)
+      }
       return ''
     }
   }

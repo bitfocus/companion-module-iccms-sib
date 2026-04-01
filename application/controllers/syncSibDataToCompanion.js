@@ -18,6 +18,7 @@ import {
  * @param {SibWebSocket} sibSocket
  * @param {ApiSportTeamWithoutPlayers[]} allTeams All teams from API
  * @param {ApiRundownWithoutItemsArray} allRundowns all rundowns from api
+ * @returns {Promise<boolean>} true if all icons fetched, false if icon fetch was interrupted by rate limit.
  */
 export async function syncSibDataToCompanion(
   sibComputer,
@@ -32,14 +33,14 @@ export async function syncSibDataToCompanion(
 
   if (!Array.isArray(qbCollections)) {
     logger.warn('syncSibDataToCompanion. qbCollections is not an array.')
-    return null
+    return true
   }
 
   logger.debug(`qbCollections ${qbCollections.length}`)
 
   const iconIds = getAllUniqueIconIdsFromQbCollectionsAndRundowns(qbCollections, allRundowns)
 
-  await sibIcons.updateIcons(iconIds, sibComputer.getConnectionConfig(), sibComputer.getSibVersion())
+  const iconsComplete = await sibIcons.updateIcons(iconIds, sibComputer.getConnectionConfig(), sibComputer.getSibVersion())
 
   const sibConfig = sibComputer.getConnectionConfig()
 
@@ -65,5 +66,7 @@ export async function syncSibDataToCompanion(
     allRundowns
   )
 
-  logger.debug(`syncSibDataToCompanion. Done.`)
+  logger.debug(`syncSibDataToCompanion. Done. Icons complete: ${iconsComplete}`)
+
+  return iconsComplete
 }
