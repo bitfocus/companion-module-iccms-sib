@@ -77,11 +77,11 @@ export function createPresetFromButton(parentCategoryId, qb, sibIcons) {
 		presetTriggerQb.style.bgcolor = bgClrInt
 	}
 
-	presetTriggerQb.style.color = getForegroundColorFromBackgroundColor(bgClrInt)
-
 	if (sibIcons.hasIcon(qb.IconId)) {
 		presetTriggerQb.style.png64 = composeIconWithGradient(sibIcons.getIconPngBase64(qb.IconId), qb.BackgroundColorHex)
+		presetTriggerQb.style.color = getForegroundColorFromBackgroundColor(bgClrInt)
 	} else {
+		presetTriggerQb.style.color = getForegroundColorFromBackgroundColor(bgClrInt)
 		logger.debug('Preset. Missing icon: %s', qb.IconId)
 	}
 

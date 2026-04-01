@@ -7,7 +7,7 @@ describe('Test get QB foreground background colors', () => {
 
 	it.each([
 		[defBackground, clrWhite],
-		[16751001, clrWhite],
+		[16751001, clrBlack], // #FF9999 (light pink) — black text for contrast
 		[16764057, clrBlack],
 		[16777113, clrBlack],
 		[10092441, clrBlack],

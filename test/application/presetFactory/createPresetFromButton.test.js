@@ -28,7 +28,7 @@ describe('Create preset from button', () => {
 
 		// style
 		expect(actual.style['text']).toBe('b_text')
-		expect(actual.style['color']).toBe(16777215)
+		expect(actual.style['color']).toBe(0) // #FF9999 is light — black text for contrast
 		expect(actual.style['bgcolor']).toBe(16751001)
 
 		// steps
