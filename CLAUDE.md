@@ -6,15 +6,17 @@ Sport In The Box 2 (SIB2) Companion module for Bitfocus Companion / StreamDeck.
 
 Uses `@companion-module/base ^1.4.3` (resolves to 1.14.1, API 1.14). Since API 1.13+, variables in `textinput` fields are auto-parsed — manual `parseVariablesInString` calls are no longer needed.
 
-## Project Structure
+## Architecture — Tactical DDD
 
-- **Action IDs**: `application/actionId.js` — all action identifiers as constants
-- **Action Definitions**: `application/actions.js` — action definitions, options, callbacks
-- **Action Factories**: `application/actionFactory/` — factory pattern (see `createRundownControlAction.js` for constants pattern)
-- **Feedback Definitions**: `application/feedbacks.js` — feedback definitions and callbacks
-- **Domain**: `domain/` — domain models and icons
-- **Infrastructure**: `infrastructure/` — parsers and API communication
-- **Tests**: `test/` — mirrors source directory structure
+The project uses **tactical Domain-Driven Design** patterns. Dependencies flow inward: `main.js` → `application/` → `domain/` and `infrastructure/`. Domain has no outward dependencies.
+
+- **`domain/`** — pure business logic and state (aggregates, value objects). No Companion SDK or HTTP knowledge.
+- **`infrastructure/`** — external communication: API DTOs (`sib-api/`), parsers as anti-corruption layer (`parsers/`), HTTP/WebSocket clients (`connection/`)
+- **`application/`** — orchestrates domain + infrastructure into Companion concepts (actions, feedbacks, presets, variables). Includes factories (`actionFactory/`, `presetFactory/`) and controllers.
+- **`main.js`** — composition root. Wires domain, infrastructure, and application together.
+- **`test/`** — mirrors source directory structure.
+
+See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed per-file descriptions.
 
 ## Build and Test
 
@@ -36,6 +38,7 @@ Uses `@companion-module/base ^1.4.3` (resolves to 1.14.1, API 1.14). Since API 1
 ## Debugging with Browser
 
 Use `@browser` / Chrome integration to read module logs from Companion's debug page:
+
 - **Debug URL**: `http://127.0.0.1:8000/connection-debug/{connectionId}`
 - Use `get_page_text` on the debug tab to read logs — module logs appear on the page, not in the browser console.
 - Use `find` + `computer` to click "Clear log" button at the top of the debug page before reading to reduce noise.
