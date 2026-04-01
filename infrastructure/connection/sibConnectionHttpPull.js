@@ -78,6 +78,10 @@ export class SibConnectionHttpPull extends EventEmitter {
     this.#sibConfig = config
     this.#deviceId = "companion-module-iccms-sib"
     this.#teamLogos = new TeamLogos()
+    this.#prevSibInfo = null
+    this.#prevTeams = null
+    this.#prevCollections = null
+    this.#prevRundowns = null
 
     clearTimeout(this.#pullTimer)
     this.#pullTimer = null
@@ -172,6 +176,15 @@ export class SibConnectionHttpPull extends EventEmitter {
         shouldUpdateTeams = prevComponent.Team !== currComponent.Team;
         shouldUpdateQuickButtons = prevComponent.QuickButton !== currComponent.QuickButton;
         shouldUpdateRundowns = prevComponent.Rundown !== currComponent.Rundown;
+
+        logger.debug(
+          'ComponentLastModified check — teams: %s, quickButtons: %s, rundowns: %s',
+          shouldUpdateTeams ? 'changed' : 'unchanged',
+          shouldUpdateQuickButtons ? 'changed' : 'unchanged',
+          shouldUpdateRundowns ? 'changed' : 'unchanged',
+        );
+      } else {
+        logger.debug('ComponentLastModified not available (prev: %o, curr: %o) — fetching all.', prevComponent, currComponent);
       }
 
       // Teams
