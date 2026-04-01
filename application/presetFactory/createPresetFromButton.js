@@ -2,6 +2,7 @@ import { combineRgb } from '@companion-module/base'
 import { actionId } from '../actionId.js'
 import { parseBgColorToPresetBgColor } from './parseBgColorToPresetBgColor.js'
 import { getForegroundColorFromBackgroundColor } from './getForegroundColorFromBackgroundColor.js'
+import { composeIconWithGradient } from '../../domain/imageProcessing.js'
 import { logger } from '../../logger.js'
 
 /**
@@ -60,7 +61,7 @@ export function createPresetFromButton(parentCategoryId, qb, sibIcons) {
 						// add an action on down press
 						actionId: actionId.TriggerEvent,
 						options: {
-							[actionId.TriggerEvent]: qb.Id,
+							[actionId.TriggerEvent]: qb.EventId,
 						},
 					},
 				],
@@ -78,7 +79,7 @@ export function createPresetFromButton(parentCategoryId, qb, sibIcons) {
 	presetTriggerQb.style.color = getForegroundColorFromBackgroundColor(bgClrInt)
 
 	if (sibIcons.hasIcon(qb.IconId)) {
-		presetTriggerQb.style.png64 = sibIcons.getIconPngBase64(qb.IconId)
+		presetTriggerQb.style.png64 = composeIconWithGradient(sibIcons.getIconPngBase64(qb.IconId), qb.BackgroundColorHex)
 	} else {
 		logger.debug('Preset. Missing icon: %s', qb.IconId)
 	}

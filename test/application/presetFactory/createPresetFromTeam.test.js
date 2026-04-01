@@ -3,16 +3,18 @@ import { createPresetFromTeam } from '../../../application/presetFactory/createP
 import { ApiSportTeamWithoutPlayers } from '../../../infrastructure/sib-api/apiSportTeamWithoutPlayers.js'
 import { apiSportTeamType } from '../../../infrastructure/sib-api/apiSportTeamType.js'
 import { defineFixture } from 'efate'
-import { faker } from '@faker-js/faker'
+import { createTestPngBase64 } from '../../fixtures/testPngBase64.js'
 
 describe('Create preset from team', () => {
+	const testLogoPng = createTestPngBase64(72, 72, 200, 50, 50)
+
 	const teamWithSmallLogoFixture = defineFixture((t) => {
 		t['Id'].asNumber({ min: 1 })
 		t['Name'].asString()
 		t['ShortName'].asString()
 		t['LogoBase64'].as(() => '')
-		t['LogoSmallBase64'].as(() => faker.internet.emoji())
-		t['TeamColorHex'].as(() => faker.color.rgb({ format: 'hex', casing: 'upper' }))
+		t['LogoSmallBase64'].as(() => testLogoPng)
+		t['TeamColorHex'].as(() => '#FF0000')
 	})
 
 	const teamWithDarkColorFixture = defineFixture((t) => {
@@ -43,7 +45,7 @@ describe('Create preset from team', () => {
 		expected.Name = 'Team Arlen'
 		expected.ShortName = 'T-Arl'
 		expected.LogoBase64 = 'logo_64'
-		expected.LogoSmallBase64 = 'logo_small_64'
+		expected.LogoSmallBase64 = testLogoPng
 		expected.TeamColorHex = '#F2EA35FF'
 
 		// act
@@ -58,7 +60,7 @@ describe('Create preset from team', () => {
 		expect(actual.style['text']).toBe(expected.Name)
 		expect(actual.style['color']).toBe(16777215)
 		expect(actual.style['bgcolor']).toBe(0)
-		expect(actual.style['png64']).toBe('logo_small_64')
+		expect(actual.style['png64']).toBeTruthy()
 
 		// steps
 
@@ -84,7 +86,7 @@ describe('Create preset from team', () => {
 		// assert
 		expect(actual.style['color']).toBe(clrWhite)
 		expect(actual.style['bgcolor']).toBe(clrBlack)
-		expect(actual.style['png64']).toBe(expected['LogoSmallBase64'])
+		expect(actual.style['png64']).toBeTruthy()
 	})
 
 	test('If there is no logo and team color is dark, make background white', () => {

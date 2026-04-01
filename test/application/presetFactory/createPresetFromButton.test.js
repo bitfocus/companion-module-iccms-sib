@@ -35,7 +35,7 @@ describe('Create preset from button', () => {
 
 		// up
 		expect(actual.steps[0].down[0].actionId).toBe(actionId.TriggerEvent)
-		expect(actual.steps[0].down[0].options[actionId.TriggerEvent]).toBe(apiButton.Id)
+		expect(actual.steps[0].down[0].options[actionId.TriggerEvent]).toBe(apiButton.EventId)
 
 		// down
 		expect(actual.steps[0].up).toEqual(expect.any(Array))

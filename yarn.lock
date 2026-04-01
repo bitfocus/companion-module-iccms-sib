@@ -3227,6 +3227,7 @@ __metadata:
     jest-fetch-mock: "npm:^3.0.3"
     object-path: "npm:^0.11.8"
     path: "npm:^0.12.7"
+    pngjs: "npm:^7.0.0"
     webpack: "npm:^5.94.0"
     webpack-cli: "npm:^5.1.4"
     winston: "npm:^3.11.0"
@@ -5991,6 +5992,13 @@ __metadata:
   dependencies:
     find-up: "npm:^4.0.0"
   checksum: 10/9863e3f35132bf99ae1636d31ff1e1e3501251d480336edb1c211133c8d58906bed80f154a1d723652df1fda91e01c7442c2eeaf9dc83157c7ae89087e43c8d6
+  languageName: node
+  linkType: hard
+
+"pngjs@npm:^7.0.0":
+  version: 7.0.0
+  resolution: "pngjs@npm:7.0.0"
+  checksum: 10/e843ebbb0df092ee0f3a3e7dbd91ff87a239a4e4c4198fff202916bfb33b67622f4b83b3c29f3ccae94fcb97180c289df06068624554f61686fe6b9a4811f7db
   languageName: node
   linkType: hard
 

@@ -2,6 +2,7 @@ import { combineRgb } from '@companion-module/base'
 import { actionId } from '../actionId.js'
 import { colord } from 'colord'
 import { apiSportTeamType } from '../../infrastructure/sib-api/apiSportTeamType.js'
+import { composeIconWithGradient } from '../../domain/imageProcessing.js'
 
 /**
  * Create companion preset from qb collection with groups and buttons.
@@ -91,7 +92,7 @@ export function createPresetFromTeam(team, teamType) {
 		// with logo, ignore team color
 		presetTeam.style.color = combineRgb(255, 255, 255)
 		presetTeam.style.bgcolor = combineRgb(0, 0, 0)
-		presetTeam.style.png64 = team.LogoSmallBase64
+		presetTeam.style.png64 = composeIconWithGradient(team.LogoSmallBase64, team.TeamColorHex)
 	} else {
 		// no logo, use team color.
 		if (colord(team.TeamColorHex).isDark()) {

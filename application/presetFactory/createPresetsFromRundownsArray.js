@@ -2,6 +2,7 @@ import { combineRgb } from '@companion-module/base'
 import { actionId } from '../actionId.js'
 import { parseBgColorToPresetBgColor } from './parseBgColorToPresetBgColor.js'
 import { getForegroundColorFromBackgroundColor } from './getForegroundColorFromBackgroundColor.js'
+import { composeIconWithGradient } from '../../domain/imageProcessing.js'
 import {logger} from "../../logger.js";
 
 /**
@@ -84,7 +85,7 @@ export function createPresetsFromRundownsArray(allRundowns, sibIcons) {
 
       // Add icon if available
       if (sibIcons?.hasIcon && rundown.IconId && sibIcons.hasIcon(rundown.IconId)) {
-        style.png64 = sibIcons.getIconPngBase64(rundown.IconId)
+        style.png64 = composeIconWithGradient(sibIcons.getIconPngBase64(rundown.IconId), rundown.ColorHex)
       }else {
         logger.debug('Rundown preset. Missing icon: %s', rundown.IconId)
       }
