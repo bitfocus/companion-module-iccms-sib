@@ -52,7 +52,8 @@ export function createPresetsFromTeamsArray(teams) {
       // Style
       const style = {
         text: team.Name,
-        size: 'auto',
+        size: 14,
+        alignment: 'center:bottom',
         color: combineRgb(255, 255, 255),
         bgcolor: bgClrInt,
         pngalignment: 'center:center',

@@ -49,7 +49,8 @@ export function createPresetFromButton(parentCategoryId, qb, sibIcons) {
 		style: {
 			// You can use variables from your module here
 			text: qb.ButtonText,
-			size: 'auto',
+			size: 14,
+			alignment: 'center:bottom',
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(0, 0, 0),
 			pngalignment: 'center:center',

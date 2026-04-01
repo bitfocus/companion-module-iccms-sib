@@ -76,8 +76,8 @@ export function createPresetsFromRundownsArray(allRundowns, sibIcons) {
 
       const style = {
         text: `${truncatedName}\\n${action.text}`,
-        size: 'auto',
-        alignment: 'center:top',
+        size: 14,
+        alignment: 'center:bottom',
         color: fgColor,
         bgcolor: bgClrInt,
         pngalignment: 'center:center',
@@ -93,8 +93,8 @@ export function createPresetsFromRundownsArray(allRundowns, sibIcons) {
       // Preview style for preset browser
       const previewStyle = {
         text: `Rundown\\n${action.text}`,
-        size: 'auto',
-        alignment: 'center:top',
+        size: 14,
+        alignment: 'center:bottom',
         color: fgColor,
         bgcolor: bgClrInt,
         pngalignment: 'center:center',

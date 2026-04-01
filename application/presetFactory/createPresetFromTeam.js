@@ -60,7 +60,8 @@ export function createPresetFromTeam(team, teamType) {
 		style: {
 			// You can use variables from your module here
 			text: team.Name,
-			size: 'auto',
+			size: 14,
+			alignment: 'center:bottom',
 			color: combineRgb(255, 255, 255),
 			bgcolor: combineRgb(0, 0, 0),
 			pngalignment: 'center:center',
