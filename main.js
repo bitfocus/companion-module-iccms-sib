@@ -105,7 +105,6 @@ class SibPluginInstance extends InstanceBase {
 			this.#sibSocket = new SibWebSocket(this.#sibConfig)
 
 			this.#sibComputer.setConnectionConfig(this.#sibConfig)
-			await this.#sibConnection.connectToSib(this.#sibConfig)
 
 			// Hardcoded thins.
 			updateActionsAtStartup(this, this.#sibSocket, this.#sibConfig, sibHttpClientChangeTeamById)
@@ -215,6 +214,9 @@ class SibPluginInstance extends InstanceBase {
 
 				this.#handleSyncResult(iconsComplete)
 			})
+
+			// Connect after listeners are registered so the first tick's events are handled.
+			await this.#sibConnection.connectToSib(this.#sibConfig)
 
 			this.isInitialized = true
 

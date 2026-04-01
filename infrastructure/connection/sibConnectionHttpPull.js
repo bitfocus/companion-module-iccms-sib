@@ -179,9 +179,9 @@ export class SibConnectionHttpPull extends EventEmitter {
 
         logger.debug(
           'ComponentLastModified check — teams: %s, quickButtons: %s, rundowns: %s',
-          shouldUpdateTeams ? 'changed' : 'unchanged',
-          shouldUpdateQuickButtons ? 'changed' : 'unchanged',
-          shouldUpdateRundowns ? 'changed' : 'unchanged',
+          shouldUpdateTeams ? `changed (${prevComponent.Team} → ${currComponent.Team})` : 'unchanged',
+          shouldUpdateQuickButtons ? `changed (${prevComponent.QuickButton} → ${currComponent.QuickButton})` : 'unchanged',
+          shouldUpdateRundowns ? `changed (${prevComponent.Rundown} → ${currComponent.Rundown})` : 'unchanged',
         );
       } else {
         logger.debug('ComponentLastModified not available (prev: %o, curr: %o) — fetching all.', prevComponent, currComponent);
@@ -240,7 +240,7 @@ export class SibConnectionHttpPull extends EventEmitter {
           );
 
           if (!(JSON.stringify(this.#prevCollections) === JSON.stringify(apiCollections))) {
-            logger.debug('Connection. Collections updated.');
+            logger.debug('Connection. Collections updated. Count: %d.', apiCollections ? apiCollections.length : 0);
 
             this.#prevCollections = apiCollections;
             this.emit(sibConnectionEvents.OnSibQuickButtonsUpdated, apiCollections);

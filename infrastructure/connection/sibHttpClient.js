@@ -290,13 +290,13 @@ export function sibHttpClientGetPngIconBase64(baseUrl, token, iconId, deviceId, 
               const response_body = Buffer.concat(chunks_of_data);
               resolve(response_body.toString());
             } catch (e) {
-              logger.warn('API. Icon processing error: %s, url: %s', e.message);
+              logger.warn('API. Icon processing error: %s, url: %s', e.message, url.toString());
               reject(e);
             }
           });
         })
         .on('error', (e) => {
-          logger.error('API. Icon request error: %s, url: %s', e.message);
+          logger.error('API. Icon request error: %s, url: %s', e.message, url.toString());
           reject(e);
         });
     } catch (e) {

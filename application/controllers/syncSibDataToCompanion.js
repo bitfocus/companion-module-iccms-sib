@@ -40,6 +40,11 @@ export async function syncSibDataToCompanion(
 
   const iconIds = getAllUniqueIconIdsFromQbCollectionsAndRundowns(qbCollections, allRundowns)
 
+  const totalIcons = iconIds ? iconIds.size || iconIds.length || 0 : 0
+  const cachedIcons = sibIcons.cachedCount
+  const toFetch = totalIcons - cachedIcons
+  logger.debug('syncSibDataToCompanion. Icons — total: %d, cached: %d, to fetch: %d.', totalIcons, cachedIcons, toFetch > 0 ? toFetch : 0)
+
   const iconsComplete = await sibIcons.updateIcons(iconIds, sibComputer.getConnectionConfig(), sibComputer.getSibVersion())
 
   const sibConfig = sibComputer.getConnectionConfig()

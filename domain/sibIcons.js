@@ -32,6 +32,14 @@ export class SibIcons {
   }
 
   /**
+   * Number of currently cached icons.
+   * @returns {number}
+   */
+  get cachedCount() {
+    return this.#icons.size
+  }
+
+  /**
    * Updates icons by fetching and caching all icons in the provided iconIds set/array.
    * @param {Iterable<string>} iconIds - Set or array of unique icon IDs to fetch.
    * @param {SibConnection} connectionCfg
