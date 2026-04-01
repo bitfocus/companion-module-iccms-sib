@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(file_path:.clinerules/**)",
+      "Glob(path:.clinerules/**)",
+      "Glob(pattern:.clinerules/**)",
+      "Grep(path:.clinerules/**)",
+      "Edit(file_path:.clinerules/**)",
+      "Write(file_path:.clinerules/**)",
+      "Bash(cat .clinerules/**)",
+      "Bash(ls .clinerules/**)",
+      "Read(file_path:.idea/**)",
+      "Glob(path:.idea/**)",
+      "Glob(pattern:.idea/**)",
+      "Grep(path:.idea/**)",
+      "Edit(file_path:.idea/**)",
+      "Write(file_path:.idea/**)",
+      "Bash(cat .idea/**)",
+      "Bash(ls .idea/**)"
+    ]
+  }
+}
