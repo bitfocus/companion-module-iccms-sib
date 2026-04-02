@@ -1,6 +1,6 @@
 {
 	"name": "companion-module-iccms-sib",
-	"version": "1.0.2",
+	"version": "1.0.7",
 	"main": "main.js",
 	"type": "module",
 	"scripts": {
@@ -19,7 +19,7 @@
 	},
 	"homepage": "https://www.iccmediasport.com/en",
 	"dependencies": {
-		"@companion-module/base": "^1.4.3",
+		"@companion-module/base": "~1.12.1",
 		"colord": "^2.9.3",
 		"object-path": "^0.11.8",
 		"path": "^0.12.7",
@@ -30,7 +30,7 @@
 	"devDependencies": {
 		"@babel/core": "^7.23.7",
 		"@babel/preset-env": "^7.23.8",
-		"@companion-module/tools": "^1.5.2",
+		"@companion-module/tools": "^2.4.2",
 		"@faker-js/faker": "^8.3.1",
 		"@types/jest": "^29.5.11",
 		"babel-jest": "^29.7.0",
