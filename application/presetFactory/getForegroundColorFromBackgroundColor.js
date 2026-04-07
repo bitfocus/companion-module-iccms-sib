@@ -1,5 +1,5 @@
 import { combineRgb } from '@companion-module/base'
-import { colord } from 'colord'
+// import { colord } from 'colord'
 
 /**
  * Gets foreground color (black or white) for best contrast against the given background color.
@@ -8,5 +8,6 @@ import { colord } from 'colord'
  * @returns {number} White for dark backgrounds, black for light backgrounds.
  */
 export function getForegroundColorFromBackgroundColor(bgColorHex) {
-	return colord(bgColorHex).isDark() ? combineRgb(255, 255, 255) : combineRgb(0, 0, 0)
+	// return colord(bgColorHex).isDark() ? combineRgb(255, 255, 255) : combineRgb(0, 0, 0)
+	return combineRgb(255, 255, 255)
 }

@@ -63,8 +63,7 @@ export function createPresetsFromTeamsArray(teams) {
       // Logo logic
       if (team.LogoSmallBase64 !== '') {
         style.color = combineRgb(255, 255, 255)
-        style.bgcolor = combineRgb(0, 0, 0)
-        style.png64 = composeIconWithGradient(team.LogoSmallBase64, team.TeamColorHex)
+        style.png64 = composeIconWithGradient(team.LogoSmallBase64)
       } else {
         style.color = getForegroundColorFromBackgroundColor(team.TeamColorHex)
         style.bgcolor = bgClrInt

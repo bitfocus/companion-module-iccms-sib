@@ -99,115 +99,63 @@ describe('composeIconWithGradient', () => {
 		expect(px.r).toBe(100)
 	})
 
-	describe('without bgColor', () => {
-		test.each([
-			['undefined', undefined],
-			['null', null],
-			['empty string', ''],
-			['#838383', '#838383'],
-			['#838383FF (with alpha)', '#838383FF'],
-		])('treats %s as no color — bottom row is near-transparent', (_label, bgColor) => {
-			// arrange
-			const input = createTestPng(72, 72, 255, 255, 255)
+	test('top area above gradient is transparent', () => {
+		// arrange
+		const input = createTestPng(72, 72, 255, 255, 255)
 
-			// act
-			const result = composeIconWithGradient(input, bgColor)
+		// act
+		const result = composeIconWithGradient(input)
 
-			// assert — last row near end of gradient
-			const px = getPixel(decodeResult(result), 36, 57)
-			expect(px.a).toBeLessThanOrEqual(10)
-		})
-
-		test('bottom row is near-transparent', () => {
-			// arrange
-			const input = createTestPng(72, 72, 255, 255, 255)
-
-			// act
-			const result = composeIconWithGradient(input)
-
-			// assert — last row should be near end of gradient
-			const px = getPixel(decodeResult(result), 36, 57)
-			expect(px.a).toBeLessThanOrEqual(10)
-		})
-
-		test('icon pixels are visible in top area', () => {
-			// arrange — 72x72 scales to fill 72px width
-			const input = createTestPng(72, 72, 0, 200, 0)
-
-			// act
-			const result = composeIconWithGradient(input)
-
-			// assert — pixel (36, 5) is center of icon, above gradient
-			const px = getPixel(decodeResult(result), 36, 5)
-			expect(px.g).toBe(200)
-			expect(px.a).toBe(255)
-		})
-
-		test('gradient fades icon all the way to bottom', () => {
-			// arrange
-			const input = createTestPng(72, 72, 255, 255, 255)
-
-			// act
-			const result = composeIconWithGradient(input)
-
-			// assert — gradient runs from row 29 to 57
-			const decoded = decodeResult(result)
-			const alphas = []
-			for (let y = 29; y < 58; y++) {
-				alphas.push(getPixel(decoded, 36, y).a)
-			}
-
-			// Alpha should decrease through gradient
-			for (let i = 1; i < alphas.length; i++) {
-				expect(alphas[i]).toBeLessThanOrEqual(alphas[i - 1])
-			}
-		})
+		// assert — pixel outside icon padding area, above gradient, should be transparent
+		const px = getPixel(decodeResult(result), 0, 5)
+		expect(px.a).toBe(0)
 	})
 
-	describe('with bgColor', () => {
-		test('bottom row is near-black and opaque', () => {
-			// arrange
-			const input = createTestPng(72, 72, 255, 255, 255)
+	test('bottom row is near-opaque black', () => {
+		// arrange
+		const input = createTestPng(72, 72, 255, 255, 255)
 
-			// act
-			const result = composeIconWithGradient(input, '#FF0000')
+		// act
+		const result = composeIconWithGradient(input)
 
-			// assert — last row should be near end of gradient
-			const px = getPixel(decodeResult(result), 36, 57)
-			expect(px.r).toBeLessThanOrEqual(20)
-			expect(px.g).toBeLessThanOrEqual(20)
-			expect(px.b).toBeLessThanOrEqual(20)
-			expect(px.a).toBe(255)
-		})
+		// assert — last row near end of gradient should be near-opaque black
+		const px = getPixel(decodeResult(result), 36, 57)
+		expect(px.r).toBeLessThanOrEqual(20)
+		expect(px.g).toBeLessThanOrEqual(20)
+		expect(px.b).toBeLessThanOrEqual(20)
+		expect(px.a).toBeGreaterThanOrEqual(240)
+	})
 
-		test('gradient fades bgColor to black all the way down', () => {
-			// arrange — use black icon so bg color is visible through compositing
-			const input = createTestPng(72, 72, 0, 0, 0)
+	test('icon pixels are visible in top area', () => {
+		// arrange — 72x72 scales to fill 44px icon width
+		const input = createTestPng(72, 72, 0, 200, 0)
 
-			// act
-			const result = composeIconWithGradient(input, '#FF0000')
+		// act
+		const result = composeIconWithGradient(input)
 
-			// assert — bg color gradient visible in composited result
-			const decoded = decodeResult(result)
-			// Above gradient: bg is red, but icon (black) is composited on top
-			// Check that bottom row is near-black (gradient endpoint)
-			const px = getPixel(decoded, 0, 57)
-			expect(px.r).toBeLessThanOrEqual(20)
-		})
+		// assert — pixel (36, 5) is center of icon, above gradient
+		const px = getPixel(decodeResult(result), 36, 5)
+		expect(px.g).toBe(200)
+		expect(px.a).toBe(255)
+	})
 
-		test('canvas is opaque when bgColor is set', () => {
-			// arrange
-			const input = createTestPng(72, 72, 0, 0, 255)
+	test('gradient increases opacity from transparent to black', () => {
+		// arrange — use transparent-friendly icon
+		const input = createTestPng(72, 72, 255, 255, 255)
 
-			// act
-			const result = composeIconWithGradient(input, '#FF0000')
+		// act
+		const result = composeIconWithGradient(input)
 
-			// assert — all pixels should be fully opaque
-			const decoded = decodeResult(result)
-			const topPx = getPixel(decoded, 0, 5)
-			const bottomPx = getPixel(decoded, 0, 57)
-			expect(topPx.a).toBe(255)
-			expect(bottomPx.a).toBe(255)
-		})
+		// assert — outside icon padding, alpha should increase through gradient
+		const decoded = decodeResult(result)
+		const alphas = []
+		for (let y = 29; y < 58; y++) {
+			alphas.push(getPixel(decoded, 0, y).a)
+		}
+
+		// Alpha should increase (transparent → opaque black)
+		for (let i = 1; i < alphas.length; i++) {
+			expect(alphas[i]).toBeGreaterThanOrEqual(alphas[i - 1])
+		}
 	})
 })

@@ -1,5 +1,4 @@
 import { PNG } from 'pngjs'
-import { colord } from 'colord'
 import { logger } from '../logger.js'
 
 const CANVAS_WIDTH = 72
@@ -7,27 +6,21 @@ const CANVAS_HEIGHT = 58
 // Icon is centered horizontally with 14px padding on each side (72 - 44 = 28 / 2 = 14)
 const ICON_WIDTH = 44
 const ICON_HEIGHT = 39
-const GRADIENT_HEIGHT = 10
 
 /**
  * Composites a base64 PNG icon onto a 72x58 canvas (matching Companion visible area with topbar).
  * The icon is scaled to fill width and fit the top 2/3 (~39px) of the canvas.
- * A gradient fades from the icon area all the way to the bottom.
  *
- * When bgColorHex is provided, the canvas background is that color above the gradient,
- * and the gradient transitions from bgColor to black. The bottom 1/3 is black.
+ * The canvas is transparent above the gradient zone (so Companion's bgcolor shows through)
+ * and fades to opaque black at the bottom (where the text label sits).
  *
- * When bgColorHex is missing/empty, the canvas is transparent and the gradient
- * fades the icon to transparent. The bottom 1/3 is transparent.
- *
- * Contract: (base64Png: string, bgColorHex?: string) => string
+ * Contract: (base64Png: string) => string
  * This is a decorator — can be swapped for a different implementation.
  *
  * @param {string} base64Png - Base64-encoded PNG image data.
- * @param {string} [bgColorHex] - Optional background color hex string (e.g. '#FF9999').
- * @returns {string} Base64-encoded 72x72 PNG with gradient, or empty string on error.
+ * @returns {string} Base64-encoded 72x58 PNG with gradient, or empty string on error.
  */
-export function composeIconWithGradient(base64Png, bgColorHex) {
+export function composeIconWithGradient(base64Png) {
   if (!base64Png) {
     return ''
   }
@@ -38,18 +31,6 @@ export function composeIconWithGradient(base64Png, bgColorHex) {
 
     const srcBuf = Buffer.from(raw, 'base64')
     const src = PNG.sync.read(srcBuf)
-
-    // Parse background color if provided.
-    // Treat null, empty string, and #838383 (default SIB gray, with or without alpha) as no color.
-    let bgR = 0, bgG = 0, bgB = 0
-    const isSibInterfaceGray = bgColorHex && bgColorHex.replace('#', '').toUpperCase().startsWith('838383')
-    const hasBgColor = bgColorHex && bgColorHex !== '' && !isSibInterfaceGray
-    if (hasBgColor) {
-      const bg = colord(bgColorHex).toRgb()
-      bgR = bg.r
-      bgG = bg.g
-      bgB = bg.b
-    }
 
     // Scale to fit icon width with padding on sides
     const scale = ICON_WIDTH / src.width
@@ -62,32 +43,25 @@ export function composeIconWithGradient(base64Png, bgColorHex) {
     const out = new PNG({ width: CANVAS_WIDTH, height: CANVAS_HEIGHT })
 
     // Gradient starts where the icon ends and runs to bottom
-    const gradientStart = Math.min(scaledH, ICON_HEIGHT) - 6
+    const gradientStart = Math.min(scaledH, ICON_HEIGHT) - 16
     const gradientLength = CANVAS_HEIGHT - gradientStart
     for (let y = 0; y < CANVAS_HEIGHT; y++) {
       for (let x = 0; x < CANVAS_WIDTH; x++) {
         const idx = (y * CANVAS_WIDTH + x) * 4
 
         if (y < gradientStart) {
-          // Above gradient: bg color or transparent
-          out.data[idx] = bgR
-          out.data[idx + 1] = bgG
-          out.data[idx + 2] = bgB
-          out.data[idx + 3] = hasBgColor ? 255 : 0
+          // Above gradient: transparent (Companion bgcolor shows through)
+          out.data[idx] = 0
+          out.data[idx + 1] = 0
+          out.data[idx + 2] = 0
+          out.data[idx + 3] = 0
         } else {
-          // Gradient from bgColor → black (or transparent), all the way to bottom
+          // Gradient: transparent → opaque black
           const t = (y - gradientStart) / gradientLength
-          if (hasBgColor) {
-            out.data[idx] = Math.round(bgR * (1 - t))
-            out.data[idx + 1] = Math.round(bgG * (1 - t))
-            out.data[idx + 2] = Math.round(bgB * (1 - t))
-            out.data[idx + 3] = 255
-          } else {
-            out.data[idx] = 0
-            out.data[idx + 1] = 0
-            out.data[idx + 2] = 0
-            out.data[idx + 3] = 0
-          }
+          out.data[idx] = 0
+          out.data[idx + 1] = 0
+          out.data[idx + 2] = 0
+          out.data[idx + 3] = Math.round(t * 255)
         }
       }
     }

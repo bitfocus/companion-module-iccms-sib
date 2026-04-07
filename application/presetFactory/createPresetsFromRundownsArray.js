@@ -85,7 +85,7 @@ export function createPresetsFromRundownsArray(allRundowns, sibIcons) {
 
       // Add icon if available
       if (sibIcons?.hasIcon && rundown.IconId && sibIcons.hasIcon(rundown.IconId)) {
-        style.png64 = composeIconWithGradient(sibIcons.getIconPngBase64(rundown.IconId), rundown.ColorHex)
+        style.png64 = composeIconWithGradient(sibIcons.getIconPngBase64(rundown.IconId))
       } else {
         logger.debug('Rundown preset. Missing icon: %s', rundown.IconId)
       }
