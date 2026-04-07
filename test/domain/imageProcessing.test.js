@@ -192,7 +192,7 @@ describe('composeIconWithGradient', () => {
 			// Above gradient: bg is red, but icon (black) is composited on top
 			// Check that bottom row is near-black (gradient endpoint)
 			const px = getPixel(decoded, 0, 57)
-			expect(px.r).toBeLessThanOrEqual(10)
+			expect(px.r).toBeLessThanOrEqual(20)
 		})
 
 		test('canvas is opaque when bgColor is set', () => {

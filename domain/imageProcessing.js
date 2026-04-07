@@ -61,8 +61,8 @@ export function composeIconWithGradient(base64Png, bgColorHex) {
 
     const out = new PNG({ width: CANVAS_WIDTH, height: CANVAS_HEIGHT })
 
-    // Gradient starts before the icon's visual midpoint and runs to bottom
-    const gradientStart = Math.min(scaledH, ICON_HEIGHT) - GRADIENT_HEIGHT
+    // Gradient starts where the icon ends and runs to bottom
+    const gradientStart = Math.min(scaledH, ICON_HEIGHT) - 6
     const gradientLength = CANVAS_HEIGHT - gradientStart
     for (let y = 0; y < CANVAS_HEIGHT; y++) {
       for (let x = 0; x < CANVAS_WIDTH; x++) {
