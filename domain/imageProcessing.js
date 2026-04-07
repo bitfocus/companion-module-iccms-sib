@@ -4,6 +4,8 @@ import { logger } from '../logger.js'
 
 const CANVAS_WIDTH = 72
 const CANVAS_HEIGHT = 58
+// Icon is centered horizontally with 14px padding on each side (72 - 44 = 28 / 2 = 14)
+const ICON_WIDTH = 44
 const ICON_HEIGHT = 39
 const GRADIENT_HEIGHT = 10
 
@@ -49,13 +51,13 @@ export function composeIconWithGradient(base64Png, bgColorHex) {
       bgB = bg.b
     }
 
-    // Scale to fill canvas width edge-to-edge
-    const scale = CANVAS_WIDTH / src.width
-    const scaledW = CANVAS_WIDTH
+    // Scale to fit icon width with padding on sides
+    const scale = ICON_WIDTH / src.width
+    const scaledW = ICON_WIDTH
     const scaledH = Math.round(src.height * scale)
 
-    // Center horizontally (0 for full-width, non-zero for wider-than-tall sources)
-    const offsetX = 0
+    // Center icon horizontally within canvas
+    const offsetX = Math.floor((CANVAS_WIDTH - ICON_WIDTH) / 2)
 
     const out = new PNG({ width: CANVAS_WIDTH, height: CANVAS_HEIGHT })
 

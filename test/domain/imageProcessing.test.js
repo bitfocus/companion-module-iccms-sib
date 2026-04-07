@@ -94,8 +94,8 @@ describe('composeIconWithGradient', () => {
 		expect(decoded.width).toBe(72)
 		expect(decoded.height).toBe(58)
 
-		// Edge pixel should have color (no margin gaps)
-		const px = getPixel(decoded, 0, 10)
+		// Icon pixel within padded area should have color
+		const px = getPixel(decoded, 36, 10)
 		expect(px.r).toBe(100)
 	})
 
