@@ -72,7 +72,7 @@ export function createPresetsFromRundownsArray(allRundowns, sibIcons) {
       // Use rundown color/icon if available
       let bgClrInt = parseBgColorToPresetBgColor(rundown.ColorHex)
       if (!bgClrInt || bgClrInt === 16711680) bgClrInt = action.bgcolor
-      const fgColor = getForegroundColorFromBackgroundColor(bgClrInt)
+      const fgColor = getForegroundColorFromBackgroundColor(rundown.ColorHex)
 
       const style = {
         text: `${truncatedName}\\n${action.text}`,
@@ -86,7 +86,6 @@ export function createPresetsFromRundownsArray(allRundowns, sibIcons) {
       // Add icon if available
       if (sibIcons?.hasIcon && rundown.IconId && sibIcons.hasIcon(rundown.IconId)) {
         style.png64 = composeIconWithGradient(sibIcons.getIconPngBase64(rundown.IconId), rundown.ColorHex)
-        style.color = getForegroundColorFromBackgroundColor(bgClrInt)
       } else {
         logger.debug('Rundown preset. Missing icon: %s', rundown.IconId)
       }

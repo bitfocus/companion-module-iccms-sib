@@ -1,21 +1,20 @@
 import { getForegroundColorFromBackgroundColor } from '../../../application/presetFactory/getForegroundColorFromBackgroundColor.js'
 
 describe('Test get QB foreground background colors', () => {
-	const defBackground = 16711680
 	const clrBlack = 0
 	const clrWhite = 16777215
 
 	it.each([
-		[defBackground, clrWhite],
-		[16751001, clrBlack], // #FF9999 (light pink) — black text for contrast
-		[16764057, clrBlack],
-		[16777113, clrBlack],
-		[10092441, clrBlack],
-		[10079487, clrBlack],
-		[13408767, clrBlack],
-		[16751102, clrBlack],
-	])('bg color %d, converted to fore color mapped to %d', (bgColor, expectedClr) => {
-		const actualClr = getForegroundColorFromBackgroundColor(bgColor)
+		['#FF0000', clrWhite],
+		['#FF9999', clrBlack], // light pink — black text for contrast
+		['#FFE799', clrBlack],
+		['#FFFF99', clrBlack],
+		['#99FF99', clrBlack],
+		['#99CCFF', clrBlack],
+		['#CCCCFF', clrBlack],
+		['#FF997E', clrBlack],
+	])('bg color %s, converted to fore color mapped to %d', (bgColorHex, expectedClr) => {
+		const actualClr = getForegroundColorFromBackgroundColor(bgColorHex)
 
 		// black = 0
 		expect(actualClr).toBe(expectedClr)

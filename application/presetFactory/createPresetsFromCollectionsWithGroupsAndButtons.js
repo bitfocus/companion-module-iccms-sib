@@ -45,7 +45,7 @@ export function createPresetsFromCollectionsWithGroupsAndButtons(collections, si
 
     // Parse background color for the collection header
     let collectionBgClr = parseBgColorToPresetBgColor(qbCollection.BackgroundColorHex)
-    let collectionFgColor = getForegroundColorFromBackgroundColor(collectionBgClr)
+    let collectionFgColor = getForegroundColorFromBackgroundColor(qbCollection.BackgroundColorHex)
 
     // Create a collection header
     const collectionHeaderId = `collection_header_${collectionId}`

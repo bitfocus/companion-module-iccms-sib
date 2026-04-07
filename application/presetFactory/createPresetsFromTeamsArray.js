@@ -1,9 +1,10 @@
 import { combineRgb } from '@companion-module/base'
-import { actionId } from '../actionId.js'
 import { colord } from 'colord'
+import { actionId } from '../actionId.js'
 import { apiSportTeamType } from '../../infrastructure/sib-api/apiSportTeamType.js'
-import { logger } from '../../logger.js'
+import { getForegroundColorFromBackgroundColor } from './getForegroundColorFromBackgroundColor.js'
 import { composeIconWithGradient } from '../../domain/imageProcessing.js'
+import { logger } from '../../logger.js'
 
 /**
  * Create team presets with header and two buttons (home/guest) per team, under "Teams" category.
@@ -65,11 +66,7 @@ export function createPresetsFromTeamsArray(teams) {
         style.bgcolor = combineRgb(0, 0, 0)
         style.png64 = composeIconWithGradient(team.LogoSmallBase64, team.TeamColorHex)
       } else {
-        if (colord(team.TeamColorHex).isDark()) {
-          style.color = combineRgb(255, 255, 255)
-        } else {
-          style.color = combineRgb(0, 0, 0)
-        }
+        style.color = getForegroundColorFromBackgroundColor(team.TeamColorHex)
         style.bgcolor = bgClrInt
       }
 
