@@ -7,16 +7,12 @@ describe('ApiSportTeamWithoutPlayers array deserialization', () => {
 			Id: 4,
 			Name: 'Team Arlen',
 			ShortName: 'T-Arl',
-			LogoBase64: 'logo_64',
-			LogoSmallBase64: 'logo_small_64',
 			TeamColorHex: '#F2EA35FF',
 		}
 		let expected2 = {
 			Id: 4,
 			Name: 'Team Arlen',
 			ShortName: 'T-Arl',
-			LogoBase64: 'logo_64',
-			LogoSmallBase64: 'logo_small_64',
 			TeamColorHex: '#F2EA35FF',
 		}
 

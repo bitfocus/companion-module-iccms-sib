@@ -9,10 +9,11 @@ import { logger } from '../../logger.js'
  * @param {SibPluginInstance} cmpModule
  * @param {SibComputer} sibComputer
  * @param {SibIcons} sibIcons
+ * @param {TeamLogos} teamLogos
  * @param {ApiSportTeamWithoutPlayers[]} allTeams
  * @param {ApiRundownWithoutItemsArray} allRundowns
  */
-export function updatePresetsAtRuntime(cmpModule, sibComputer, sibIcons, allTeams, allRundowns) {
+export function updatePresetsAtRuntime(cmpModule, sibComputer, sibIcons, teamLogos, allTeams, allRundowns) {
   logger.debug('[updatePresetsAtRuntime] Start updating presets at runtime')
   let presetsAll = {}
 
@@ -26,7 +27,7 @@ export function updatePresetsAtRuntime(cmpModule, sibComputer, sibIcons, allTeam
   }
 
   // Teams presets
-  const teamPresets = createPresetsFromTeamsArray(allTeams)
+  const teamPresets = createPresetsFromTeamsArray(allTeams, teamLogos)
   if (teamPresets != null) {
     for (const [key, pObject] of Object.entries(teamPresets)) {
       presetsAll[key] = pObject

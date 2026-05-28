@@ -9,9 +9,10 @@ import { logger } from '../../logger.js'
 /**
  * Create team presets with header and two buttons (home/guest) per team, under "Teams" category.
  * @param {ApiSportTeamWithoutPlayers[]} teams
+ * @param {TeamLogos} [teamLogos] Optional logo cache; when present, logos are composed onto buttons.
  * @returns {object} presets dictionary
  */
-export function createPresetsFromTeamsArray(teams) {
+export function createPresetsFromTeamsArray(teams, teamLogos) {
   logger.debug('[createPresetsFromTeamsArray] Start creating team presets')
   if (!Array.isArray(teams) || !teams) {
     return {}
@@ -20,6 +21,7 @@ export function createPresetsFromTeamsArray(teams) {
   const CATEGORY = 'Teams'
 
   for (const team of teams) {
+    const logoBase64 = teamLogos ? teamLogos.getTeamLogoPngBase64(team.Id) : ''
     // Header
     const headerId = `header_team_${team.Id}`
     presets[headerId] = {
@@ -61,9 +63,9 @@ export function createPresetsFromTeamsArray(teams) {
       }
 
       // Logo logic
-      if (team.LogoSmallBase64 !== '') {
+      if (logoBase64 !== '') {
         style.color = combineRgb(255, 255, 255)
-        style.png64 = composeIconWithGradient(team.LogoSmallBase64)
+        style.png64 = composeIconWithGradient(logoBase64)
       } else {
         style.color = getForegroundColorFromBackgroundColor(team.TeamColorHex)
         style.bgcolor = bgClrInt

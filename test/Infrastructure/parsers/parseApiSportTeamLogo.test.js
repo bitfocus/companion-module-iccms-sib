@@ -7,26 +7,26 @@ describe('ApiSportTeamLogo deserialization', () => {
   test('Deserialized correctly with all fields', () => {
     // arrange
     let expected = {
-      id: 12345,
-      ext: '.PNG',
-      logoBase64: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
+      Id: 12345,
+      Ext: '.PNG',
+      LogoBase64: 'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=='
     }
 
     // act
     const actual = parseApiSportTeamLogo(expected)
 
     // assert
-    expect(actual.id).toBe(expected.id)
-    expect(actual.ext).toBe(expected.ext)
-    expect(actual.logoBase64).toBe(expected.logoBase64)
+    expect(actual.id).toBe(expected.Id)
+    expect(actual.ext).toBe(expected.Ext)
+    expect(actual.logoBase64).toBe(expected.LogoBase64)
   })
 
   test('Deserializes with different file extensions', () => {
     // arrange
     const testCases = [
-      { id: 1, ext: '.png', logoBase64: 'base64data1' },
-      { id: 2, ext: '.jpg', logoBase64: 'base64data2' },
-      { id: 3, ext: '.svg', logoBase64: 'base64data3' }
+      { Id: 1, Ext: '.png', LogoBase64: 'base64data1' },
+      { Id: 2, Ext: '.jpg', LogoBase64: 'base64data2' },
+      { Id: 3, Ext: '.svg', LogoBase64: 'base64data3' }
     ]
 
     testCases.forEach((expected) => {
@@ -34,9 +34,9 @@ describe('ApiSportTeamLogo deserialization', () => {
       const actual = parseApiSportTeamLogo(expected)
 
       // assert
-      expect(actual.id).toBe(expected.id)
-      expect(actual.ext).toBe(expected.ext.toUpperCase())
-      expect(actual.logoBase64).toBe(expected.logoBase64)
+      expect(actual.id).toBe(expected.Id)
+      expect(actual.ext).toBe(expected.Ext.toUpperCase())
+      expect(actual.logoBase64).toBe(expected.LogoBase64)
     })
   })
 
@@ -49,9 +49,9 @@ describe('ApiSportTeamLogo deserialization', () => {
       const actual = parseApiSportTeamLogo(expected)
 
       // assert
-      expect(actual.id).toBe(expected.id)
-      expect(actual.ext).toBe(expected.ext)
-      expect(actual.logoBase64).toBe(expected.logoBase64)
+      expect(actual.id).toBe(expected.Id)
+      expect(actual.ext).toBe(expected.Ext)
+      expect(actual.logoBase64).toBe(expected.LogoBase64)
     })
 
     test('Deserializes from JSON string input', () => {
@@ -63,9 +63,9 @@ describe('ApiSportTeamLogo deserialization', () => {
       const actual = parseApiSportTeamLogo(json)
 
       // assert
-      expect(actual.id).toBe(expected.id)
-      expect(actual.ext).toBe(expected.ext)
-      expect(actual.logoBase64).toBe(expected.logoBase64)
+      expect(actual.id).toBe(expected.Id)
+      expect(actual.ext).toBe(expected.Ext)
+      expect(actual.logoBase64).toBe(expected.LogoBase64)
     })
 
     test('Deserializes minimal fields from JSON string input', () => {
@@ -77,7 +77,7 @@ describe('ApiSportTeamLogo deserialization', () => {
       const actual = parseApiSportTeamLogo(json)
 
       // assert
-      expect(actual.id).toBe(expected.id)
+      expect(actual.id).toBe(expected.Id)
       expect(actual.ext).toBe('')
       expect(actual.logoBase64).toBe('')
     })

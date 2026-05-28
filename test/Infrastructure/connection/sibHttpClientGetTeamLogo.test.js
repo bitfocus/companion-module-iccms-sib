@@ -68,8 +68,8 @@ describe('sibHttpClientGetTeamLogo', () => {
       expect.any(Function)
     );
     expect(result).toBeDefined();
-    expect(result.id).toBe(mockTeamLogo.id);
-    expect(result.ext).toBe(mockTeamLogo.ext);
+    expect(result.id).toBe(mockTeamLogo.Id);
+    expect(result.ext).toBe(mockTeamLogo.Ext);
   });
 
   it('should construct the correct URL without token', async () => {
@@ -245,16 +245,16 @@ describe('sibHttpClientGetTeamLogo', () => {
     );
 
     expect(result).toBeDefined();
-    expect(result.id).toBe(mockTeamLogo.id);
-    expect(result.ext).toBe(mockTeamLogo.ext);
-    expect(result.logoBase64).toBe(mockTeamLogo.logoBase64);
+    expect(result.id).toBe(mockTeamLogo.Id);
+    expect(result.ext).toBe(mockTeamLogo.Ext);
+    expect(result.logoBase64).toBe(mockTeamLogo.LogoBase64);
   });
 
 
   it('should handle different team IDs', async () => {
     const teamId = 42;
     const mockTeamLogo = apiSportTeamLogoFixture.create();
-    mockTeamLogo.id = teamId;
+    mockTeamLogo.Id = teamId;
     const mockTeamLogoResponse = JSON.stringify(mockTeamLogo);
 
     const mockEmitter = {

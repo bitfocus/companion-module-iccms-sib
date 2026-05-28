@@ -16,7 +16,7 @@ import { defineFixture } from 'efate'
  * // }
  */
 export const apiSportTeamLogoMinimalFixture = defineFixture((t) => {
-  t['id'].as(() => 0)
-  t['ext'].as(() => '')
-  t['logoBase64'].as(() => '')
+  t['Id'].as(() => 0)
+  t['Ext'].as(() => '')
+  t['LogoBase64'].as(() => '')
 })

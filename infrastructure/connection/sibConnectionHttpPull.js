@@ -7,7 +7,6 @@ import {
   sibHttpClientGetSibInfo,
   sibHttpClientGetTeams,
 } from './sibHttpClient.js'
-import {TeamLogos} from '../../domain/teamLogos.js'
 
 /**
  * Abstraction to connect to SIB2 with HTTP pulling of sib api.
@@ -53,12 +52,6 @@ export class SibConnectionHttpPull extends EventEmitter {
   #prevRundowns;
 
   /**
-   * Team logos manager.
-   * @type {TeamLogos}
-   */
-  #teamLogos
-
-  /**
    * Unique ID that used to identify module in sib.
    * Not currently used.
    * @type {string}
@@ -77,7 +70,6 @@ export class SibConnectionHttpPull extends EventEmitter {
 
     this.#sibConfig = config
     this.#deviceId = "companion-module-iccms-sib"
-    this.#teamLogos = new TeamLogos()
     this.#prevSibInfo = null
     this.#prevTeams = null
     this.#prevCollections = null
@@ -115,14 +107,6 @@ export class SibConnectionHttpPull extends EventEmitter {
       await this.#apiTimerTick()
       this.#scheduleNextTick()
     }, this.#sibConfig.pullIntervall)
-  }
-
-  /**
-   * Get the team logos manager.
-   * @returns {TeamLogos}
-   */
-  get teamLogos() {
-    return this.#teamLogos
   }
 
   /**
@@ -194,26 +178,6 @@ export class SibConnectionHttpPull extends EventEmitter {
 
           if (!(JSON.stringify(this.#prevTeams) === JSON.stringify(apiTeams))) {
             logger.debug('Connection. Teams updated.');
-
-            // Extract unique team IDs and fetch team logos
-            if (apiTeams && apiTeams.length > 0) {
-              const teamIds = apiTeams.map(team => team.Id).filter(id => id != null);
-              const uniqueTeamIds = [...new Set(teamIds)];
-
-              if (uniqueTeamIds.length > 0) {
-                logger.debug('Connection. Fetching team logos for %d teams.', uniqueTeamIds.length);
-                try {
-                  await this.#teamLogos.updateTeamLogos(
-                    uniqueTeamIds,
-                    this.#sibConfig,
-                    sinInfo.SportInTheBoxVersion
-                  );
-                  logger.debug('Connection. Team logos updated.');
-                } catch (logoError) {
-                  logger.error('Failed to update team logos: %s', logoError);
-                }
-              }
-            }
 
             this.#prevTeams = apiTeams;
             this.emit(sibConnectionEvents.OnSibTeamsUpdated, apiTeams);

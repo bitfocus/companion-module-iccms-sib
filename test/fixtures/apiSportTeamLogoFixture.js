@@ -16,7 +16,7 @@ import { faker } from '@faker-js/faker'
  * // }
  */
 export const apiSportTeamLogoFixture = defineFixture((t) => {
-  t['id'].as(() => faker.number.int({ min: 1, max: 999999 }))
-  t['ext'].as(() => faker.helpers.arrayElement(['.PNG', '.JPG', '.SVG']))
-  t['logoBase64'].as(() => faker.image.dataUri({ width: 100, height: 100 }).split(',')[1])
+  t['Id'].as(() => faker.number.int({ min: 1, max: 999999 }))
+  t['Ext'].as(() => faker.helpers.arrayElement(['.PNG', '.JPG', '.SVG']))
+  t['LogoBase64'].as(() => faker.image.dataUri({ width: 100, height: 100 }).split(',')[1])
 })

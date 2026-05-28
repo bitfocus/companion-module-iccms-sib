@@ -5,6 +5,7 @@ import { configFieldId } from './application/configFieldId.js'
 import { SibConnection } from './infrastructure/connection/sibConnection.js'
 import { SibComputer } from './domain/sibComputer.js'
 import { SibIcons } from './domain/sibIcons.js'
+import { TeamLogos } from './domain/teamLogos.js'
 import { SibConnectionHttpPull } from './infrastructure/connection/sibConnectionHttpPull.js'
 import { updateVariableDefinitions } from './application/variables.js'
 import { updateFeedbacks } from './application/updateFeedbacks.js'
@@ -47,6 +48,12 @@ class SibPluginInstance extends InstanceBase {
 	 * @type {SibIcons}
 	 */
 	#sibIcons = undefined
+
+	/**
+	 * Holds team logos cache keyed by team OID.
+	 * @type {TeamLogos}
+	 */
+	#teamLogos = undefined
 
 	/**
 	 * Open sib database via WebSocket.
@@ -100,6 +107,7 @@ class SibPluginInstance extends InstanceBase {
 
 			this.#sibComputer = new SibComputer()
 			this.#sibIcons = new SibIcons()
+			this.#teamLogos = new TeamLogos()
 
 			this.#sibConnection = new SibConnectionHttpPull()
 			this.#sibSocket = new SibWebSocket(this.#sibConfig)
@@ -160,6 +168,7 @@ class SibPluginInstance extends InstanceBase {
 				const iconsComplete = await syncSibDataToCompanion(
 					this.#sibComputer,
 					this.#sibIcons,
+					this.#teamLogos,
 					qbCollections,
 					this,
 					this.#sibSocket,
@@ -182,6 +191,7 @@ class SibPluginInstance extends InstanceBase {
 				const iconsComplete = await syncSibDataToCompanion(
 					this.#sibComputer,
 					this.#sibIcons,
+					this.#teamLogos,
 					qbCollections,
 					this,
 					this.#sibSocket,
@@ -205,6 +215,7 @@ class SibPluginInstance extends InstanceBase {
 				const iconsComplete = await syncSibDataToCompanion(
 					this.#sibComputer,
 					this.#sibIcons,
+					this.#teamLogos,
 					qbCollections,
 					this,
 					this.#sibSocket,
@@ -262,6 +273,7 @@ class SibPluginInstance extends InstanceBase {
 			const complete = await syncSibDataToCompanion(
 				this.#sibComputer,
 				this.#sibIcons,
+				this.#teamLogos,
 				qbCollections,
 				this,
 				this.#sibSocket,

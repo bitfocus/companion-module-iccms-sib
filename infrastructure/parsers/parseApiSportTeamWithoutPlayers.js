@@ -24,15 +24,11 @@ export function parseApiSportTeamWithoutPlayers(apiTeam) {
 	const id = objectPath.get(msgValue, 'Id', -1)
 	const tName = objectPath.get(msgValue, 'Name', '')
 	const tShortName = objectPath.get(msgValue, 'ShortName', '')
-	const logoBase64 = objectPath.get(msgValue, 'LogoBase64', '')
-	const logoSmallBase64 = objectPath.get(msgValue, 'LogoSmallBase64', '')
 	const tColor = objectPath.get(msgValue, 'TeamColorHex', '#000000')
 
 	apiObj.Id = id
 	apiObj.Name = tName
 	apiObj.ShortName = tShortName
-	apiObj.LogoBase64 = logoBase64
-	apiObj.LogoSmallBase64 = logoSmallBase64
 	apiObj.TeamColorHex = tColor
 
 	return apiObj

@@ -13,6 +13,7 @@ import {
  *
  * @param {SibComputer} sibComputer
  * @param {SibIcons} sibIcons Holds all icons as name and converted value
+ * @param {TeamLogos} teamLogos Team logo cache keyed by team OID
  * @param {apiQuickButtonCollectionWithGroupsAndButtons[]} qbCollections Already parsed QuickButton collections
  * @param {SibPluginInstance} cmpModule
  * @param {SibWebSocket} sibSocket
@@ -23,6 +24,7 @@ import {
 export async function syncSibDataToCompanion(
   sibComputer,
   sibIcons,
+  teamLogos,
   qbCollections,
   cmpModule,
   sibSocket,
@@ -45,9 +47,20 @@ export async function syncSibDataToCompanion(
   const toFetch = totalIcons - cachedIcons
   logger.debug('syncSibDataToCompanion. Icons — total: %d, cached: %d, to fetch: %d.', totalIcons, cachedIcons, toFetch > 0 ? toFetch : 0)
 
-  const iconsComplete = await sibIcons.updateIcons(iconIds, sibComputer.getConnectionConfig(), sibComputer.getSibVersion())
-
   const sibConfig = sibComputer.getConnectionConfig()
+
+  const iconsComplete = await sibIcons.updateIcons(iconIds, sibConfig, sibComputer.getSibVersion())
+
+  if (Array.isArray(allTeams) && allTeams.length > 0) {
+    const uniqueTeamIds = [...new Set(allTeams.map(t => t.Id).filter(id => id != null))]
+    if (uniqueTeamIds.length > 0) {
+      try {
+        await teamLogos.updateTeamLogos(uniqueTeamIds, sibConfig, sibComputer.getSibVersion())
+      } catch (logoError) {
+        logger.error('syncSibDataToCompanion. Failed to update team logos: %s', logoError)
+      }
+    }
+  }
 
 // Update actions first
   updateActionsAtRuntime(
@@ -67,6 +80,7 @@ export async function syncSibDataToCompanion(
     cmpModule,
     sibComputer,
     sibIcons,
+    teamLogos,
     allTeams,
     allRundowns
   )

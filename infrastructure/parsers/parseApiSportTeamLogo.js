@@ -20,9 +20,9 @@ export function parseApiSportTeamLogo(apiTeamLogo) {
     }
   }
 
-  const id = objectPath.get(obj, 'id', -1)
-  const ext = objectPath.get(obj, 'ext', '')
-  const logoBase64 = objectPath.get(obj, 'logoBase64', '')
+  const id = objectPath.get(obj, 'Id', -1)
+  const ext = objectPath.get(obj, 'Ext', '')
+  const logoBase64 = objectPath.get(obj, 'LogoBase64', '')
 
   return new ApiSportTeamLogo(id, ext, logoBase64)
 }

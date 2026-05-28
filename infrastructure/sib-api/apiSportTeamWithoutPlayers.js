@@ -23,18 +23,6 @@ export class ApiSportTeamWithoutPlayers {
 	ShortName = ''
 
 	/**
-	 * Logo from team settings as base64 string.
-	 * @type {string}
-	 */
-	LogoBase64 = ''
-
-	/**
-	 * Small logo from team settings as base64 string.
-	 * @type {string}
-	 */
-	LogoSmallBase64 = ''
-
-	/**
 	 * #RRGGBB or #RRGGBBAA with or without hash.
 	 * @type {string}
 	 * @example #F2EA35FF as yellow
