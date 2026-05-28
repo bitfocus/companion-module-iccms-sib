@@ -82,8 +82,8 @@ describe('composeIconWithGradient', () => {
 		expect(decoded.height).toBe(58)
 	})
 
-	test('handles non-square input by scaling to fill width', () => {
-		// arrange — 36x36 scales to 72x72 (fill width)
+	test('square input is scaled to fit icon height preserving aspect ratio', () => {
+		// arrange — 36x36 scales to 39x39 (contain fit, limited by ICON_HEIGHT=39)
 		const input = createTestPng(36, 36, 100, 100, 100)
 
 		// act
@@ -94,9 +94,40 @@ describe('composeIconWithGradient', () => {
 		expect(decoded.width).toBe(72)
 		expect(decoded.height).toBe(58)
 
-		// Icon pixel within padded area should have color
-		const px = getPixel(decoded, 36, 10)
+		// Center pixel of icon zone should carry the icon color
+		const px = getPixel(decoded, 36, 5)
 		expect(px.r).toBe(100)
+	})
+
+	test('tall input is contained within icon height without overflow', () => {
+		// arrange — 50x200 (tall). Contain fit scales to ~10x39 so it must NOT bleed past icon zone.
+		const input = createTestPng(50, 200, 0, 0, 200)
+
+		// act
+		const result = composeIconWithGradient(input)
+
+		// assert — pixel outside the contained icon width should remain transparent above gradient
+		const decoded = decodeResult(result)
+		const outsideIcon = getPixel(decoded, 0, 5)
+		expect(outsideIcon.a).toBe(0)
+
+		// And the icon column near horizontal center should be visible above the gradient
+		const insideIcon = getPixel(decoded, 36, 5)
+		expect(insideIcon.b).toBe(200)
+		expect(insideIcon.a).toBe(255)
+	})
+
+	test('wide input is contained within icon width preserving aspect ratio', () => {
+		// arrange — 200x50 (wide). Contain fit scales to 44x11 so vertical center of icon zone is ~y=14.
+		const input = createTestPng(200, 50, 200, 0, 0)
+
+		// act
+		const result = composeIconWithGradient(input)
+
+		// assert — pixel above the vertically-centered icon strip should be transparent
+		const decoded = decodeResult(result)
+		const aboveIcon = getPixel(decoded, 36, 2)
+		expect(aboveIcon.a).toBe(0)
 	})
 
 	test('top area above gradient is transparent', () => {

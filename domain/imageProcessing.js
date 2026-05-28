@@ -3,13 +3,13 @@ import { logger } from '../logger.js'
 
 const CANVAS_WIDTH = 72
 const CANVAS_HEIGHT = 58
-// Icon is centered horizontally with 14px padding on each side (72 - 44 = 28 / 2 = 14)
+// Icon zone is centered horizontally with 14px padding on each side (72 - 44 = 28 / 2 = 14)
 const ICON_WIDTH = 44
 const ICON_HEIGHT = 39
 
 /**
  * Composites a base64 PNG icon onto a 72x58 canvas (matching Companion visible area with topbar).
- * The icon is scaled to fill width and fit the top 2/3 (~39px) of the canvas.
+ * The icon is scaled to fit within a 44x39 zone preserving aspect ratio (contain fit), centered.
  *
  * The canvas is transparent above the gradient zone (so Companion's bgcolor shows through)
  * and fades to opaque black at the bottom (where the text label sits).
@@ -32,13 +32,14 @@ export function composeIconWithGradient(base64Png) {
     const srcBuf = Buffer.from(raw, 'base64')
     const src = PNG.sync.read(srcBuf)
 
-    // Scale to fit icon width with padding on sides
-    const scale = ICON_WIDTH / src.width
-    const scaledW = ICON_WIDTH
-    const scaledH = Math.round(src.height * scale)
+    // Contain fit: scale so the icon fits entirely within ICON_WIDTH x ICON_HEIGHT, preserving aspect ratio
+    const scale = Math.min(ICON_WIDTH / src.width, ICON_HEIGHT / src.height)
+    const scaledW = Math.max(1, Math.round(src.width * scale))
+    const scaledH = Math.max(1, Math.round(src.height * scale))
 
-    // Center icon horizontally within canvas
-    const offsetX = Math.floor((CANVAS_WIDTH - ICON_WIDTH) / 2)
+    // Center icon within the icon zone (horizontally on canvas, vertically within ICON_HEIGHT)
+    const offsetX = Math.floor((CANVAS_WIDTH - scaledW) / 2)
+    const offsetY = Math.floor((ICON_HEIGHT - scaledH) / 2)
 
     const out = new PNG({ width: CANVAS_WIDTH, height: CANVAS_HEIGHT })
 
@@ -67,21 +68,22 @@ export function composeIconWithGradient(base64Png) {
     }
 
     // Composite source icon onto canvas with nearest-neighbor scaling
-    const renderH = Math.min(scaledH, CANVAS_HEIGHT)
-    for (let y = 0; y < renderH; y++) {
+    for (let y = 0; y < scaledH; y++) {
+      const canvasY = offsetY + y
+      if (canvasY < 0 || canvasY >= CANVAS_HEIGHT) continue
       const srcY = Math.min(Math.floor(y / scale), src.height - 1)
 
       // Icon fade factor: full above gradient, fades out through gradient zone
       let iconBlend = 1.0
-      if (y >= gradientStart) {
-        iconBlend = 1.0 - (y - gradientStart) / gradientLength
+      if (canvasY >= gradientStart) {
+        iconBlend = 1.0 - (canvasY - gradientStart) / gradientLength
       }
 
       for (let x = 0; x < scaledW; x++) {
         const srcX = Math.min(Math.floor(x / scale), src.width - 1)
         const srcIdx = (srcY * src.width + srcX) * 4
         const outX = offsetX + x
-        const outIdx = (y * CANVAS_WIDTH + outX) * 4
+        const outIdx = (canvasY * CANVAS_WIDTH + outX) * 4
 
         const srcA = (src.data[srcIdx + 3] / 255) * iconBlend
         const dstA = out.data[outIdx + 3] / 255
