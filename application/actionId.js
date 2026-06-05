@@ -17,4 +17,9 @@ export const actionId = {
 	 * Change home or guest team by id.
 	 */
 	ChangeTeam: 'sib_action_change_team',
+
+	/**
+	 * Rundown control actions (select rundown, run line, select prev/next).
+	 */
+	Rundown: 'sib_action_rundown',
 }

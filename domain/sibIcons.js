@@ -1,148 +1,183 @@
-import { logger } from '../logger.js'
-import { sibHttpClientGetPngIconBase64 } from '../infrastructure/connection/sibHttpClient.js'
+import {logger} from '../logger.js'
+import {sibHttpClientGetPngIconBase64, SibRateLimitError} from '../infrastructure/connection/sibHttpClient.js'
 
 /**
  * Used to store svg icons that are used by sib as dictionary locally.
  * To skip converting every time.
  */
 export class SibIcons {
-	/**
-	 * Info about current database.
-	 * key is icon name, value is png icon as base64.
-	 * @type { Map }
-	 */
-	#icons
+  /**
+   * Info about the current database.
+   * key is icon name, value is png icon as base64.
+   * @type { Map }
+   */
+  #icons
 
-	/**
-	 * SIB version where icons api was added.
-	 * @type {string}
-	 */
-	#sibVersionWithIconApi = '2.15.8630'
+  /**
+   * SIB version where icons api was added.
+   * @type {string}
+   */
+  #sibVersionWithIconApi = '2.15.8630'
 
-	constructor() {
-		this.#icons = new Map()
-	}
+  /**
+   * Unique ID that used to identify module in sib.
+   * Not currently used.
+   * @type {string}
+   */
+  #deviceId
 
-	/**
-	 * Takes api object, extracts icons.
-	 * @param {apiQuickButtonCollectionWithGroupsAndButtons[]} apiButtons all collections with groups and buttons.
-	 * @param {SibConnection} connectionCfg
-	 * @param {string} sibVersion
-	 * @returns {Promise<void>}
-	 */
-	async updateIcons(apiButtons, connectionCfg, sibVersion) {
-		if (typeof connectionCfg == 'undefined') {
-			logger.warn('Icons, null connection string.')
-		}
+  constructor() {
+    this.#icons = new Map()
+    this.#deviceId = "companion-module-iccms-sib"
+  }
 
-		if (typeof apiButtons == 'undefined') {
-			this.#icons.clear()
-		}
+  /**
+   * Number of currently cached icons.
+   * @returns {number}
+   */
+  get cachedCount() {
+    return this.#icons.size
+  }
 
-		if (sibVersion.startsWith(this.#sibVersionWithIconApi)) {
-			logger.debug(
-				'ICONS. Sib needs to be update to get icons: %s. Version with icons was released Aug 2023.',
-				sibVersion
-			)
-			return
-		}
+  /**
+   * Updates icons by fetching and caching all icons in the provided iconIds set/array.
+   * @param {Iterable<string>} iconIds - Set or array of unique icon IDs to fetch.
+   * @param {SibConnection} connectionCfg
+   * @param {string} sibVersion
+   * @returns {Promise<boolean>} true if all icons fetched, false if interrupted by rate limit (429).
+   */
+  async updateIcons(iconIds, connectionCfg, sibVersion) {
+    if (typeof connectionCfg == 'undefined') {
+      logger.warn('Icons, null connection string.')
+      return true
+    }
 
-		logger.debug('ICONS. Update icons. Known keys: %o.', this.#icons.keys())
+    if (typeof iconIds == 'undefined') {
+      this.#icons.clear()
+      return true
+    }
 
-		// Collect all unique icon names.
-		let uniqueSvgIcons = []
+    if (sibVersion.startsWith(this.#sibVersionWithIconApi)) {
+      logger.debug(
+        'ICONS. Sib needs to be update to get icons: %s. Version with icons was released Aug 2023.',
+        sibVersion
+      )
+      return true
+    }
 
-		apiButtons.forEach((iCol) => {
-			if (!uniqueSvgIcons.includes(iCol.IconId)) {
-				uniqueSvgIcons.push(iCol.IconId)
-			}
+    logger.debug('ICONS. Update icons. Known keys: %o.', Array.from(this.#icons.keys()))
 
-			iCol.Groups.forEach((iGroup) => {
-				if (!uniqueSvgIcons.includes(iGroup.IconId)) {
-					uniqueSvgIcons.push(iGroup.IconId)
-				}
+    // Prepare icon ID lists
+    const allIconIds = Array.from(iconIds || [])
+    const knownIds = Array.from(this.#icons.keys())
+    const newIconIds = allIconIds.filter((value) => !knownIds.includes(value))
 
-				iGroup.Buttons.forEach((iButton) => {
-					if (!uniqueSvgIcons.includes(iButton.IconId)) {
-						uniqueSvgIcons.push(iButton.IconId)
-					}
-				})
-			})
-		})
+    logger.debug('ICONS. Unique icons in request: %o.', allIconIds)
+    logger.debug('ICONS. New icons to fetch: %o.', newIconIds)
 
-		// Keys
-		const uniqueIconIds = uniqueSvgIcons
-		const knowsIds = Array.from(this.#icons.keys())
+    let convertedIcons = []
+    let rateLimited = false
 
-		const newIconIds = uniqueIconIds.filter((value) => !knowsIds.includes(value))
+    // Fetch new icons sequentially
+    for (const iconId of newIconIds) {
+      try {
+        const base64png = await sibHttpClientGetPngIconBase64(connectionCfg.sibIpPort, connectionCfg.token, iconId, this.#deviceId)
+        if (base64png !== '') {
+          convertedIcons.push({iconId, png64: base64png})
+        }
+      } catch (error) {
+        if (error instanceof SibRateLimitError) {
+          logger.warn('ICONS. Rate limited by SIB. Stopping icon fetch, will retry later.')
+          rateLimited = true
+          break
+        }
+      }
+    }
 
-		logger.debug('ICONS. Unique icons in request: %o.', uniqueSvgIcons)
-		logger.debug('ICONS. New icons to fetch: %o.', newIconIds)
+    let fetchedIconIds = convertedIcons.filter((x) => x).map((a) => a['iconId'])
 
-		// Process values.
-		let convertedIcons = await Promise.all(
-			newIconIds.map(async (iconId) => {
-				try {
-					const base64png = await sibHttpClientGetPngIconBase64(connectionCfg.sibIpPort, connectionCfg.token, iconId)
+    logger.debug('ICONS. Got new icon id: %o', fetchedIconIds)
 
-					if (base64png !== '') {
-						return { iconId: iconId, png64: base64png }
-					} else {
-						// Handle conversion errors and incompatible sib api.
-						return null
-					}
-				} catch (error) {
-					return null
-				}
-			})
-		)
+    // Save conversion fetchedIconIds locally.
+    convertedIcons.forEach((iconKvp) => {
+      try {
+        if (iconKvp) {
+          // extra check for exceptions
+          const iconId = iconKvp['iconId']
+          const base64Png = iconKvp['png64']
 
-		let fetchedIconIds = convertedIcons.filter((x) => x).map((a) => a['iconId'])
+          logger.debug('ICONS, add: %s', iconId)
 
-		logger.debug('ICONS. Got new icon id: %o', fetchedIconIds)
+          if (!this.#icons.has(iconId)) {
+            this.#icons.set(iconId, base64Png)
+          }
+        }
+      } catch (error) {
+        logger.warn(JSON.stringify(iconKvp))
+      }
+    })
 
-		// Save conversion fetchedIconIds locally.
-		convertedIcons.forEach((iconKvp) => {
-			try {
-				if (iconKvp) {
-					// extra check for exceptions
-					const iconId = iconKvp['iconId']
-					const base64Png = iconKvp['png64']
+    logger.debug('ICONS. Icons after update: %o.', Array.from(this.#icons.keys()))
 
-					logger.debug('ICONS, add: %s', iconId)
+    return !rateLimited
+  }
 
-					if (!this.#icons.has(iconId)) {
-						this.#icons.set(iconId, base64Png)
-					}
-				}
-			} catch (error) {
-				logger.warn(JSON.stringify(iconKvp))
-			}
-		})
+  /**
+   * Check if icon is in local cache.
+   * @param {string} iconId
+   */
+  hasIcon(iconId) {
+    return this.#icons.has(iconId)
+  }
 
-		logger.debug('ICONS. Icons after update: %o.', Array.from(this.#icons.keys()))
-	}
+  /**
+   * Get base64 png icon by icon id.
+   * @param  {string} iconId
+   * @returns {string} base64 encoded png icon or empty string.
+   */
+  getIconPngBase64(iconId) {
+    if (this.#icons.has(iconId)) {
+      logger.debug('Icons. Get icon: %s', iconId)
+      return this.#icons.get(iconId)
+    }
 
-	/**
-	 * Check if icon is in local cache.
-	 * @param {string} iconId
-	 */
-	hasIcon(iconId) {
-		return this.#icons.has(iconId)
-	}
+    logger.debug('Icons. Missing icon: %s', iconId)
+    return ''
+  }
 
-	/**
-	 * Get base64 png icon by icon id.
-	 * @param  {string} iconId
-	 * @returns {string} base64 encoded png icon or empty string.
-	 */
-	getIconPngBase64(iconId) {
-		if (this.#icons.has(iconId)) {
-			logger.debug('Icons. Got icon: %s', iconId)
-			return this.#icons.get(iconId)
-		}
-
-		logger.debug('Icons. Missing icon: %s', iconId)
-		return ''
-	}
+  /**
+   * Fetch a single icon by iconId from the remote source if not cached.
+   * @param {string} iconId
+   * @param {SibConnection} connectionCfg - Should have sibIpPort and token properties.
+   * @returns {Promise<string>} base64 encoded png icon or empty string.
+   */
+  async fetchIconById(iconId, connectionCfg) {
+    if (this.#icons.has(iconId)) {
+      logger.debug('Icons. fetchIconById: cache hit for %s', iconId)
+      return this.#icons.get(iconId)
+    }
+    try {
+      const base64png = await sibHttpClientGetPngIconBase64(
+        connectionCfg.sibIpPort,
+        connectionCfg.token,
+        iconId,
+        this.#deviceId
+      )
+      if (base64png !== '') {
+        this.#icons.set(iconId, base64png)
+        logger.debug('Icons. fetchIconById: fetched and cached %s', iconId)
+        return base64png
+      } else {
+        logger.debug('Icons. fetchIconById: icon not found or empty for %s', iconId)
+        return ''
+      }
+    } catch (error) {
+      if (error instanceof SibRateLimitError) {
+        logger.warn(`Icons. fetchIconById: rate limited by SIB for icon ${iconId}`)
+      } else {
+        logger.warn(`Icons. fetchIconById: error fetching icon ${iconId}: ${error}`)
+      }
+      return ''
+    }
+  }
 }

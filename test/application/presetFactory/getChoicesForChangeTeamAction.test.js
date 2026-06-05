@@ -7,16 +7,12 @@ describe('Choices are created from teams', () => {
 			Id: 4,
 			Name: 'Team Arlen',
 			ShortName: 'T-Arl',
-			LogoBase64: 'logo_64',
-			LogoSmallBase64: 'logo_small_64',
 			TeamColorHex: '#F2EA35FF',
 		}
 		let expected2 = {
 			Id: 5,
 			Name: 'Team Five',
 			ShortName: 'T-FIVE',
-			LogoBase64: 'logo_64_2',
-			LogoSmallBase64: 'logo_small_64_2',
 			TeamColorHex: '#F2EA44FF',
 		}
 
@@ -54,8 +50,6 @@ describe('Choices are created from teams', () => {
 			Id: 4,
 			Name: 'Team Arlen',
 			ShortName: 'T-Arl',
-			LogoBase64: 'logo_64',
-			LogoSmallBase64: 'logo_small_64',
 			TeamColorHex: '#F2EA35FF',
 		}
 

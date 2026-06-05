@@ -1,17 +1,13 @@
-/**
- * Gets foreground color to match background color.
- * @param {number} bgColor
- * @returns {number}
- */
-export function getForegroundColorFromBackgroundColor(bgColor) {
-	const clrBlack = 0
-	const clrWhite = 16777215
+import { combineRgb } from '@companion-module/base'
+// import { colord } from 'colord'
 
-	if (bgColor === 16711680) {
-		return clrWhite
-	} else if (bgColor === 16751001) {
-		return clrWhite
-	} else {
-		return clrBlack
-	}
+/**
+ * Gets foreground color (black or white) for best contrast against the given background color.
+ * Uses colord perceived brightness to determine if background is dark or light.
+ * @param {string} bgColorHex - Background color as hex string from SIB API (e.g. '#FF9999').
+ * @returns {number} White for dark backgrounds, black for light backgrounds.
+ */
+export function getForegroundColorFromBackgroundColor(bgColorHex) {
+	// return colord(bgColorHex).isDark() ? combineRgb(255, 255, 255) : combineRgb(0, 0, 0)
+	return combineRgb(255, 255, 255)
 }

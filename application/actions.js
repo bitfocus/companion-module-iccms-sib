@@ -1,10 +1,12 @@
 import { actionId } from './actionId.js'
-import { getChoicesForTriggerEventAction } from './presetFactory/getChoicesForTriggerEventAction.js'
 import { logger } from '../logger.js'
-import { ApiOpenDatabase } from '../infrastructure/protocol/apiOpenDatabase.js'
+import { createTriggerEventAction } from './actionFactory/createTriggerEventAction.js'
+import { createOpenDatabaseAction } from './actionFactory/createOpenDatabaseAction.js'
+import { createChangeTeamAction } from './actionFactory/createChangeTeamAction.js'
+import { createRundownControlAction } from './actionFactory/createRundownControlAction.js'
+import { ApiOpenDatabase } from '../infrastructure/sib-api/apiOpenDatabase.js'
 import objectPath from 'object-path'
-import { apiSportTeamType } from '../infrastructure/protocol/apiSportTeamType.js'
-import { getChoicesForChangeTeamAction } from './presetFactory/getChoicesForChangeTeamAction.js'
+import { apiSportTeamType } from '../infrastructure/sib-api/apiSportTeamType.js'
 
 /**
  * Update drop-down from buttons.
@@ -23,8 +25,9 @@ import { getChoicesForChangeTeamAction } from './presetFactory/getChoicesForChan
  * @param {SibConnection} sibConfig
  * @param sibHttpClientChangeTeamById http client to change team.
  * @param {ApiSportTeamWithoutPlayers[]} allTeams all teams from api
+ * @param {ApiRundownWithoutItemsArray} allRundowns all rundowns from api
  */
-export function updateActionsFromButtons(
+export function updateActionsAtRuntime(
 	self,
 	restBaseUrl,
 	sibHttpClientTriggerQbById,
@@ -32,109 +35,17 @@ export function updateActionsFromButtons(
 	sibSocket,
 	sibConfig,
 	sibHttpClientChangeTeamById,
-	allTeams
+	allTeams,
+	allRundowns
 ) {
 	logger.debug('Update actions from buttons.')
 
-	let my_actions = {}
+	const my_actions = {}
 
-	my_actions[actionId.TriggerEvent] = {
-		name: 'Fire QuickButton',
-		options: [
-			{
-				type: 'dropdown',
-				id: actionId.TriggerEvent,
-				label: 'TriggerID',
-				default: -1,
-				choices: getChoicesForTriggerEventAction(qbCollections),
-				required: true,
-			},
-		],
-		callback: (event) => {
-			logger.debug('Fire TriggerId (my_action_trigger_event): %s', event.options[actionId.TriggerEvent])
-			sibHttpClientTriggerQbById(restBaseUrl, event.options[actionId.TriggerEvent])
-		},
-	}
-
-	my_actions[actionId.OpenDatabase] = {
-		name: 'Open database',
-		options: [
-			{
-				type: 'textinput',
-				id: 'db_path',
-				label: 'Database path',
-				default: '',
-				required: true,
-			},
-			{
-				type: 'number',
-				id: 'db_delay',
-				label: 'Exit delay if Sport In The Box is running',
-				tooltip:
-					'0 - as usual, ask user to close\n-1 - close without confirmation\npositive number - wait X seconds and close',
-				default: 0,
-			},
-		],
-		callback: async (event) => {
-			logger.debug('Fire open database (sib_action_open_database): %s', event.options[actionId.OpenDatabase])
-
-			const sibIpPort = sibConfig.sibIpPort
-			const sibDbpath = objectPath.get(event.options, 'db_path', '')
-			const sibDelay = objectPath.get(event.options, 'db_delay', 0)
-			const cmd = new ApiOpenDatabase(sibIpPort, sibDbpath, sibDelay)
-
-			logger.debug('Open database from buttons : %s.', JSON.stringify(cmd))
-
-			try {
-				await sibSocket.openSibDatabaseAsync(cmd)
-			} catch (e) {
-				logger.error('Got error from socket.')
-			}
-		},
-	}
-
-	// Teams
-
-	my_actions[actionId.ChangeTeam] = {
-		name: 'Change team',
-		options: [
-			{
-				type: 'dropdown',
-				label: 'Team to change',
-				id: 'team_type',
-				default: apiSportTeamType.Home,
-				tooltip: 'Which team to change?',
-				choices: [
-					{ id: apiSportTeamType.Home, label: 'Home' },
-					{ id: apiSportTeamType.Guest, label: 'Guest' },
-				],
-			},
-			{
-				type: 'dropdown',
-				label: 'Select team',
-				id: 'team_oid',
-				default: -1,
-				tooltip: 'Change match home or guest team.',
-				choices: getChoicesForChangeTeamAction(allTeams),
-			},
-		],
-		callback: async (event) => {
-			logger.debug('Change team (sib_action_change_team): %s', event.options[actionId.ChangeTeam])
-
-			const sibIpPort = sibConfig.sibIpPort
-			const sibTeamType = objectPath.get(event.options, 'team_type', 'h')
-			const sibTeamOid = objectPath.get(event.options, 'team_oid', -1)
-
-			logger.debug('Change team from startup. Type %s, id %s.', sibTeamType, sibTeamOid)
-
-			try {
-				logger.debug('Fire (sib_action_change_team): %s', event.options[actionId.ChangeTeam])
-				sibHttpClientChangeTeamById(sibIpPort, sibTeamType, sibTeamOid)
-			} catch (e) {
-				logger.error('Got error from teams client.')
-			}
-		},
-	}
+	my_actions[actionId.TriggerEvent] = createTriggerEventAction(qbCollections, restBaseUrl, sibHttpClientTriggerQbById)
+	my_actions[actionId.OpenDatabase] = createOpenDatabaseAction(sibConfig, sibSocket)
+	my_actions[actionId.ChangeTeam] = createChangeTeamAction(allTeams, sibConfig, sibHttpClientChangeTeamById)
+	my_actions[actionId.Rundown] = createRundownControlAction(allRundowns, sibConfig, self)
 
 	self.setActionDefinitions(my_actions)
 }
@@ -156,45 +67,11 @@ export function updateActionsFromButtons(
 export function updateActionsAtStartup(self, sibSocket, sibConfig, sibHttpClientChangeTeamById) {
 	logger.debug('Update actions at startup.')
 
-	let my_actions = {}
+	const my_actions = {}
 
-	my_actions[actionId.OpenDatabase] = {
-		name: 'Open database',
-		options: [
-			{
-				type: 'textinput',
-				id: 'db_path',
-				label: 'Database path',
-				default: '',
-				required: true,
-			},
-			{
-				type: 'number',
-				id: 'db_delay',
-				label: 'Exit delay if Sport In The Box is running',
-				tooltip:
-					'0 - as usual, ask user to close\n-1 - close without confirmation\npositive number - wait X seconds and close',
-				default: 0,
-			},
-		],
-		callback: async (event) => {
-			logger.debug('Fire open database (sib_action_open_database): %s', event.options[actionId.OpenDatabase])
+	my_actions[actionId.OpenDatabase] = createOpenDatabaseAction(sibConfig, sibSocket)
 
-			const sibIpPort = sibConfig.sibIpPort
-			const sibDbpath = objectPath.get(event.options, 'db_path', '')
-			const sibDelay = objectPath.get(event.options, 'db_delay', 0)
-			const cmd = new ApiOpenDatabase(sibIpPort, sibDbpath, sibDelay)
-
-			logger.debug('Open database from startup : %s', JSON.stringify(cmd))
-
-			try {
-				await sibSocket.openSibDatabaseAsync(cmd)
-			} catch (e) {
-				logger.error('Got error from socket.')
-			}
-		},
-	}
-
+	// For startup, team action uses numeric input instead of dropdown
 	my_actions[actionId.ChangeTeam] = {
 		name: 'Change team',
 		options: [
