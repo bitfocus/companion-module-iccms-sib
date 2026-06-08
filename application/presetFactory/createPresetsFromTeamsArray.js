@@ -1,39 +1,108 @@
-import { createPresetFromTeam } from './createPresetFromTeam.js'
-import { apiSportTeamType } from '../../infrastructure/protocol/apiSportTeamType.js'
+import { combineRgb } from '@companion-module/base'
+import { colord } from 'colord'
+import { actionId } from '../actionId.js'
+import { apiSportTeamType } from '../../infrastructure/sib-api/apiSportTeamType.js'
+import { getForegroundColorFromBackgroundColor } from './getForegroundColorFromBackgroundColor.js'
+import { composeIconWithGradient } from '../../domain/imageProcessing.js'
+import { logger } from '../../logger.js'
 
 /**
- * Create presets from collection teams.
- * Makes home and guest presets.
- *
- * Don't create presets for collections without teams.
- *
- * NOTE: only one level of nesting is possible.
- * @param {ApiSportTeamWithoutPlayers[]} collections
- * @returns {*} presets for setPresetDefinitions, <a href="https://github.com/bitfocus/companion-module-base/wiki/Presets">Presets</a>
+ * Create team presets with header and two buttons (home/guest) per team, under "Teams" category.
+ * @param {ApiSportTeamWithoutPlayers[]} teams
+ * @param {TeamLogos} [teamLogos] Optional logo cache; when present, logos are composed onto buttons.
+ * @returns {object} presets dictionary
  */
-export function createPresetsFromTeamsArray(collections) {
-	if (!Array.isArray(collections) || !collections) {
-		return []
-	}
-	const presets = {}
+export function createPresetsFromTeamsArray(teams, teamLogos) {
+  logger.debug('[createPresetsFromTeamsArray] Start creating team presets')
+  if (!Array.isArray(teams) || !teams) {
+    return {}
+  }
+  const presets = {}
+  const CATEGORY = 'Teams'
 
-	// home
-	collections.forEach((team) => {
-		const presetQb = createPresetFromTeam(team, apiSportTeamType.Home)
+  for (const team of teams) {
+    const logoBase64 = teamLogos ? teamLogos.getTeamLogoPngBase64(team.Id) : ''
+    // Header
+    const headerId = `header_team_${team.Id}`
+    presets[headerId] = {
+      type: 'text',
+      category: CATEGORY,
+      name: team.Name,
+      text: 'Move this button to the canvas to activate',
+    }
 
-		if (presetQb != null) {
-			presets[`preset_home_team_${team.Id}`] = presetQb
-		}
-	})
+    // Helper for button creation
+    function makeTeamButton(teamType) {
+      let bgClrInt = -1
+      let clr
 
-	// guest
-	collections.forEach((team) => {
-		const presetQb = createPresetFromTeam(team, apiSportTeamType.Guest)
+      if (team.TeamColorHex !== '') {
+        clr = colord(team.TeamColorHex).toRgb()
+        bgClrInt = combineRgb(clr.r, clr.g, clr.b)
+      } else {
+        bgClrInt = combineRgb(0, 0, 0)
+      }
 
-		if (presetQb != null) {
-			presets[`preset_guest_team_${team.Id}`] = presetQb
-		}
-	})
+      let buttonLabel, buttonName
+      if (teamType === apiSportTeamType.Home) {
+        buttonLabel = 'Change to Home Team'
+        buttonName = `Change home team to ${team.Name}`
+      } else {
+        buttonLabel = 'Change to Guest Team'
+        buttonName = `Change guest team to ${team.Name}`
+      }
 
-	return presets
+      // Style
+      const style = {
+        text: team.Name,
+        size: 14,
+        alignment: 'center:bottom',
+        color: combineRgb(255, 255, 255),
+        bgcolor: bgClrInt,
+        pngalignment: 'center:center',
+      }
+
+      // Logo logic
+      if (logoBase64 !== '') {
+        style.color = combineRgb(255, 255, 255)
+        style.png64 = composeIconWithGradient(logoBase64)
+      } else {
+        style.color = getForegroundColorFromBackgroundColor(team.TeamColorHex)
+        style.bgcolor = bgClrInt
+      }
+
+      return {
+        type: 'button',
+        category: CATEGORY,
+        name: buttonName,
+        style,
+        steps: [
+          {
+            down: [
+              {
+                actionId: actionId.ChangeTeam,
+                options: {
+                  team_type: teamType,
+                  team_oid: team.Id,
+                },
+              },
+            ],
+            up: [],
+          },
+        ],
+        feedbacks: [],
+      }
+    }
+
+    // Home team button
+    const homeButtonId = `team_${team.Id}_home`
+    presets[homeButtonId] = makeTeamButton(apiSportTeamType.Home)
+
+    // Guest team button
+    const guestButtonId = `team_${team.Id}_guest`
+    presets[guestButtonId] = makeTeamButton(apiSportTeamType.Guest)
+  }
+
+  logger.debug('[createPresetsFromTeamsArray] Finished creating team presets')
+  return presets
 }

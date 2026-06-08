@@ -1,0 +1,5 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Attach to Companion module" type="ChromiumRemoteDebugType" factoryName="Chromium Remote" port="54220" restartOnDisconnect="true">
+    <method v="2" />
+  </configuration>
+</component>

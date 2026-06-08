@@ -1,120 +1,142 @@
-import { SibIcons } from '../../../domain/sibIcons.js'
-import { apiQuickButtonInGroup } from '../../../infrastructure/protocol/apiQuickButtonInGroup.js'
-import { apiQuickButtonGroupWithButtons } from '../../../infrastructure/protocol/apiQuickButtonGroupWithButtons.js'
-import { apiQuickButtonCollectionWithGroupsAndButtons } from '../../../infrastructure/protocol/apiQuickButtonCollectionWithGroupsAndButtons.js'
-import { createPresetsFromCollectionsWithGroupsAndButtons } from '../../../application/presetFactory/createPresetsFromCollectionsWithGroupsAndButtons.js'
+import {SibIcons} from '../../../domain/sibIcons.js'
+import {apiQuickButtonInGroup} from '../../../infrastructure/sib-api/apiQuickButtonInGroup.js'
+import {apiQuickButtonGroupWithButtons} from '../../../infrastructure/sib-api/apiQuickButtonGroupWithButtons.js'
+import {
+  apiQuickButtonCollectionWithGroupsAndButtons
+} from '../../../infrastructure/sib-api/apiQuickButtonCollectionWithGroupsAndButtons.js'
+import {
+  createPresetsFromCollectionsWithGroupsAndButtons
+} from '../../../application/presetFactory/createPresetsFromCollectionsWithGroupsAndButtons.js'
 
 describe('Create preset from collection with groups and buttons', () => {
-	test('Collection, Group has buttons, button is created.', () => {
-		// arrange
-		const sibIcons = new SibIcons()
+  test('Collection, Group has buttons, button is created.', () => {
+    // arrange
+    const sibIcons = new SibIcons()
 
-		// Buttons
-		const apiButton = new apiQuickButtonInGroup()
-		apiButton.Id = 1
-		apiButton.EventId = 10
-		apiButton.ButtonId = '10'
-		apiButton.ButtonText = 'b_text'
-		apiButton.Order = 0
-		apiButton.BackgroundColorHex = ''
-		apiButton.IconId = 'IconId'
-		apiButton.SvgIcon = ''
+    // Buttons
+    const apiButton = new apiQuickButtonInGroup()
+    apiButton.Id = 1
+    apiButton.EventId = 10
+    apiButton.ButtonId = '10'
+    apiButton.ButtonText = 'b_text'
+    apiButton.Order = 0
+    apiButton.BackgroundColorHex = ''
+    apiButton.IconId = 'IconId'
+    apiButton.SvgIcon = ''
 
-		// groups
-		let apiGrp = new apiQuickButtonGroupWithButtons()
-		apiGrp.Id = 11
-		apiGrp.CollectionType = 1
-		apiGrp.ButtonText = 'g_text'
-		apiGrp.Order = 1
-		apiGrp.BackgroundColorHex = ''
-		apiGrp.IconId = 'iconId'
-		apiGrp.SvgIcon = ''
-		apiGrp.Buttons = Array(1).fill(apiButton)
+    // groups
+    let apiGrp = new apiQuickButtonGroupWithButtons()
+    apiGrp.Id = 11
+    apiGrp.CollectionType = 1
+    apiGrp.ButtonText = 'g_text'
+    apiGrp.Order = 1
+    apiGrp.BackgroundColorHex = ''
+    apiGrp.IconId = 'iconId'
+    apiGrp.SvgIcon = ''
+    apiGrp.Buttons = Array(1).fill(apiButton)
 
-		// collections
-		let apiC = new apiQuickButtonCollectionWithGroupsAndButtons()
+    // collections
+    let apiC = new apiQuickButtonCollectionWithGroupsAndButtons()
 
-		apiC.Id = 111
-		apiC.CollectionType = 1
-		apiC.Text = 'c_text'
-		apiC.Order = 1
-		apiC.BackgroundColorHex = ''
-		apiC.IconId = 'iconId'
-		apiC.SvgIcon = ''
-		apiC.Groups = Array(1).fill(apiGrp)
+    apiC.Id = 111
+    apiC.CollectionType = 1
+    apiC.Text = 'c_text'
+    apiC.Order = 1
+    apiC.BackgroundColorHex = ''
+    apiC.IconId = 'iconId'
+    apiC.SvgIcon = ''
+    apiC.Groups = Array(1).fill(apiGrp)
 
-		const apiColArray = []
-		apiColArray.push(apiC)
+    const apiColArray = []
+    apiColArray.push(apiC)
 
-		// act
-		const actual = createPresetsFromCollectionsWithGroupsAndButtons(apiColArray, sibIcons)
+    // act
+    const actual = createPresetsFromCollectionsWithGroupsAndButtons(apiColArray, sibIcons)
 
-		// assert
-		const actualKeys = Object.keys(actual)
-		expect(actualKeys).toHaveLength(1)
-	})
+    // assert
+    const actualKeys = Object.keys(actual)
+    expect(actualKeys).toHaveLength(3)
+    expect(actualKeys).toContain('collection_header_111')
+    expect(actualKeys).toContain('group_header_111_11')
+    expect(actualKeys).toContain('button_111_11_1')
 
-	test('Collection, Group has no buttons, preset is not created.', () => {
-		// arrange
-		const sibIcons = new SibIcons()
+    // Verify the collection header
+    expect(actual['collection_header_111'].type).toBe('text')
+    expect(actual['collection_header_111'].category).toBe('Pages/c_text')
 
-		// groups
-		let apiGrp = new apiQuickButtonGroupWithButtons()
-		apiGrp.Id = 11
-		apiGrp.CollectionType = 1
-		apiGrp.ButtonText = 'g_text'
-		apiGrp.Order = 1
-		apiGrp.BackgroundColorHex = ''
-		apiGrp.IconId = 'iconId'
-		apiGrp.SvgIcon = ''
-		apiGrp.Buttons = []
+    // Verify group header
+    expect(actual['group_header_111_11'].type).toBe('text')
+    expect(actual['group_header_111_11'].category).toBe('Pages/c_text')
 
-		// collections
-		let apiC = new apiQuickButtonCollectionWithGroupsAndButtons()
+    // Verify individual button
+    expect(actual['button_111_11_1'].type).toBe('button')
+    expect(actual['button_111_11_1'].category).toBe('Pages/c_text')
+  })
 
-		apiC.Id = 111
-		apiC.CollectionType = 1
-		apiC.Text = 'c_text'
-		apiC.Order = 1
-		apiC.BackgroundColorHex = ''
-		apiC.IconId = 'iconId'
-		apiC.SvgIcon = ''
-		apiC.Groups = Array(1).fill(apiGrp)
+  test('Collection, Group has no buttons, preset is not created.', () => {
+    // arrange
+    const sibIcons = new SibIcons()
 
-		const apiColArray = []
-		apiColArray.push(apiC)
+    // groups
+    let apiGrp = new apiQuickButtonGroupWithButtons()
+    apiGrp.Id = 11
+    apiGrp.CollectionType = 1
+    apiGrp.ButtonText = 'g_text'
+    apiGrp.Order = 1
+    apiGrp.BackgroundColorHex = ''
+    apiGrp.IconId = 'iconId'
+    apiGrp.SvgIcon = ''
+    apiGrp.Buttons = []
 
-		// act
-		const actual = createPresetsFromCollectionsWithGroupsAndButtons(apiColArray, sibIcons)
+    // collections
+    let apiC = new apiQuickButtonCollectionWithGroupsAndButtons()
 
-		// assert
-		const actualKeys = Object.keys(actual)
-		expect(actualKeys).toEqual(expect.any(Array))
-	})
+    apiC.Id = 111
+    apiC.CollectionType = 1
+    apiC.Text = 'c_text'
+    apiC.Order = 1
+    apiC.BackgroundColorHex = ''
+    apiC.IconId = 'iconId'
+    apiC.SvgIcon = ''
+    apiC.Groups = Array(1).fill(apiGrp)
 
-	test('Collection, no groups and no buttons, preset is not created.', () => {
-		// arrange
-		const sibIcons = new SibIcons()
-		// collections
-		let apiC = new apiQuickButtonCollectionWithGroupsAndButtons()
+    const apiColArray = []
+    apiColArray.push(apiC)
 
-		apiC.Id = 111
-		apiC.CollectionType = 1
-		apiC.Text = 'c_text'
-		apiC.Order = 1
-		apiC.BackgroundColorHex = ''
-		apiC.IconId = 'iconId'
-		apiC.SvgIcon = ''
-		apiC.Groups = []
+    // act
+    const actual = createPresetsFromCollectionsWithGroupsAndButtons(apiColArray, sibIcons)
 
-		const apiColArray = []
-		apiColArray.push(apiC)
+    // assert
+    const actualKeys = Object.keys(actual)
+    expect(actualKeys).toHaveLength(2)
+    expect(actualKeys).toContain('collection_header_111')
+    expect(actualKeys).toContain('group_header_111_11')
+  })
 
-		// act
-		const actual = createPresetsFromCollectionsWithGroupsAndButtons(apiColArray, sibIcons)
+  test('Collection, no groups and no buttons, preset is not created.', () => {
+    // arrange
+    const sibIcons = new SibIcons()
+    // collections
+    let apiC = new apiQuickButtonCollectionWithGroupsAndButtons()
 
-		// assert
-		const actualKeys = Object.keys(actual)
-		expect(actualKeys).toEqual(expect.any(Array))
-	})
+    apiC.Id = 111
+    apiC.CollectionType = 1
+    apiC.Text = 'c_text'
+    apiC.Order = 1
+    apiC.BackgroundColorHex = ''
+    apiC.IconId = 'iconId'
+    apiC.SvgIcon = ''
+    apiC.Groups = []
+
+    const apiColArray = []
+    apiColArray.push(apiC)
+
+    // act
+    const actual = createPresetsFromCollectionsWithGroupsAndButtons(apiColArray, sibIcons)
+
+    // assert
+    const actualKeys = Object.keys(actual)
+    expect(actualKeys).toHaveLength(1)
+    expect(actualKeys).toContain('collection_header_111')
+  })
 })

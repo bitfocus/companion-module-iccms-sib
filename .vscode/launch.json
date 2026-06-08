@@ -1,0 +1,21 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "chrome",
+      "request": "launch",
+      "name": "Launch Companion Webui (in Chrome)",
+      "url": "http://localhost:8000/",
+      "webRoot": "${workspaceFolder}/webui/src"
+    },
+    {
+      "name": "Attach to Companion module",
+      "port": 54220,
+      "request": "attach",
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
+      "type": "node"
+    }
+  ]
+}

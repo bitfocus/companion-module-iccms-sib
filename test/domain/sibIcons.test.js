@@ -1,5 +1,5 @@
 import { SibIcons } from '../../domain/sibIcons.js'
-import { apiQuickButtonCollectionWithGroupsAndButtons } from '../../infrastructure/protocol/apiQuickButtonCollectionWithGroupsAndButtons.js'
+import { apiQuickButtonCollectionWithGroupsAndButtons } from '../../infrastructure/sib-api/apiQuickButtonCollectionWithGroupsAndButtons.js'
 import { SibConnection } from '../../infrastructure/connection/sibConnection.js'
 describe('Sib icons tests', () => {
 	test.skip('Test to convert svg to png, add first image', async () => {

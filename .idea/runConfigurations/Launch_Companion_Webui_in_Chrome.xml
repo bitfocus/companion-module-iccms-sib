@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Launch Companion Webui (in Chrome)" type="JavascriptDebugType" factoryName="JavaScript Debug" nameIsGenerated="true">
+    <option name="url" value="http://localhost:8000/" />
+    <option name="browser" value="Chrome" />
+    <method v="2" />
+  </configuration>
+</component>
