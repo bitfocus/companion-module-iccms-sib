@@ -1,4 +1,4 @@
-import { apiQuickButtonInGroup } from '../../../infrastructure/protocol/apiQuickButtonInGroup.js'
+import { apiQuickButtonInGroup } from '../../../infrastructure/sib-api/apiQuickButtonInGroup.js'
 import { SibIcons } from '../../../domain/sibIcons.js'
 import { createPresetFromButton } from '../../../application/presetFactory/createPresetFromButton.js'
 import { actionId } from '../../../application/actionId.js'
@@ -28,14 +28,14 @@ describe('Create preset from button', () => {
 
 		// style
 		expect(actual.style['text']).toBe('b_text')
-		expect(actual.style['color']).toBe(16777215)
+		expect(actual.style['color']).toBe(16777215) // always white
 		expect(actual.style['bgcolor']).toBe(16751001)
 
 		// steps
 
 		// up
 		expect(actual.steps[0].down[0].actionId).toBe(actionId.TriggerEvent)
-		expect(actual.steps[0].down[0].options[actionId.TriggerEvent]).toBe(apiButton.Id)
+		expect(actual.steps[0].down[0].options[actionId.TriggerEvent]).toBe(apiButton.EventId)
 
 		// down
 		expect(actual.steps[0].up).toEqual(expect.any(Array))

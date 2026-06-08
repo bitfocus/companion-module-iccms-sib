@@ -5,14 +5,16 @@ import { configFieldId } from './application/configFieldId.js'
 import { SibConnection } from './infrastructure/connection/sibConnection.js'
 import { SibComputer } from './domain/sibComputer.js'
 import { SibIcons } from './domain/sibIcons.js'
+import { TeamLogos } from './domain/teamLogos.js'
 import { SibConnectionHttpPull } from './infrastructure/connection/sibConnectionHttpPull.js'
 import { updateVariableDefinitions } from './application/variables.js'
 import { updateFeedbacks } from './application/updateFeedbacks.js'
 import { sibConnectionEvents } from './infrastructure/connection/sibConnectionEvents.js'
-import { controllerQuickButtonCollections } from './application/controllers/controllerQuickButtonCollections.js'
+import { syncSibDataToCompanion } from './application/controllers/syncSibDataToCompanion.js'
 import { SibWebSocket } from './infrastructure/connection/sibWebSocket.js'
 import { updateActionsAtStartup } from './application/actions.js'
 import { sibHttpClientChangeTeamById } from './infrastructure/connection/sibHttpClient.js'
+import { parseCollectionWithGroupsAndButtonsArray } from './infrastructure/parsers/parseCollectionWithGroupsAndButtonsArray.js'
 
 /**
  * When your module is started, first the constructor will be called, followed by your upgrade scripts and then the init method.
@@ -48,10 +50,34 @@ class SibPluginInstance extends InstanceBase {
 	#sibIcons = undefined
 
 	/**
+	 * Holds team logos cache keyed by team OID.
+	 * @type {TeamLogos}
+	 */
+	#teamLogos = undefined
+
+	/**
 	 * Open sib database via WebSocket.
 	 * @type {SibWebSocket}
 	 */
 	#sibSocket = undefined
+
+	/**
+	 * Timer for retrying incomplete icon fetches after rate limiting.
+	 * @type {NodeJS.Timeout|undefined}
+	 */
+	#iconRetryTimer = undefined
+
+	/**
+	 * Number of icon retry attempts since last data change.
+	 * @type {number}
+	 */
+	#iconRetryCount = 0
+
+	/**
+	 * Maximum number of icon retry attempts before giving up.
+	 * @type {number}
+	 */
+	#maxIconRetries = 3
 
 	// noinspection JSCheckFunctionSignatures
 	/**
@@ -69,6 +95,7 @@ class SibPluginInstance extends InstanceBase {
 			const sibReconnect = config[configFieldId.Reconnect]
 			const sibDebug = config[configFieldId.DebugMessages]
 			const sibReset = config[configFieldId.ResetVariables]
+			const sibDisableDataFetch = config[configFieldId.DisableDataFetch]
 
 			if (sibDebug) {
 				logger.level = 'debug'
@@ -76,16 +103,16 @@ class SibPluginInstance extends InstanceBase {
 				logger.level = 'error'
 			}
 
-			this.#sibConfig = new SibConnection(sibHost, sibPort, sibPass, sibReconnect, sibDebug, sibReset, sibToken)
+			this.#sibConfig = new SibConnection(sibHost, sibPort, sibPass, sibReconnect, sibDebug, sibReset, sibToken, sibDisableDataFetch)
 
 			this.#sibComputer = new SibComputer()
 			this.#sibIcons = new SibIcons()
+			this.#teamLogos = new TeamLogos()
 
 			this.#sibConnection = new SibConnectionHttpPull()
 			this.#sibSocket = new SibWebSocket(this.#sibConfig)
 
 			this.#sibComputer.setConnectionConfig(this.#sibConfig)
-			await this.#sibConnection.connectToSib(this.#sibConfig)
 
 			// Hardcoded thins.
 			updateActionsAtStartup(this, this.#sibSocket, this.#sibConfig, sibHttpClientChangeTeamById)
@@ -124,42 +151,83 @@ class SibPluginInstance extends InstanceBase {
 			})
 
 			// Data updates.
-
 			this.#sibConnection.on(sibConnectionEvents.OnSibDatabaseChanges, (value) => {
 				logger.debug(`Got connected data.`)
 				this.#sibComputer.setSibInfo(value)
 			})
 
+			this.#sibConnection.on(sibConnectionEvents.OnSibRundownUpdated, async (value) => {
+				logger.debug(`Got rundown data.`)
+				this.#resetIconRetry()
+				this.#sibComputer.setSibRundowns(value)
+
+				let allTeams = this.#sibComputer.getSibTeams()
+				let allRundowns = this.#sibComputer.getSibRundowns()
+				let qbCollections = this.#sibComputer.getCollectionsWithButtons()
+
+				const iconsComplete = await syncSibDataToCompanion(
+					this.#sibComputer,
+					this.#sibIcons,
+					this.#teamLogos,
+					qbCollections,
+					this,
+					this.#sibSocket,
+					allTeams,
+					allRundowns
+				)
+
+				this.#handleSyncResult(iconsComplete)
+			})
+
 			this.#sibConnection.on(sibConnectionEvents.OnSibTeamsUpdated, async (value) => {
 				logger.debug(`Got teams data.`)
+				this.#resetIconRetry()
 				this.#sibComputer.setSibTeams(value)
 
 				let allTeams = this.#sibComputer.getSibTeams()
+				let allRundowns = this.#sibComputer.getSibRundowns()
+				let qbCollections = this.#sibComputer.getCollectionsWithButtons()
 
-				await controllerQuickButtonCollections(
+				const iconsComplete = await syncSibDataToCompanion(
 					this.#sibComputer,
 					this.#sibIcons,
-					value,
+					this.#teamLogos,
+					qbCollections,
 					this,
 					this.#sibSocket,
-					allTeams
+					allTeams,
+					allRundowns
 				)
+
+				this.#handleSyncResult(iconsComplete)
 			})
 
 			this.#sibConnection.on(sibConnectionEvents.OnSibQuickButtonsUpdated, async (value) => {
-				logger.debug(`Got connected data.`)
+				logger.debug(`Got QuickButtons data.`)
+				this.#resetIconRetry()
+
+				const qbCollections = parseCollectionWithGroupsAndButtonsArray(value)
+				this.#sibComputer.setSibCollections(qbCollections)
 
 				let allTeams = this.#sibComputer.getSibTeams()
+				let allRundowns = this.#sibComputer.getSibRundowns()
 
-				await controllerQuickButtonCollections(
+				const iconsComplete = await syncSibDataToCompanion(
 					this.#sibComputer,
 					this.#sibIcons,
-					value,
+					this.#teamLogos,
+					qbCollections,
 					this,
 					this.#sibSocket,
-					allTeams
+					allTeams,
+					allRundowns
 				)
+
+				this.#handleSyncResult(iconsComplete)
 			})
+
+			// Connect after listeners are registered so the first tick's events are handled.
+			await this.#sibConnection.connectToSib(this.#sibConfig)
 
 			this.isInitialized = true
 
@@ -175,8 +243,55 @@ class SibPluginInstance extends InstanceBase {
 	 */
 	async destroy() {
 		this.isInitialized = false
+		clearTimeout(this.#iconRetryTimer)
 		this.#sibSocket = undefined
 		this.#sibConnection.disconnectFromSib()
+	}
+
+	/**
+	 * Handles sync result and schedules icon retry if needed.
+	 * @param {boolean} iconsComplete - true if all icons fetched, false if rate limited.
+	 */
+	#handleSyncResult(iconsComplete) {
+		if (iconsComplete) {
+			return
+		}
+
+		if (this.#iconRetryCount >= this.#maxIconRetries) {
+			logger.warn('Icon retry limit reached (%d). Remaining icons will load on next data change.', this.#maxIconRetries)
+			return
+		}
+
+		this.#iconRetryCount++
+		logger.debug('Scheduling icon retry %d/%d.', this.#iconRetryCount, this.#maxIconRetries)
+
+		this.#iconRetryTimer = setTimeout(async () => {
+			let allTeams = this.#sibComputer.getSibTeams()
+			let allRundowns = this.#sibComputer.getSibRundowns()
+			let qbCollections = this.#sibComputer.getCollectionsWithButtons()
+
+			const complete = await syncSibDataToCompanion(
+				this.#sibComputer,
+				this.#sibIcons,
+				this.#teamLogos,
+				qbCollections,
+				this,
+				this.#sibSocket,
+				allTeams,
+				allRundowns
+			)
+
+			this.#handleSyncResult(complete)
+		}, this.#sibConfig.pullIntervall)
+	}
+
+	/**
+	 * Cancels pending icon retry and resets retry counter.
+	 * Called when fresh data arrives from SIB.
+	 */
+	#resetIconRetry() {
+		clearTimeout(this.#iconRetryTimer)
+		this.#iconRetryCount = 0
 	}
 
 	/**
@@ -196,6 +311,7 @@ class SibPluginInstance extends InstanceBase {
 		const sibReconnect = config[configFieldId.Reconnect]
 		const sibDebug = config[configFieldId.DebugMessages]
 		const sibReset = config[configFieldId.ResetVariables]
+		const sibDisableDataFetch = config[configFieldId.DisableDataFetch]
 
 		if (sibDebug) {
 			logger.level = 'debug'
@@ -203,7 +319,7 @@ class SibPluginInstance extends InstanceBase {
 			logger.level = 'error'
 		}
 
-		this.#sibConfig = new SibConnection(sibHost, sibPort, sibPass, sibReconnect, sibDebug, sibReset, sibToken)
+		this.#sibConfig = new SibConnection(sibHost, sibPort, sibPass, sibReconnect, sibDebug, sibReset, sibToken, sibDisableDataFetch)
 
 		this.#sibComputer.setConnectionConfig(this.#sibConfig)
 		await this.#sibConnection.connectToSib(this.#sibConfig)
@@ -214,7 +330,7 @@ class SibPluginInstance extends InstanceBase {
 	 * Companion will call this when the configuration panel is opened for your module, so that it can present the correct fields to the user.
 	 *
 	 * The fields you can use here are similar to the ones for actions and feedbacks, but with more limitation.
-	 * @see <a href="https://github.com/bitfocus/companion-module-base/wiki/Module-configuration">Module configuration</a>
+	 * @see <a href="https://companion.free/for-developers/module-development/connection-basics/user-configuration/">Module configuration</a>
 	 * @returns {any[]}
 	 */
 	getConfigFields() {
@@ -283,6 +399,14 @@ class SibPluginInstance extends InstanceBase {
 				isVisible: () => false,
 				label: 'Reset variables',
 				tooltip: 'Reset variables on init and on connect',
+				width: 6,
+				default: false,
+			},
+			{
+				type: 'checkbox',
+				id: configFieldId.DisableDataFetch,
+				label: 'Disable data fetching',
+				tooltip: 'Only fetch heartbeat and database info. Disables teams, quick buttons, and rundowns polling.',
 				width: 6,
 				default: false,
 			},

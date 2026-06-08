@@ -1,0 +1,10 @@
+{
+    "recommendations": [
+        "EditorConfig.EditorConfig",
+        "yzhang.markdown-all-in-one",
+        "DavidAnson.vscode-markdownlint",
+        "bierner.markdown-mermaid",
+        "tomoyukim.vscode-mermaid-editor",
+        "bpruitt-goddard.mermaid-markdown-syntax-highlighting"
+    ]
+}

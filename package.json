@@ -1,6 +1,6 @@
 {
 	"name": "companion-module-iccms-sib",
-	"version": "1.0.2",
+	"version": "3.0.0",
 	"main": "main.js",
 	"type": "module",
 	"scripts": {
@@ -19,17 +19,18 @@
 	},
 	"homepage": "https://www.iccmediasport.com/en",
 	"dependencies": {
-		"@companion-module/base": "^1.4.3",
+		"@companion-module/base": "~1.12.1",
 		"colord": "^2.9.3",
 		"object-path": "^0.11.8",
 		"path": "^0.12.7",
+		"pngjs": "^7.0.0",
 		"winston": "^3.11.0",
 		"ws": "^8.20.1"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.23.7",
 		"@babel/preset-env": "^7.23.8",
-		"@companion-module/tools": "^1.5.2",
+		"@companion-module/tools": "^2.4.2",
 		"@faker-js/faker": "^8.3.1",
 		"@types/jest": "^29.5.11",
 		"babel-jest": "^29.7.0",
@@ -42,5 +43,5 @@
 		"webpack-cli": "^5.1.4"
 	},
 	"prettier": "@companion-module/tools/.prettierrc.json",
-	"packageManager": "yarn@3.6.1"
+	"packageManager": "yarn@4.12.0"
 }

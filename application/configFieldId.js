@@ -40,4 +40,10 @@ export const configFieldId = {
 	 * Not visible, not yet implemented, but will be.
 	 */
 	ResetVariables: 'reset_variables',
+
+	/**
+	 * Disable fetching heavy data (teams, quick buttons, rundowns) from SIB API.
+	 * Heartbeat and database info are still fetched.
+	 */
+	DisableDataFetch: 'disable_data_fetch',
 }

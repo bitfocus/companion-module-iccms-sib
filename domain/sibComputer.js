@@ -1,193 +1,238 @@
-import { ApiMessageSibInfo } from '../infrastructure/protocol/apiMessageSibInfo.js'
-import { logger } from '../logger.js'
+import {ApiMessageSibInfo} from '../infrastructure/sib-api/apiMessageSibInfo.js'
+import {ApiRundownWithoutItemsArray} from '../infrastructure/sib-api/ApiRundownWithoutItemsArray.js'
+import {logger} from '../logger.js'
 
 /**
  * Stores sib data and manages state.
  */
 export class SibComputer {
-	/**
-	 * Info about current database.
-	 * @type { ApiMessageSibInfo }
-	 */
-	#sibInfo = undefined
+  /**
+   * Info about current database.
+   * @type { ApiMessageSibInfo }
+   */
+  #sibInfo = undefined
 
-	/**
-	 * Parsed and corrected collections from sib instance.
-	 * @type {apiQuickButtonCollectionWithGroupsAndButtons[]}
-	 */
-	#sibCollections = undefined
+  /**
+   * Parsed and corrected collections from sib instance.
+   * @type {apiQuickButtonCollectionWithGroupsAndButtons[]}
+   */
+  #sibCollections = undefined
 
-	/**
-	 * Connection properties to sib.
-	 * @type {SibConnection}
-	 */
-	#sibConnectionConfig = undefined
+  /**
+   * Connection properties to sib.
+   * @type {SibConnection}
+   */
+  #sibConnectionConfig = undefined
 
-	/**
-	 * Parsed and corrected teams from sib instance.
-	 * @type {ApiSportTeamWithoutPlayers[]}
-	 */
-	#sibTeams = undefined
+  /**
+   * Parsed and corrected teams from sib instance.
+   * @type {ApiSportTeamWithoutPlayers[]}
+   */
+  #sibTeams = undefined
 
-	constructor() {
-		this.#sibInfo = new ApiMessageSibInfo()
-		this.#sibCollections = []
-		this.#sibTeams = []
-	}
+  /**
+   * Rundown data from sib instance.
+   * @type {ApiRundownWithoutItemsArray}
+   */
+  #sibRundownArray = undefined
 
-	/**
-	 * Set db info from network.
-	 * @param {ApiMessageSibInfo} parsedInfo
-	 */
-	setSibInfo(parsedInfo) {
-		if (typeof parsedInfo == 'undefined') {
-			logger.warn('CMP. parsedInfo is undefined.')
-			return
-		}
+  constructor() {
+    this.#sibInfo = new ApiMessageSibInfo()
+    this.#sibCollections = []
+    this.#sibTeams = []
+    this.#sibRundownArray = undefined
+  }
 
-		logger.debug('CMP. setSibInfo: %o', parsedInfo)
+  /**
+   * Set db info from network.
+   * @param {ApiMessageSibInfo} parsedInfo
+   */
+  setSibInfo(parsedInfo) {
+    if (typeof parsedInfo == 'undefined') {
+      logger.warn('CMP. parsedInfo is undefined.')
+      return
+    }
 
-		this.#sibInfo = parsedInfo
-	}
+    logger.debug('CMP. setSibInfo: %o', parsedInfo)
 
-	/**
-	 * Update connection config.
-	 * @param {SibConnection} cfg
-	 */
-	setConnectionConfig(cfg) {
-		if (typeof cfg == 'undefined') {
-			logger.warn('CMP. cfg is undefined.')
-			return
-		}
-		logger.debug('CMP. Updated config: %o.', cfg)
+    this.#sibInfo = parsedInfo
+  }
 
-		this.#sibConnectionConfig = cfg
-	}
+  /**
+   * Update connection config.
+   * @param {SibConnection} cfg
+   */
+  setConnectionConfig(cfg) {
+    if (typeof cfg == 'undefined') {
+      logger.warn('CMP. cfg is undefined.')
+      return
+    }
+    logger.debug('CMP. Updated config: %o.', cfg)
 
-	/**
-	 * Get connection config.
-	 * @return {SibConnection} cfg
-	 */
-	getConnectionConfig() {
-		return this.#sibConnectionConfig
-	}
+    this.#sibConnectionConfig = cfg
+  }
 
-	/**
-	 * Get sib version.
-	 * @returns {string}
-	 */
-	getSibVersion() {
-		let sibVer
-		if (this.#sibInfo.SportInTheBoxVersion === undefined) {
-			sibVer = ''
-		} else if (this.#sibInfo.SportInTheBoxVersion === null) {
-			sibVer = ''
-		} else if (this.#sibInfo.SportInTheBoxVersion.trim() === '') {
-			sibVer = ''
-		} else if (this.#sibInfo.SportInTheBoxVersion.length === 0) {
-			sibVer = ''
-		} else {
-			sibVer = this.#sibInfo.SportInTheBoxVersion
-		}
-		return sibVer
-	}
+  /**
+   * Get connection config.
+   * @return {SibConnection} cfg
+   */
+  getConnectionConfig() {
+    return this.#sibConnectionConfig
+  }
 
-	/**
-	 * Set db info from network.
-	 * @param {apiQuickButtonCollectionWithGroupsAndButtons[]} parsedCollections
-	 */
-	setSibCollections(parsedCollections) {
-		if (typeof parsedCollections == 'undefined') {
-			this.#sibCollections = []
-			logger.warn('CMP. Collection is undefined.')
-			return
-		}
+  /**
+   * Get sib version.
+   * @returns {string}
+   */
+  getSibVersion() {
+    let sibVer
+    if (this.#sibInfo.SportInTheBoxVersion === undefined) {
+      sibVer = ''
+    } else if (this.#sibInfo.SportInTheBoxVersion === null) {
+      sibVer = ''
+    } else if (this.#sibInfo.SportInTheBoxVersion.trim() === '') {
+      sibVer = ''
+    } else if (this.#sibInfo.SportInTheBoxVersion.length === 0) {
+      sibVer = ''
+    } else {
+      sibVer = this.#sibInfo.SportInTheBoxVersion
+    }
+    return sibVer
+  }
 
-		if (!Array.isArray(parsedCollections) || !parsedCollections.length) {
-			this.#sibCollections = []
-			logger.warn('CMP. Collection is not array.')
-			return
-		}
+  /**
+   * Set db info from network.
+   * @param {apiQuickButtonCollectionWithGroupsAndButtons[]} parsedCollections
+   */
+  setSibCollections(parsedCollections) {
+    if (typeof parsedCollections == 'undefined') {
+      this.#sibCollections = []
+      logger.warn('CMP. Collection is undefined.')
+      return
+    }
 
-		this.#sibCollections = parsedCollections
-	}
+    if (!Array.isArray(parsedCollections) || !parsedCollections.length) {
+      this.#sibCollections = []
+      logger.warn('CMP. Collection is not array.')
+      return
+    }
 
-	/**
-	 * Get collections with buttons.
-	 * Only those can be used to create presets.
-	 * @returns {apiQuickButtonCollectionWithGroupsAndButtons[]}
-	 */
-	getCollectionsWithButtons() {
-		let colForPresets = []
+    this.#sibCollections = parsedCollections
+  }
 
-		if (!colForPresets) return colForPresets
+  /**
+   * Get collections with buttons.
+   * Only those can be used to create presets.
+   * @returns {apiQuickButtonCollectionWithGroupsAndButtons[]}
+   */
+  getCollectionsWithButtons() {
+    let colForPresets = []
 
-		if (!Array.isArray(this.#sibCollections) || !this.#sibCollections.length) {
-			return []
-		}
+    if (!colForPresets) return colForPresets
 
-		this.#sibCollections.forEach((eCollection) => {
-			try {
-				if (eCollection.hasButtons()) {
-					colForPresets.push(eCollection)
-				}
-			} catch (e) {
-				logger.error('CMP. Get collections loop, %s.', e)
-			}
-		})
-		return colForPresets
-	}
+    if (!Array.isArray(this.#sibCollections) || !this.#sibCollections.length) {
+      return []
+    }
 
-	/**
-	 * Set sib teams.
-	 * @param {ApiSportTeamWithoutPlayers[]} parsedTeams
-	 */
-	setSibTeams(parsedTeams) {
-		if (typeof parsedTeams == 'undefined') {
-			this.#sibCollections = []
-			logger.warn('CMP. Teams collection is undefined.')
-			return
-		}
+    this.#sibCollections.forEach((eCollection) => {
+      try {
+        if (eCollection.hasButtons()) {
+          colForPresets.push(eCollection)
+        }
+      } catch (e) {
+        logger.error('CMP. Get collections loop, %s.', e)
+      }
+    })
+    return colForPresets
+  }
 
-		if (!Array.isArray(parsedTeams) || !parsedTeams.length) {
-			this.#sibCollections = []
-			logger.warn('CMP. Teams collection is not array.')
-			return
-		}
+  /**
+   * Set sib teams.
+   * @param {ApiSportTeamWithoutPlayers[]} parsedTeams
+   */
+  setSibTeams(parsedTeams) {
+    if (typeof parsedTeams == 'undefined') {
+      this.#sibCollections = []
+      logger.warn('CMP. Teams collection is undefined.')
+      return
+    }
 
-		this.#sibTeams = parsedTeams
-	}
+    if (!Array.isArray(parsedTeams) || !parsedTeams.length) {
+      this.#sibCollections = []
+      logger.warn('CMP. Teams collection is not array.')
+      return
+    }
 
-	/**
-	 * Get saved teams.
-	 * Doesn't include 'no team' row.
-	 * @returns {ApiSportTeamWithoutPlayers[]}
-	 */
-	getSibTeams() {
-		let colTeams = []
+    this.#sibTeams = parsedTeams
+  }
 
-		if (!colTeams) return colTeams
+  /**
+   * Get saved teams.
+   * Doesn't include 'no team' row.
+   * @returns {ApiSportTeamWithoutPlayers[]}
+   */
+  getSibTeams() {
+    let colTeams = []
 
-		if (!Array.isArray(this.#sibTeams) || !this.#sibTeams.length) {
-			return []
-		}
+    if (!colTeams) return colTeams
 
-		this.#sibTeams.forEach((eCollection) => {
-			try {
-				colTeams.push(eCollection)
-			} catch (e) {
-				logger.error('CMP. Get teams loop, %s.', e)
-			}
-		})
-		// Return copy to prevent changed.
-		return colTeams
-	}
+    if (!Array.isArray(this.#sibTeams) || !this.#sibTeams.length) {
+      return []
+    }
 
-	/**
-	 * Get api url (ip:port)
-	 * @returns {string}
-	 */
-	getApiUrl() {
-		return this.#sibConnectionConfig.sibIpPort
-	}
+    this.#sibTeams.forEach((eCollection) => {
+      try {
+        colTeams.push(eCollection)
+      } catch (e) {
+        logger.error('CMP. Get teams loop, %s.', e)
+      }
+    })
+    // Return copy to prevent changed.
+    return colTeams
+  }
+
+  /**
+   * Set sib rundown array.
+   * @param {ApiRundownWithoutItemsArray} rundownArray
+   */
+  setSibRundowns(rundownArray) {
+    if (typeof rundownArray == 'undefined') {
+      this.#sibRundownArray = undefined
+      logger.warn('CMP. Rundown array is undefined.')
+      return
+    }
+
+    if (!rundownArray || !Array.isArray(rundownArray.Rundowns) || !rundownArray.Rundowns.length) {
+      this.#sibRundownArray = undefined
+      logger.warn('CMP. Rundown array is not array or empty.')
+      return
+    }
+
+    this.#sibRundownArray = JSON.parse(JSON.stringify(rundownArray))
+  }
+
+  /**
+   * Get sib rundown array.
+   * @returns {ApiRundownWithoutItemsArray}
+   */
+  getSibRundowns() {
+    if (
+      !this.#sibRundownArray ||
+      !Array.isArray(this.#sibRundownArray.Rundowns) ||
+      !this.#sibRundownArray.Rundowns.length
+    ) {
+      return ApiRundownWithoutItemsArray.empty();
+    }
+    const copy = new ApiRundownWithoutItemsArray();
+    copy.Rundowns = JSON.parse(JSON.stringify(this.#sibRundownArray.Rundowns));
+    return copy;
+  }
+
+  /**
+   * Get api url (ip:port)
+   * @returns {string}
+   */
+  getApiUrl() {
+    return this.#sibConnectionConfig.sibIpPort
+  }
 }
