@@ -9,7 +9,7 @@
 		"format": "prettier -w .",
 		"lint:raw": "eslint --ext .ts --ext .js --ignore-pattern dist --ignore-pattern pkg",
 		"lint": "yarn lint:raw .",
-		"dist": "yarn companion-module-build"
+		"package": "companion-module-build"
 	},
 	"description": "Sport In The Box 2 Companion plugin for StreamDeck",
 	"license": "MIT",
