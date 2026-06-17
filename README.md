@@ -41,6 +41,29 @@ The module fires QuickButton events using the **Trigger ID** shown in SIB.
 
 See the [module development wiki](https://github.com/bitfocus/companion-module-base/wiki) for general Companion module guidance.
 
+### Troubleshooting
+
+#### `yarn install` fails on Windows with `UNKNOWN: unknown error ... archive.zip`
+
+If `yarn install` aborts during the **Fetch step** with an error like:
+
+```text
+➤ YN0001: │ Error: @faker-js/faker@npm:8.3.1: UNKNOWN: unknown error, open 'C:\Users\<you>\AppData\Local\Temp\xfs-xxxxxxxx\archive.zip'
+```
+
+a real-time antivirus is quarantining the package archive that Node writes while building Yarn's cache, then removing the temp folder out from under it. It usually trips on the largest package in the tree (here `@faker-js/faker`), and the temp path changes every run. Confirmed with **Bitdefender Total Security**, but any on-access scanner can do this.
+
+Notes:
+
+- **Clearing the cache does not help** — it forces *every* archive to be re-fetched and re-written, exposing them all to the same block.
+- The temp location is irrelevant — setting `TMP`/`TEMP` elsewhere fails identically, because it's the act of Node writing the archive that's blocked, not the path.
+
+**Fix** — exempt Node from the scanner so the whole toolchain (Yarn, Jest, webpack) stops being interfered with:
+
+- **Bitdefender**: Protection → Antivirus → Settings → **Manage Exceptions** → add `C:\Program Files\nodejs\node.exe` (enable it for On-access scanning **and** Advanced Threat Defense).
+
+As a one-off, you can instead temporarily turn off real-time scanning (Bitdefender Shield), run `yarn install` once to populate `.yarn/cache`, then re-enable it — later installs read from the cache and won't re-trigger the block.
+
 ## How to Contribute
 
 Mail us :)
