@@ -23,7 +23,7 @@ See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed per-file descriptions.
 - **Package Manager**: Yarn (use `yarn test`, NEVER `npm test`)
 - **Test Runner**: Jest
 - **Module System**: ES Modules
-- **Build**: `yarn dist`
+- **Build**: `yarn package`
 - **Dev**: `yarn dev`
 
 ## SIB API Connection Rules
