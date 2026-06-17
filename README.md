@@ -41,6 +41,12 @@ The module fires QuickButton events using the **Trigger ID** shown in SIB.
 
 See the [module development wiki](https://github.com/bitfocus/companion-module-base/wiki) for general Companion module guidance.
 
+### Logging
+
+Logging goes through a small Winston logger (`src/logger.js`) that writes to the console. Per Companion's [logging docs](https://companion.free/for-developers/module-development/connection-basics/logging), console output is captured in the connection's debug log view, so this is a supported approach. It runs synchronously in the module's event loop — no worker thread/background event loop (unlike pino's threaded transports), so nothing needs cleanup in `destroy()`.
+
+Enable the **Debug messages** option in the connection settings to raise log verbosity at runtime — useful for debugging a live instance without redeploying.
+
 ### Debug files
 
 Local-only debug toggles (gitignored via `DEBUG-*`) — create when needed, never commit:
