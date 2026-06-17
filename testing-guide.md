@@ -76,11 +76,25 @@ test('Works')
 ```javascript
 import { faker } from '@faker-js/faker'
 
+// Dates
 faker.date.anytime().toISOString()
+faker.date.past()
+faker.date.future()
+
+// File paths (Windows-compatible — use path.sep)
 faker.system.directoryPath() + path.sep + faker.system.commonFileName('SIB2')
+
+// Strings & numbers
 faker.string.alphanumeric(10)
 faker.string.uuid()
 faker.number.int({ min: 1, max: 100 })
+faker.number.float({ min: 0, max: 1 })
+
+// Colors, names, text
+faker.color.rgb({ format: 'hex', casing: 'lower' }) // '#ff0000'
+faker.person.fullName()
+faker.internet.email()
+faker.lorem.word()
 ```
 
 ### Faker Best Practices
@@ -148,6 +162,7 @@ expect(() => fn()).toThrow()
 ## Edge Cases Checklist
 
 Always test:
+
 - `undefined` input
 - `null` input
 - Empty object `{}`
@@ -227,6 +242,62 @@ describe('parseApiMessageSibInfo', () => {
     })
 })
 ```
+
+---
+
+## Quick Reference: Test Template
+
+```javascript
+import { functionToTest } from '../../../path/to/module.js'
+import { defineFixture } from 'efate'
+import { faker } from '@faker-js/faker'
+import * as path from 'path'
+
+describe('Feature or Component Name', () => {
+    const testFixture = defineFixture((t) => {
+        t['field1'].as(() => faker.date.anytime().toISOString())
+        t['field2'].as(() => faker.system.directoryPath() + path.sep + faker.system.commonFileName('ext'))
+    })
+
+    test('Descriptive name for main scenario', () => {
+        // arrange
+        const expected = { field1: 'value1', field2: 'value2' }
+
+        // act
+        const actual = functionToTest(expected)
+
+        // assert
+        expect(actual.field1).toBe(expected.field1)
+    })
+
+    test('Handles edge case: undefined input', () => {
+        // act
+        const result = functionToTest(undefined)
+
+        // assert
+        expect(result).toBeNull()
+    })
+})
+```
+
+---
+
+## Self-Checking Guidelines
+
+**Before writing tests:**
+
+- Test file location mirrors the source structure
+- Import paths include the `.js` extension
+- Edge cases identified (null / undefined / empty)
+- Fixtures planned for complex reusable data
+
+**After writing tests:**
+
+- `yarn test` passes
+- Tests are isolated (no shared mutable state)
+- Test names describe behavior
+- `// arrange`, `// act`, `// assert` comments present
+- Faker used only for variable data, not logic-dependent values
 
 ---
 
