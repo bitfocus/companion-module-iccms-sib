@@ -2959,6 +2959,7 @@ __metadata:
     object-path: "npm:^0.11.8"
     path: "npm:^0.12.7"
     pngjs: "npm:^7.0.0"
+    prettier: "npm:^3.8.3"
     webpack: "npm:^5.94.0"
     webpack-cli: "npm:^5.1.4"
     winston: "npm:^3.11.0"
@@ -5294,6 +5295,15 @@ __metadata:
   dependencies:
     fast-diff: "npm:^1.1.2"
   checksum: 10/2dc35f5036a35f4c4f5e645887edda1436acb63687a7f12b2383e0a6f3c1f76b8a0a4709fe4d82e19157210feb5984b159bb714d43290022911ab53d606474ec
+  languageName: node
+  linkType: hard
+
+"prettier@npm:^3.8.3":
+  version: 3.8.4
+  resolution: "prettier@npm:3.8.4"
+  bin:
+    prettier: bin/prettier.cjs
+  checksum: 10/54684a3cc6689238692b29fab541c01934af7677be94c02293ba49981a1ac121c8bebe2a865f0c3b963e99d208f847c53aed354cc0ce8750e2d45791d64506c5
   languageName: node
   linkType: hard
 
