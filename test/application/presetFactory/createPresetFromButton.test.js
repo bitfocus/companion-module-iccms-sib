@@ -1,7 +1,7 @@
-import { apiQuickButtonInGroup } from '../../../infrastructure/sib-api/apiQuickButtonInGroup.js'
-import { SibIcons } from '../../../domain/sibIcons.js'
-import { createPresetFromButton } from '../../../application/presetFactory/createPresetFromButton.js'
-import { actionId } from '../../../application/actionId.js'
+import { apiQuickButtonInGroup } from '../../../src/infrastructure/sib-api/apiQuickButtonInGroup.js'
+import { SibIcons } from '../../../src/domain/sibIcons.js'
+import { createPresetFromButton } from '../../../src/application/presetFactory/createPresetFromButton.js'
+import { actionId } from '../../../src/application/actionId.js'
 
 describe('Create preset from button', () => {
 	test('Default values', () => {

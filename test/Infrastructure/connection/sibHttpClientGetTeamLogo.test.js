@@ -1,4 +1,4 @@
-import { sibHttpClientGetTeamLogo } from '../../../infrastructure/connection/sibHttpClient.js';
+import { sibHttpClientGetTeamLogo } from '../../../src/infrastructure/connection/sibHttpClient.js';
 import { apiSportTeamLogoFixture } from '../../fixtures/apiSportTeamLogoFixture.js';
 import { apiSportTeamLogoMinimalFixture } from '../../fixtures/apiSportTeamLogoMinimalFixture.js';
 import * as http from 'http';

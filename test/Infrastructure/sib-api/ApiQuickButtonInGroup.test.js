@@ -1,4 +1,4 @@
-import { apiQuickButtonInGroup } from '../../../infrastructure/sib-api/apiQuickButtonInGroup.js'
+import { apiQuickButtonInGroup } from '../../../src/infrastructure/sib-api/apiQuickButtonInGroup.js'
 
 describe('QB deserialization', () => {
 	test('QB is deserialized correctly', () => {

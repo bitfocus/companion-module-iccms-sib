@@ -1,4 +1,4 @@
-import { sibHttpClientGetSibInfo } from '../../../infrastructure/connection/sibHttpClient.js';
+import { sibHttpClientGetSibInfo } from '../../../src/infrastructure/connection/sibHttpClient.js';
 import * as http from 'http';
 import { jest } from '@jest/globals';
 import {sibInfoWithComponentsFixture} from "../../fixtures/sibInfoWithComponentsFixture.js";

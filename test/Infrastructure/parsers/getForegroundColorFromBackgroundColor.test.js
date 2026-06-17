@@ -1,4 +1,4 @@
-import { getForegroundColorFromBackgroundColor } from '../../../application/presetFactory/getForegroundColorFromBackgroundColor.js'
+import { getForegroundColorFromBackgroundColor } from '../../../src/application/presetFactory/getForegroundColorFromBackgroundColor.js'
 
 describe('Test get QB foreground background colors', () => {
 	const clrWhite = 16777215

@@ -1,4 +1,4 @@
-import { parseApiRundownWithoutItemsDto } from '../../../infrastructure/parsers/parseApiRundownWithoutItemsDto.js'
+import { parseApiRundownWithoutItemsDto } from '../../../src/infrastructure/parsers/parseApiRundownWithoutItemsDto.js'
 import { apiRundownWithoutItemsDtoFixture } from '../../fixtures/apiRundownWithoutItemsDtoFixture.js'
 
 describe('ApiRundownWithoutItemsDto deserialization', () => {

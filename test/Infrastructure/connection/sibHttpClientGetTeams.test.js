@@ -1,4 +1,4 @@
-import { sibHttpClientGetTeams } from '../../../infrastructure/connection/sibHttpClient.js';
+import { sibHttpClientGetTeams } from '../../../src/infrastructure/connection/sibHttpClient.js';
 import * as http from 'http';
 import { jest } from '@jest/globals';
 

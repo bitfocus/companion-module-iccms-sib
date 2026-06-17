@@ -1,4 +1,4 @@
-import { sibHttpClientRundownSelect } from '../../../infrastructure/connection/sibHttpClient.js';
+import { sibHttpClientRundownSelect } from '../../../src/infrastructure/connection/sibHttpClient.js';
 import * as http from 'http';
 import { jest } from '@jest/globals';
 

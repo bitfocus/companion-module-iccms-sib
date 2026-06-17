@@ -1,4 +1,4 @@
-import { getChoicesForTriggerEventAction } from '../../../application/presetFactory/getChoicesForTriggerEventAction.js'
+import { getChoicesForTriggerEventAction } from '../../../src/application/presetFactory/getChoicesForTriggerEventAction.js'
 import { apiQuickButtonCollectionWithGroupsAndButtonsFixture } from '../../fixtures/apiQuickButtonCollectionWithGroupsAndButtonsFixture.js'
 
 describe('getChoicesForTriggerEventAction', () => {

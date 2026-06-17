@@ -5,7 +5,7 @@ import { faker } from '@faker-js/faker'
  * Factory fixture for creating test data of a type {@link ApiSportTeamLogo}.
  *
  * @returns {ApiSportTeamLogo} An object with team logo properties.
- *          See {@link ../../infrastructure/sib-api/apiSportTeamLogo.js} for structure.
+ *          See {@link ../../src/infrastructure/sib-api/apiSportTeamLogo.js} for structure.
  *
  * @example
  * const teamLogo = apiSportTeamLogoFixture.create();

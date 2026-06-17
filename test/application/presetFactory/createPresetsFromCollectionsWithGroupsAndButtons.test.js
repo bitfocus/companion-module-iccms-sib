@@ -1,12 +1,12 @@
-import {SibIcons} from '../../../domain/sibIcons.js'
-import {apiQuickButtonInGroup} from '../../../infrastructure/sib-api/apiQuickButtonInGroup.js'
-import {apiQuickButtonGroupWithButtons} from '../../../infrastructure/sib-api/apiQuickButtonGroupWithButtons.js'
+import {SibIcons} from '../../../src/domain/sibIcons.js'
+import {apiQuickButtonInGroup} from '../../../src/infrastructure/sib-api/apiQuickButtonInGroup.js'
+import {apiQuickButtonGroupWithButtons} from '../../../src/infrastructure/sib-api/apiQuickButtonGroupWithButtons.js'
 import {
   apiQuickButtonCollectionWithGroupsAndButtons
-} from '../../../infrastructure/sib-api/apiQuickButtonCollectionWithGroupsAndButtons.js'
+} from '../../../src/infrastructure/sib-api/apiQuickButtonCollectionWithGroupsAndButtons.js'
 import {
   createPresetsFromCollectionsWithGroupsAndButtons
-} from '../../../application/presetFactory/createPresetsFromCollectionsWithGroupsAndButtons.js'
+} from '../../../src/application/presetFactory/createPresetsFromCollectionsWithGroupsAndButtons.js'
 
 describe('Create preset from collection with groups and buttons', () => {
   test('Collection, Group has buttons, button is created.', () => {

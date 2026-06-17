@@ -1,7 +1,7 @@
 {
 	"name": "companion-module-iccms-sib",
 	"version": "3.0.0",
-	"main": "main.js",
+	"main": "src/main.js",
 	"type": "module",
 	"scripts": {
 		"dev": "yarn build:watch",

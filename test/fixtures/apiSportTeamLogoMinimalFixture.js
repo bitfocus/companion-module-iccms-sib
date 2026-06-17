@@ -5,7 +5,7 @@ import { defineFixture } from 'efate'
  * This fixture creates team logo objects with minimal or empty data.
  *
  * @returns {ApiSportTeamLogo} An object with minimal team logo properties.
- *          See {@link ../../infrastructure/sib-api/apiSportTeamLogo.js} for structure.
+ *          See {@link ../../src/infrastructure/sib-api/apiSportTeamLogo.js} for structure.
  *
  * @example
  * const teamLogo = apiSportTeamLogoMinimalFixture.create();

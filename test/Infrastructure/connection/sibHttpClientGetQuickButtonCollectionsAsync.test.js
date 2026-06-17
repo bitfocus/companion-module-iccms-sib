@@ -1,4 +1,4 @@
-import { sibHttpClientGetQuickButtonCollectionsAsync } from '../../../infrastructure/connection/sibHttpClient.js';
+import { sibHttpClientGetQuickButtonCollectionsAsync } from '../../../src/infrastructure/connection/sibHttpClient.js';
 import * as http from 'http';
 import { jest } from '@jest/globals';
 

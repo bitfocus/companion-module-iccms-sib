@@ -1,4 +1,4 @@
-import {parseApiSportTeamLogo} from '../../../infrastructure/parsers/parseApiSportTeamLogo.js'
+import {parseApiSportTeamLogo} from '../../../src/infrastructure/parsers/parseApiSportTeamLogo.js'
 import {apiSportTeamLogoFixture} from '../../fixtures/apiSportTeamLogoFixture.js'
 import {apiSportTeamLogoMinimalFixture} from '../../fixtures/apiSportTeamLogoMinimalFixture.js'
 

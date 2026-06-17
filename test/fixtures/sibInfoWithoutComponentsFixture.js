@@ -6,7 +6,7 @@ import * as path from 'path'
  * Factory fixture for creating test data of type {@link ApiMessageSibInfo} (without components).
  *
  * @returns {ApiMessageSibInfo} An object with SIB info properties.
- *          See {@link ../infrastructure/sib-api/apiMessageSibInfo.js} for structure.
+ *          See {@link ../src/infrastructure/sib-api/apiMessageSibInfo.js} for structure.
  *
  * @example
  * const sibInfo = sibInfoWithoutComponentsFixture.create();

@@ -1,4 +1,4 @@
-import { createPresetsFromTeamsArray } from '../../../application/presetFactory/createPresetsFromTeamsArray.js'
+import { createPresetsFromTeamsArray } from '../../../src/application/presetFactory/createPresetsFromTeamsArray.js'
 
 describe('createPresetsFromTeamsArray', () => {
   test('creates correct presets for teams array', () => {

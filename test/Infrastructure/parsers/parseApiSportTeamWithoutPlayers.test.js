@@ -1,4 +1,4 @@
-import { parseApiSportTeamWithoutPlayers } from '../../../infrastructure/parsers/parseApiSportTeamWithoutPlayers.js'
+import { parseApiSportTeamWithoutPlayers } from '../../../src/infrastructure/parsers/parseApiSportTeamWithoutPlayers.js'
 
 describe('ApiSportTeamWithoutPlayers deserialization', () => {
 	test('Deserialized correctly', () => {

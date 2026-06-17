@@ -1,4 +1,4 @@
-import { parseApiRundownWithoutItemsArray } from '../../../infrastructure/parsers/parseApiRundownWithoutItemsArray.js'
+import { parseApiRundownWithoutItemsArray } from '../../../src/infrastructure/parsers/parseApiRundownWithoutItemsArray.js'
 
 describe('ApiRundownWithoutItemsArray deserialization', () => {
 	test('Deserialized correctly', () => {

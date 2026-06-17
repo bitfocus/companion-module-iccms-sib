@@ -1,4 +1,4 @@
-import {parseApiMessageSibInfo} from '../../../infrastructure/parsers/parseApiMessageSibInfo.js'
+import {parseApiMessageSibInfo} from '../../../src/infrastructure/parsers/parseApiMessageSibInfo.js'
 import {sibInfoWithoutComponentsFixture} from '../../fixtures/sibInfoWithoutComponentsFixture.js'
 import {sibInfoWithComponentsFixture} from '../../fixtures/sibInfoWithComponentsFixture.js'
 

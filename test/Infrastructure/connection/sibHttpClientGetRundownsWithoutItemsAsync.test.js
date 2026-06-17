@@ -1,4 +1,4 @@
-import { sibHttpClientGetRundownsWithoutItems } from '../../../infrastructure/connection/sibHttpClient.js';
+import { sibHttpClientGetRundownsWithoutItems } from '../../../src/infrastructure/connection/sibHttpClient.js';
 import * as http from 'http';
 import { jest } from '@jest/globals';
 

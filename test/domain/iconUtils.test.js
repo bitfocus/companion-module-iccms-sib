@@ -1,4 +1,4 @@
-import { getAllUniqueIconIdsFromQbCollectionsAndRundowns } from '../../domain/iconUtils.js'
+import { getAllUniqueIconIdsFromQbCollectionsAndRundowns } from '../../src/domain/iconUtils.js'
 import { apiRundownWithoutItemsArray2Fixture } from '../fixtures/apiRundownWithoutItemsArray2Fixture.js'
 import { apiQuickButtonCollectionWithGroupsAndButtonsFixture } from '../fixtures/apiQuickButtonCollectionWithGroupsAndButtonsFixture.js'
 import { ICON_ID_CHOICES_FIXTURE } from '../fixtures/iconIdChoicesFixture.js'

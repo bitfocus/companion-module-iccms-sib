@@ -1,8 +1,8 @@
 // Unit tests for getChoicesForRundownAction
 
-import { getChoicesForRundownAction } from '../../../application/presetFactory/getChoicesForRundownAction.js'
-import { ApiRundownWithoutItemsArray } from '../../../infrastructure/sib-api/ApiRundownWithoutItemsArray.js'
-import { ApiRundownWithoutItemsDto } from '../../../infrastructure/sib-api/ApiRundownWithoutItemsDto.js'
+import { getChoicesForRundownAction } from '../../../src/application/presetFactory/getChoicesForRundownAction.js'
+import { ApiRundownWithoutItemsArray } from '../../../src/infrastructure/sib-api/ApiRundownWithoutItemsArray.js'
+import { ApiRundownWithoutItemsDto } from '../../../src/infrastructure/sib-api/ApiRundownWithoutItemsDto.js'
 
 describe('getChoicesForRundownAction', () => {
   test('returns default option when input is undefined', () => {

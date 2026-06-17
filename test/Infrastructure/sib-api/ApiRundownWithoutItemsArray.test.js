@@ -1,4 +1,4 @@
-import { ApiRundownWithoutItemsArray } from '../../../infrastructure/sib-api/ApiRundownWithoutItemsArray.js'
+import { ApiRundownWithoutItemsArray } from '../../../src/infrastructure/sib-api/ApiRundownWithoutItemsArray.js'
 
 describe('ApiRundownWithoutItemsArray', () => {
   test('empty() returns instance with empty Rundowns array', () => {

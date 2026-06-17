@@ -1,5 +1,5 @@
-import { SibComputer } from '../../domain/sibComputer.js'
-import { ApiRundownWithoutItemsArray } from '../../infrastructure/sib-api/ApiRundownWithoutItemsArray.js'
+import { SibComputer } from '../../src/domain/sibComputer.js'
+import { ApiRundownWithoutItemsArray } from '../../src/infrastructure/sib-api/ApiRundownWithoutItemsArray.js'
 import { apiRundownWithoutItemsArray2Fixture } from '../fixtures/apiRundownWithoutItemsArray2Fixture.js'
 
 describe('SibComputer', () => {
