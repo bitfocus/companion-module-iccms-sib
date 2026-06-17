@@ -41,6 +41,15 @@ The module fires QuickButton events using the **Trigger ID** shown in SIB.
 
 See the [module development wiki](https://github.com/bitfocus/companion-module-base/wiki) for general Companion module guidance.
 
+### Debug files
+
+Local-only debug toggles (gitignored via `DEBUG-*`) — create when needed, never commit:
+
+| Artifact | What's needed |
+| --- | --- |
+| `DEBUG-INSPECT` | Runs the module with the Node inspector to attach a debugger. |
+| `DEBUG-PACKAGED` | Runs the built `pkg/` code instead of `src/`. |
+
 ### Troubleshooting
 
 #### `yarn install` fails on Windows with `UNKNOWN: unknown error ... archive.zip`
