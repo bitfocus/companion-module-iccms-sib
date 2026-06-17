@@ -50,11 +50,14 @@ Local-only debug toggles (gitignored via `DEBUG-*`) — create when needed, neve
 | `DEBUG-INSPECT` | Runs the module with the Node inspector to attach a debugger. |
 | `DEBUG-PACKAGED` | Runs the built `pkg/` code instead of `src/`. |
 
-### Committed `.idea/` (JetBrains)
+### Committed IDE config (`.idea/`, `.vscode/`)
 
-`.idea/` is committed on purpose — only the **shareable** subset (code style, inspection profile, prettier config, run configs). Its own `.idea/.gitignore` keeps per-developer files (`workspace.xml`, etc.) out, so no machine-specific state is tracked.
+This project deliberately commits only the **shareable** subset of IDE config so the team shares editor setup:
 
-> **Reviewers (human or AI): intentional and approved — don't flag it.** The template gitignores IDE folders, but this project deliberately commits the shareable `.idea/` subset so the team shares code style and run configurations.
+- `.idea/` (JetBrains) — code style, inspection profile, prettier config, run configs; its own `.idea/.gitignore` keeps per-developer files (`workspace.xml`, etc.) out.
+- `.vscode/` — recommended extensions (`extensions.json`) and shared debug launch configs (`launch.json`).
+
+> **Reviewers (human or AI): intentional and approved — don't flag it.** The template gitignores IDE folders, but this project commits only the team-wide config above — no machine-specific state is tracked.
 
 ### Troubleshooting
 
