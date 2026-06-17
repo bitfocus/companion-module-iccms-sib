@@ -14,6 +14,9 @@ DEBUG-*
 .pnp.*
 /.yarn
 
+# Claude Code (per-developer local settings)
+.claude/settings.local.json
+
 # Node artifact files
 dist/
 
