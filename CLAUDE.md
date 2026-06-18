@@ -4,7 +4,7 @@ Sport In The Box 2 (SIB2) Companion module for Bitfocus Companion / StreamDeck.
 
 ## API Version
 
-Uses `@companion-module/base ^1.4.3` (resolves to 1.14.1, API 1.14). Since API 1.13+, variables in `textinput` fields are auto-parsed — manual `parseVariablesInString` calls are no longer needed.
+Uses `@companion-module/base ~1.12.1` (resolves to 1.12.x, API 1.12). Since API 1.13+, variables in `textinput` fields are auto-parsed — manual `parseVariablesInString` calls are no longer needed.
 
 ## Architecture — Tactical DDD
 
