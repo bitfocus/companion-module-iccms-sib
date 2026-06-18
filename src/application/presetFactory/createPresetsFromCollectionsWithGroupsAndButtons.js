@@ -10,6 +10,8 @@ import { logger } from '../../logger.js'
  * Creates headers for each collection and group with icons and colors, plus individual button presets.
  * Category structure: Pages > Collection > Group. Forward slashes in names are removed.
  *
+ * Called only when quick button data has changed, not on every heartbeat poll.
+ *
  * @param {apiQuickButtonCollectionWithGroupsAndButtons[]} collections - Array of collections from SIB API.
  *        Example: {@see test/fixtures/TEST_ManyIcons-api-quickButtonCollectionsFull.json}
  * @param {SibIcons} sibIcons - Icon resolver for fetching PNG icons by ID.
@@ -23,6 +25,7 @@ export function createPresetsFromCollectionsWithGroupsAndButtons(collections, si
 		return {}
 	}
 	const presets = {}
+	const composedIconCache = new Map()
 
 	// Forward slashes are used as separators, remove them from names.
 	function sanitizeName(name) {
@@ -78,7 +81,7 @@ export function createPresetsFromCollectionsWithGroupsAndButtons(collections, si
 				// Add buttons for this group
 				if (Array.isArray(group.Buttons)) {
 					group.Buttons.forEach((button, idx) => {
-						const buttonPreset = createPresetFromButton(collectionCategory, button, sibIcons)
+						const buttonPreset = createPresetFromButton(collectionCategory, button, sibIcons, composedIconCache)
 						if (buttonPreset) {
 							const buttonId = `button_${collectionId}_${group.Id || sanitizedGroupName}_${button.Id || idx}`
 							presets[buttonId] = buttonPreset

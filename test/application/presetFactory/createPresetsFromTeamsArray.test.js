@@ -1,7 +1,9 @@
 import { composeIconWithGradient } from '../../../src/domain/imageProcessing.js'
 import { createPresetsFromTeamsArray } from '../../../src/application/presetFactory/createPresetsFromTeamsArray.js'
 
-vi.mock('../../../src/domain/imageProcessing.js')
+vi.mock('../../../src/domain/imageProcessing.js', () => ({
+	composeIconWithGradient: vi.fn(),
+}))
 
 describe('createPresetsFromTeamsArray', () => {
 	beforeEach(() => {

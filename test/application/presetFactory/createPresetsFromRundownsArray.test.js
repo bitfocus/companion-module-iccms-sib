@@ -1,7 +1,9 @@
 import { composeIconWithGradient } from '../../../src/domain/imageProcessing.js'
 import { createPresetsFromRundownsArray } from '../../../src/application/presetFactory/createPresetsFromRundownsArray.js'
 
-vi.mock('../../../src/domain/imageProcessing.js')
+vi.mock('../../../src/domain/imageProcessing.js', () => ({
+	composeIconWithGradient: vi.fn(),
+}))
 
 const ACTION_IDS = ['select_rundown', 'current_run_line', 'current_select_prev', 'current_select_next']
 

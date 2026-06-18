@@ -16,10 +16,12 @@ import { logger } from '../../logger.js'
  * @param {apiQuickButtonInGroup} qb - Quick button object from the SIB API.
  * {@see test/fixtures/TEST_ManyIcons-api-quickButtonCollectionsFull-QuickButton.json} for example structure.
  * @param {SibIcons} sibIcons - Icon resolver for fetching PNG icons by ID.
+ * @param {Map<string, string>} [composedIconCache] - Optional per-build cache of iconId to composedPng64.
+ *        Pass a shared Map across all buttons in one build to avoid recompositing the same icon twice.
  * @returns {import('@companion-module/base').CompanionButtonPresetDefinition|null} Companion button preset definition for use with setPresetDefinitions, or null if input is invalid.
  *          See {@link https://github.com/bitfocus/companion-module-base/wiki/Presets} for preset format.
  */
-export function createPresetFromButton(parentCategoryId, qb, sibIcons) {
+export function createPresetFromButton(parentCategoryId, qb, sibIcons, composedIconCache = new Map()) {
 	if (typeof qb == 'undefined') {
 		return null
 	}
@@ -78,7 +80,12 @@ export function createPresetFromButton(parentCategoryId, qb, sibIcons) {
 	}
 
 	if (sibIcons.hasIcon(qb.IconId)) {
-		presetTriggerQb.style.png64 = composeIconWithGradient(sibIcons.getIconPngBase64(qb.IconId))
+		if (!composedIconCache.has(qb.IconId)) {
+			const cachedIconPng64 = sibIcons.getIconPngBase64(qb.IconId)
+			composedIconCache.set(qb.IconId, cachedIconPng64 ? composeIconWithGradient(cachedIconPng64) : '')
+		}
+		const composedPng64 = composedIconCache.get(qb.IconId)
+		if (composedPng64) presetTriggerQb.style.png64 = composedPng64
 		presetTriggerQb.style.color = getForegroundColorFromBackgroundColor(qb.BackgroundColorHex)
 	} else {
 		presetTriggerQb.style.color = getForegroundColorFromBackgroundColor(qb.BackgroundColorHex)
