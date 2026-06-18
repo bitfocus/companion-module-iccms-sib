@@ -1,7 +1,7 @@
 import { sibHttpClientGetRundownsWithoutItems } from '../../../src/infrastructure/connection/sibHttpClient.js'
 import * as http from 'http'
 
-jest.mock('http')
+vi.mock('http')
 
 describe('sibHttpClientGetRundownsWithoutItems', () => {
 	const mockBaseUrl = 'localhost:8080'
@@ -9,17 +9,17 @@ describe('sibHttpClientGetRundownsWithoutItems', () => {
 	const mockDeviceId = 'device_123'
 
 	beforeEach(() => {
-		jest.clearAllMocks()
+		vi.clearAllMocks()
 	})
 
 	afterEach(() => {
-		jest.resetAllMocks()
+		vi.resetAllMocks()
 	})
 
 	it('should construct the correct URL with token', async () => {
 		const mockResponse = JSON.stringify([{ id: 1, name: 'Rundown 1' }])
 		const mockEmitter = {
-			on: jest.fn(function (event, callback) {
+			on: vi.fn(function (event, callback) {
 				if (event === 'data') {
 					callback(mockResponse)
 				} else if (event === 'end') {
@@ -32,7 +32,7 @@ describe('sibHttpClientGetRundownsWithoutItems', () => {
 		http.get.mockImplementation((_, callback) => {
 			callback({
 				statusCode: 200,
-				on: jest.fn(function (event, listener) {
+				on: vi.fn(function (event, listener) {
 					if (event === 'data') {
 						listener(mockResponse)
 					} else if (event === 'end') {
@@ -52,7 +52,7 @@ describe('sibHttpClientGetRundownsWithoutItems', () => {
 
 	it('should construct the correct URL without token', async () => {
 		const mockEmitter = {
-			on: jest.fn(function (event, callback) {
+			on: vi.fn(function (event, callback) {
 				if (event === 'end') {
 					callback()
 				}
@@ -63,7 +63,7 @@ describe('sibHttpClientGetRundownsWithoutItems', () => {
 		http.get.mockImplementation((_, callback) => {
 			callback({
 				statusCode: 200,
-				on: jest.fn(function (event, listener) {
+				on: vi.fn(function (event, listener) {
 					if (event === 'end') {
 						listener()
 					}
@@ -84,7 +84,7 @@ describe('sibHttpClientGetRundownsWithoutItems', () => {
 
 	it('should include deviceId as query parameter in the URL', async () => {
 		const mockEmitter = {
-			on: jest.fn(function (event, callback) {
+			on: vi.fn(function (event, callback) {
 				if (event === 'end') {
 					callback()
 				}
@@ -95,7 +95,7 @@ describe('sibHttpClientGetRundownsWithoutItems', () => {
 		http.get.mockImplementation((_, callback) => {
 			callback({
 				statusCode: 200,
-				on: jest.fn(function (event, listener) {
+				on: vi.fn(function (event, listener) {
 					if (event === 'end') {
 						listener()
 					}
@@ -112,7 +112,7 @@ describe('sibHttpClientGetRundownsWithoutItems', () => {
 
 	it('should reject on HTTP error status code', async () => {
 		const mockEmitter = {
-			on: jest.fn(function () {
+			on: vi.fn(function () {
 				return this
 			}),
 		}
@@ -120,7 +120,7 @@ describe('sibHttpClientGetRundownsWithoutItems', () => {
 		http.get.mockImplementation((_, callback) => {
 			callback({
 				statusCode: 500,
-				on: jest.fn(function () {
+				on: vi.fn(function () {
 					return this
 				}),
 			})

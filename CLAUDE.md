@@ -21,7 +21,7 @@ See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for detailed per-file descriptions.
 ## Build and Test
 
 - **Package Manager**: Yarn (use `yarn test`, NEVER `npm test`)
-- **Test Runner**: Jest
+- **Test Runner**: Vitest
 - **Module System**: ES Modules
 - **Build**: `yarn package`
 - **Dev**: `yarn dev`

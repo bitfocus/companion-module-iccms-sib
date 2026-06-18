@@ -2,7 +2,7 @@ import { sibHttpClientGetSibInfo } from '../../../src/infrastructure/connection/
 import * as http from 'http'
 import { sibInfoWithComponentsFixture } from '../../fixtures/sibInfoWithComponentsFixture.js'
 
-jest.mock('http')
+vi.mock('http')
 
 describe('sibHttpClientGetSibInfo', () => {
 	const mockBaseUrl = 'localhost:8080'
@@ -11,18 +11,18 @@ describe('sibHttpClientGetSibInfo', () => {
 	let mockSibInfoResponse
 
 	beforeEach(() => {
-		jest.clearAllMocks()
+		vi.clearAllMocks()
 		expected = sibInfoWithComponentsFixture.create()
 		mockSibInfoResponse = JSON.stringify(expected)
 	})
 
 	afterEach(() => {
-		jest.resetAllMocks()
+		vi.resetAllMocks()
 	})
 
 	it('should return ApiMessageSibInfo object on success', async () => {
 		const mockEmitter = {
-			on: jest.fn(function (event, callback) {
+			on: vi.fn(function (event, callback) {
 				if (event === 'end') {
 					callback()
 				}
@@ -33,7 +33,7 @@ describe('sibHttpClientGetSibInfo', () => {
 		http.get.mockImplementation((_, callback) => {
 			callback({
 				statusCode: 200,
-				on: jest.fn(function (event, listener) {
+				on: vi.fn(function (event, listener) {
 					if (event === 'data') {
 						listener(Buffer.from(mockSibInfoResponse))
 					} else if (event === 'end') {
@@ -56,7 +56,7 @@ describe('sibHttpClientGetSibInfo', () => {
 
 	it('should reject on HTTP error status code', async () => {
 		const mockEmitter = {
-			on: jest.fn(function () {
+			on: vi.fn(function () {
 				return this
 			}),
 		}
@@ -64,7 +64,7 @@ describe('sibHttpClientGetSibInfo', () => {
 		http.get.mockImplementation((_, callback) => {
 			callback({
 				statusCode: 500,
-				on: jest.fn(function () {
+				on: vi.fn(function () {
 					return this
 				}),
 			})
@@ -76,7 +76,7 @@ describe('sibHttpClientGetSibInfo', () => {
 
 	it('should reject on request error', async () => {
 		const mockEmitter = {
-			on: jest.fn(function (event, callback) {
+			on: vi.fn(function (event, callback) {
 				if (event === 'error') {
 					callback(new Error('Network error'))
 				}

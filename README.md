@@ -82,7 +82,7 @@ Notes:
 - **Clearing the cache does not help** — it forces _every_ archive to be re-fetched and re-written, exposing them all to the same block.
 - The temp location is irrelevant — setting `TMP`/`TEMP` elsewhere fails identically, because it's the act of Node writing the archive that's blocked, not the path.
 
-**Fix** — exempt Node from the scanner so the whole toolchain (Yarn, Jest, webpack) stops being interfered with:
+**Fix** — exempt Node from the scanner so the whole toolchain (Yarn, Vitest) stops being interfered with:
 
 - **Bitdefender**: Protection → Antivirus → Settings → **Manage Exceptions** → add `C:\Program Files\nodejs\node.exe` (enable it for On-access scanning **and** Advanced Threat Defense).
 

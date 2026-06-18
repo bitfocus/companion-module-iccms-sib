@@ -11,10 +11,17 @@ const customConfig = [
 		},
 	},
 	{
+		files: ['vitest.config.mjs'],
+		rules: {
+			'n/no-unpublished-import': ['error', { allowModules: ['vitest'] }],
+		},
+	},
+	{
 		files: ['test/**/*.js', '**/*.test.js'],
 		languageOptions: {
 			globals: {
 				...globals.jest,
+				vi: 'readonly',
 			},
 		},
 		rules: {

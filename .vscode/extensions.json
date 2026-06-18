@@ -3,8 +3,9 @@
 		"EditorConfig.EditorConfig",
 		"yzhang.markdown-all-in-one",
 		"DavidAnson.vscode-markdownlint",
-		"bierner.markdown-mermaid",
 		"tomoyukim.vscode-mermaid-editor",
-		"bpruitt-goddard.mermaid-markdown-syntax-highlighting"
+		"bpruitt-goddard.mermaid-markdown-syntax-highlighting",
+		"vitest.explorer",
+		"dbaeumer.vscode-eslint"
 	]
 }

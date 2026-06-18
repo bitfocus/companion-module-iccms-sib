@@ -19,6 +19,12 @@ import { defineFixture } from 'efate'
 import { faker } from '@faker-js/faker'
 ```
 
+With `globals: true` in `vitest.config.mjs`, test globals (`describe`, `it`, `test`, `expect`, `vi`, `beforeEach`, `afterEach`) are available without imports. If you need to import them explicitly:
+
+```javascript
+import { vi } from 'vitest'
+```
+
 ## Arrange-Act-Assert
 
 Always structure tests with these comments:
@@ -35,6 +41,38 @@ test('Deserialized correctly', () => {
 	expect(actual.field).toBe(expected.field)
 })
 ```
+
+## Mocking
+
+Use `vi.mock()` to replace Node modules. It is auto-hoisted to the top of the file:
+
+```javascript
+import * as http from 'http'
+
+vi.mock('http')
+
+it('makes an HTTP call', async () => {
+	// arrange
+	const mockEmitter = {
+		on: vi.fn(function (event, callback) {
+			if (event === 'end') callback()
+			return this
+		}),
+	}
+	http.get.mockImplementation((_, callback) => {
+		callback({ statusCode: 200, on: vi.fn(function (event, listener) {
+			if (event === 'end') listener()
+			return this
+		}) })
+		return mockEmitter
+	})
+
+	// act & assert
+	await expect(myFunction()).resolves.toBeDefined()
+})
+```
+
+`clearMocks: true` in vitest config clears all mock state before each test automatically. Use `vi.resetAllMocks()` in `afterEach` when you also need to reset mock implementations.
 
 ## Faker
 

@@ -1,7 +1,7 @@
 import { sibHttpClientGetQuickButtonCollectionsAsync } from '../../../src/infrastructure/connection/sibHttpClient.js'
 import * as http from 'http'
 
-jest.mock('http')
+vi.mock('http')
 
 describe('sibHttpClientGetQuickButtonCollectionsAsync', () => {
 	const mockBaseUrl = 'localhost:8080'
@@ -16,17 +16,17 @@ describe('sibHttpClientGetQuickButtonCollectionsAsync', () => {
 	])
 
 	beforeEach(() => {
-		jest.clearAllMocks()
+		vi.clearAllMocks()
 	})
 
 	afterEach(() => {
-		jest.resetAllMocks()
+		vi.resetAllMocks()
 	})
 
 	it('should construct the correct URL with token', async () => {
 		// arrange
 		const mockEmitter = {
-			on: jest.fn(function (event, callback) {
+			on: vi.fn(function (event, callback) {
 				if (event === 'end') {
 					callback()
 				}
@@ -37,7 +37,7 @@ describe('sibHttpClientGetQuickButtonCollectionsAsync', () => {
 		http.get.mockImplementation((_, callback) => {
 			callback({
 				statusCode: 200,
-				on: jest.fn(function (event, listener) {
+				on: vi.fn(function (event, listener) {
 					if (event === 'data') {
 						listener(mockResponseData)
 					} else if (event === 'end') {
@@ -63,7 +63,7 @@ describe('sibHttpClientGetQuickButtonCollectionsAsync', () => {
 	it('should construct the correct URL without token', async () => {
 		// arrange
 		const mockEmitter = {
-			on: jest.fn(function (event, callback) {
+			on: vi.fn(function (event, callback) {
 				if (event === 'end') {
 					callback()
 				}
@@ -74,7 +74,7 @@ describe('sibHttpClientGetQuickButtonCollectionsAsync', () => {
 		http.get.mockImplementation((_, callback) => {
 			callback({
 				statusCode: 200,
-				on: jest.fn(function (event, listener) {
+				on: vi.fn(function (event, listener) {
 					if (event === 'data') {
 						listener(mockResponseData)
 					} else if (event === 'end') {
@@ -104,7 +104,7 @@ describe('sibHttpClientGetQuickButtonCollectionsAsync', () => {
 	it('should include deviceId as query parameter in the URL', async () => {
 		// arrange
 		const mockEmitter = {
-			on: jest.fn(function (event, callback) {
+			on: vi.fn(function (event, callback) {
 				if (event === 'end') {
 					callback()
 				}
@@ -115,7 +115,7 @@ describe('sibHttpClientGetQuickButtonCollectionsAsync', () => {
 		http.get.mockImplementation((_, callback) => {
 			callback({
 				statusCode: 200,
-				on: jest.fn(function (event, listener) {
+				on: vi.fn(function (event, listener) {
 					if (event === 'data') {
 						listener(mockResponseData)
 					} else if (event === 'end') {
@@ -137,7 +137,7 @@ describe('sibHttpClientGetQuickButtonCollectionsAsync', () => {
 	it('should reject on HTTP error status code', async () => {
 		// arrange
 		const mockEmitter = {
-			on: jest.fn(function () {
+			on: vi.fn(function () {
 				return this
 			}),
 		}
@@ -145,7 +145,7 @@ describe('sibHttpClientGetQuickButtonCollectionsAsync', () => {
 		http.get.mockImplementation((_, callback) => {
 			callback({
 				statusCode: 500,
-				on: jest.fn(function () {
+				on: vi.fn(function () {
 					return this
 				}),
 			})
@@ -161,7 +161,7 @@ describe('sibHttpClientGetQuickButtonCollectionsAsync', () => {
 	it('should reject on request error', async () => {
 		// arrange
 		const mockEmitter = {
-			on: jest.fn(function (event, callback) {
+			on: vi.fn(function (event, callback) {
 				if (event === 'error') {
 					callback(new Error('Network error'))
 				}
@@ -182,7 +182,7 @@ describe('sibHttpClientGetQuickButtonCollectionsAsync', () => {
 	it('should resolve successfully with no content response', async () => {
 		// arrange
 		const mockEmitter = {
-			on: jest.fn(function (event, callback) {
+			on: vi.fn(function (event, callback) {
 				if (event === 'end') {
 					callback()
 				}
@@ -193,7 +193,7 @@ describe('sibHttpClientGetQuickButtonCollectionsAsync', () => {
 		http.get.mockImplementation((_, callback) => {
 			callback({
 				statusCode: 200,
-				on: jest.fn(function (event, listener) {
+				on: vi.fn(function (event, listener) {
 					if (event === 'data') {
 						listener(mockResponseData)
 					} else if (event === 'end') {

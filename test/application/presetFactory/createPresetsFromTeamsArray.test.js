@@ -112,7 +112,7 @@ describe('createPresetsFromTeamsArray', () => {
 			TeamColorHex: '#112233',
 		}
 		const teamLogos = {
-			getTeamLogoPngBase64: jest.fn((id) => (id === 7 ? 'png-bytes-7' : '')),
+			getTeamLogoPngBase64: vi.fn((id) => (id === 7 ? 'png-bytes-7' : '')),
 		}
 
 		// act
@@ -133,7 +133,7 @@ describe('createPresetsFromTeamsArray', () => {
 			TeamColorHex: '#445566',
 		}
 		const teamLogos = {
-			getTeamLogoPngBase64: jest.fn(() => ''),
+			getTeamLogoPngBase64: vi.fn(() => ''),
 		}
 
 		// act

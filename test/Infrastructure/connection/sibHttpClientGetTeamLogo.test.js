@@ -2,7 +2,7 @@ import { sibHttpClientGetTeamLogo } from '../../../src/infrastructure/connection
 import { apiSportTeamLogoFixture } from '../../fixtures/apiSportTeamLogoFixture.js'
 import * as http from 'http'
 
-jest.mock('http')
+vi.mock('http')
 
 describe('sibHttpClientGetTeamLogo', () => {
 	const mockBaseUrl = 'localhost:8080'
@@ -11,11 +11,11 @@ describe('sibHttpClientGetTeamLogo', () => {
 	const mockTeamId = 1
 
 	beforeEach(() => {
-		jest.clearAllMocks()
+		vi.clearAllMocks()
 	})
 
 	afterEach(() => {
-		jest.resetAllMocks()
+		vi.resetAllMocks()
 	})
 
 	it('should construct the correct URL with token', async () => {
@@ -23,7 +23,7 @@ describe('sibHttpClientGetTeamLogo', () => {
 		const mockTeamLogoResponse = JSON.stringify(mockTeamLogo)
 
 		const mockEmitter = {
-			on: jest.fn(function (event, callback) {
+			on: vi.fn(function (event, callback) {
 				if (event === 'end') {
 					callback()
 				}
@@ -34,7 +34,7 @@ describe('sibHttpClientGetTeamLogo', () => {
 		http.get.mockImplementation((_, callback) => {
 			callback({
 				statusCode: 200,
-				on: jest.fn(function (event, listener) {
+				on: vi.fn(function (event, listener) {
 					if (event === 'data') {
 						listener(mockTeamLogoResponse)
 					} else if (event === 'end') {
@@ -61,7 +61,7 @@ describe('sibHttpClientGetTeamLogo', () => {
 		const mockTeamLogoResponse = JSON.stringify(mockTeamLogo)
 
 		const mockEmitter = {
-			on: jest.fn(function (event, callback) {
+			on: vi.fn(function (event, callback) {
 				if (event === 'end') {
 					callback()
 				}
@@ -72,7 +72,7 @@ describe('sibHttpClientGetTeamLogo', () => {
 		http.get.mockImplementation((_, callback) => {
 			callback({
 				statusCode: 200,
-				on: jest.fn(function (event, listener) {
+				on: vi.fn(function (event, listener) {
 					if (event === 'data') {
 						listener(mockTeamLogoResponse)
 					} else if (event === 'end') {
@@ -103,7 +103,7 @@ describe('sibHttpClientGetTeamLogo', () => {
 		const mockTeamLogoResponse = JSON.stringify(mockTeamLogo)
 
 		const mockEmitter = {
-			on: jest.fn(function (event, callback) {
+			on: vi.fn(function (event, callback) {
 				if (event === 'end') {
 					callback()
 				}
@@ -114,7 +114,7 @@ describe('sibHttpClientGetTeamLogo', () => {
 		http.get.mockImplementation((_, callback) => {
 			callback({
 				statusCode: 200,
-				on: jest.fn(function (event, listener) {
+				on: vi.fn(function (event, listener) {
 					if (event === 'data') {
 						listener(mockTeamLogoResponse)
 					} else if (event === 'end') {
@@ -133,7 +133,7 @@ describe('sibHttpClientGetTeamLogo', () => {
 
 	it('should reject on HTTP error status code', async () => {
 		const mockEmitter = {
-			on: jest.fn(function () {
+			on: vi.fn(function () {
 				return this
 			}),
 		}
@@ -141,7 +141,7 @@ describe('sibHttpClientGetTeamLogo', () => {
 		http.get.mockImplementation((_, callback) => {
 			callback({
 				statusCode: 500,
-				on: jest.fn(function () {
+				on: vi.fn(function () {
 					return this
 				}),
 			})
@@ -155,7 +155,7 @@ describe('sibHttpClientGetTeamLogo', () => {
 
 	it('should reject on request error', async () => {
 		const mockEmitter = {
-			on: jest.fn(function (event, callback) {
+			on: vi.fn(function (event, callback) {
 				if (event === 'error') {
 					callback(new Error('Network error'))
 				}
@@ -177,7 +177,7 @@ describe('sibHttpClientGetTeamLogo', () => {
 		const mockTeamLogoResponse = JSON.stringify(mockTeamLogo)
 
 		const mockEmitter = {
-			on: jest.fn(function (event, callback) {
+			on: vi.fn(function (event, callback) {
 				if (event === 'end') {
 					callback()
 				}
@@ -188,7 +188,7 @@ describe('sibHttpClientGetTeamLogo', () => {
 		http.get.mockImplementation((_, callback) => {
 			callback({
 				statusCode: 200,
-				on: jest.fn(function (event, listener) {
+				on: vi.fn(function (event, listener) {
 					if (event === 'data') {
 						listener(mockTeamLogoResponse)
 					} else if (event === 'end') {
@@ -215,7 +215,7 @@ describe('sibHttpClientGetTeamLogo', () => {
 		const mockTeamLogoResponse = JSON.stringify(mockTeamLogo)
 
 		const mockEmitter = {
-			on: jest.fn(function (event, callback) {
+			on: vi.fn(function (event, callback) {
 				if (event === 'end') {
 					callback()
 				}
@@ -226,7 +226,7 @@ describe('sibHttpClientGetTeamLogo', () => {
 		http.get.mockImplementation((_, callback) => {
 			callback({
 				statusCode: 200,
-				on: jest.fn(function (event, listener) {
+				on: vi.fn(function (event, listener) {
 					if (event === 'data') {
 						listener(mockTeamLogoResponse)
 					} else if (event === 'end') {
