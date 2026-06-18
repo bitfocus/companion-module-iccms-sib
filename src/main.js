@@ -243,7 +243,8 @@ class SibPluginInstance extends InstanceBase {
 
 			this.log('debug', `init. Done.`)
 		} catch (e) {
-			logger.error(e, 'init failed.')
+			this.updateStatus(InstanceStatus.UnknownError, e.message)
+			this.log('error', `init failed: ${e.message}`)
 		}
 	}
 
