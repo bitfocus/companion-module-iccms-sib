@@ -6,7 +6,7 @@
 
 - **Companion Module Development**: [https://github.com/bitfocus/companion-module-base](https://github.com/bitfocus/companion-module-base)
 - **Companion Wiki**: [https://github.com/bitfocus/companion/wiki](https://github.com/bitfocus/companion/wiki)
-- **Module SDK API**: [https://github.com/bitfocus/companion-module-base/wiki](https://github.com/bitfocus/companion-module-base/wiki)
+- **Module SDK API**: [https://companion.free/for-developers/module-development/](https://companion.free/for-developers/module-development/)
 
 ### Troubleshooting Guide
 
@@ -39,11 +39,11 @@ All presets are defined in a dedicated `src/presets.ts` file using TypeScript:
 
 ```typescript
 export function UpdatePresetDefinitions(self: ModuleInstance): void {
-	const presets: CompanionPresetDefinitions = {
-		// preset definitions here
-	}
+ const presets: CompanionPresetDefinitions = {
+  // preset definitions here
+ }
 
-	self.setPresetDefinitions(presets)
+ self.setPresetDefinitions(presets)
 }
 ```
 
@@ -52,17 +52,17 @@ export function UpdatePresetDefinitions(self: ModuleInstance): void {
 ```typescript
 // In main.ts (or main.js for JavaScript projects)
 class ModuleInstance extends InstanceBase<ModuleConfig> {
-	async init(config: ModuleConfig): Promise<void> {
-		// ... initialization code ...
-		this.updateActions()
-		this.updateFeedbacks()
-		this.updateVariableDefinitions()
-		this.updatePresetDefinitions() // Called during init
-	}
+ async init(config: ModuleConfig): Promise<void> {
+  // ... initialization code ...
+  this.updateActions()
+  this.updateFeedbacks()
+  this.updateVariableDefinitions()
+  this.updatePresetDefinitions() // Called during init
+ }
 
-	updatePresetDefinitions(): void {
-		UpdatePresetDefinitions(this) // Delegates to presets.ts/presets.js
-	}
+ updatePresetDefinitions(): void {
+  UpdatePresetDefinitions(this) // Delegates to presets.ts/presets.js
+ }
 }
 ```
 
@@ -141,61 +141,61 @@ presetKey: {
 ```javascript
 // Simple camera selection button
 presets['pgm_source_cam1'] = {
-	type: 'button',
-	category: 'Switcher/Program/Sources/Cameras',
-	name: '1. Camera 1',
-	style: {
-		text: 'PGM\\nCAM 1',
-		size: 'auto',
-		color: combineRgb(255, 255, 255),
-		bgcolor: combineRgb(255, 0, 0),
-	},
-	steps: [
-		{
-			down: [
-				{
-					actionId: 'sample_action',
-					options: { num: 1 },
-				},
-			],
-			up: [],
-		},
-	],
-	feedbacks: [],
+ type: 'button',
+ category: 'Switcher/Program/Sources/Cameras',
+ name: '1. Camera 1',
+ style: {
+  text: 'PGM\\nCAM 1',
+  size: 'auto',
+  color: combineRgb(255, 255, 255),
+  bgcolor: combineRgb(255, 0, 0),
+ },
+ steps: [
+  {
+   down: [
+    {
+     actionId: 'sample_action',
+     options: { num: 1 },
+    },
+   ],
+   up: [],
+  },
+ ],
+ feedbacks: [],
 }
 
 // Status-aware button with feedback
 presets['toggle_rehearsal'] = {
-	type: 'button',
-	category: 'Control/Playback',
-	name: 'Rehearsal Mode',
-	style: {
-		text: 'REHEARSAL',
-		size: '14',
-		color: combineRgb(255, 255, 255),
-		bgcolor: combineRgb(0, 0, 0),
-	},
-	steps: [
-		{
-			down: [
-				{
-					actionId: 'set_rehearsal_mode',
-					options: { enable: true },
-				},
-			],
-			up: [],
-		},
-	],
-	feedbacks: [
-		{
-			feedbackId: 'rehearsal_active',
-			options: {},
-			style: {
-				bgcolor: combineRgb(255, 255, 0), // Turns yellow when active
-				color: combineRgb(0, 0, 0),
-			},
-		},
-	],
+ type: 'button',
+ category: 'Control/Playback',
+ name: 'Rehearsal Mode',
+ style: {
+  text: 'REHEARSAL',
+  size: '14',
+  color: combineRgb(255, 255, 255),
+  bgcolor: combineRgb(0, 0, 0),
+ },
+ steps: [
+  {
+   down: [
+    {
+     actionId: 'set_rehearsal_mode',
+     options: { enable: true },
+    },
+   ],
+   up: [],
+  },
+ ],
+ feedbacks: [
+  {
+   feedbackId: 'rehearsal_active',
+   options: {},
+   style: {
+    bgcolor: combineRgb(255, 255, 0), // Turns yellow when active
+    color: combineRgb(0, 0, 0),
+   },
+  },
+ ],
 }
 ```
 
@@ -237,34 +237,34 @@ presetKey: {
 ```javascript
 // Simple section header
 presets['header_cameras'] = {
-	type: 'text',
-	category: 'Switcher/Program/Sources/Cameras',
-	name: 'Program Cameras', // Numbered for sorting
-	text: 'Program Camera Sources', // What user sees
+ type: 'text',
+ category: 'Switcher/Program/Sources/Cameras',
+ name: 'Program Cameras', // Numbered for sorting
+ text: 'Program Camera Sources', // What user sees
 }
 
 // Another section header
 presets['header_media'] = {
-	type: 'text',
-	category: 'Switcher/Program/Sources/Media',
-	name: 'Media Players',
-	text: 'Media Playback Sources',
+ type: 'text',
+ category: 'Switcher/Program/Sources/Media',
+ name: 'Media Players',
+ text: 'Media Playback Sources',
 }
 
 // Continuation header (breaks up long lists)
 presets['header_cameras_cont'] = {
-	type: 'text',
-	category: 'Switcher/Program/Sources/Cameras',
-	name: 'Additional Cameras', // Different name for sorting order
-	text: 'Extra Camera Sources (7-12)',
+ type: 'text',
+ category: 'Switcher/Program/Sources/Cameras',
+ name: 'Additional Cameras', // Different name for sorting order
+ text: 'Extra Camera Sources (7-12)',
 }
 
 // Status/info header
 presets['header_status'] = {
-	type: 'text',
-	category: 'System/Status',
-	name: 'System Status',
-	text: '━━━ System Information ━━━', // Can use special characters
+ type: 'text',
+ category: 'System/Status',
+ name: 'System Status',
+ text: '━━━ System Information ━━━', // Can use special characters
 }
 ```
 
@@ -325,18 +325,18 @@ This makes it instantly clear what type of preset you're working with when readi
 
 ```typescript
 steps: [
-	{
-		down: [
-			// Actions on button press (required)
-			{
-				actionId: 'action_name',
-				options: {
-					// Action-specific configuration
-				},
-			},
-		],
-		up: [], // Actions on button release (use [] for none)
-	},
+ {
+  down: [
+   // Actions on button press (required)
+   {
+    actionId: 'action_name',
+    options: {
+     // Action-specific configuration
+    },
+   },
+  ],
+  up: [], // Actions on button release (use [] for none)
+ },
 ]
 ```
 
@@ -349,16 +349,16 @@ steps: [
 
 ```typescript
 feedbacks: [
-	{
-		feedbackId: 'feedback_name', // Must reference valid feedback
-		options: {}, // Feedback-specific config
-		style: {
-			// Visual changes when feedback is active
-			bgcolor: combineRgb(208, 179, 75),
-			color: combineRgb(0, 0, 0),
-		},
-		isInverted: false, // Invert feedback condition (optional)
-	},
+ {
+  feedbackId: 'feedback_name', // Must reference valid feedback
+  options: {}, // Feedback-specific config
+  style: {
+   // Visual changes when feedback is active
+   bgcolor: combineRgb(208, 179, 75),
+   color: combineRgb(0, 0, 0),
+  },
+  isInverted: false, // Invert feedback condition (optional)
+ },
 ]
 ```
 
@@ -450,44 +450,44 @@ Multiple similar presets created programmatically.
 ```typescript
 // Add a header for organization
 presets['header_hard_cameras'] = {
-	category: 'Camera',
-	name: 'Hard Cameras',
-	type: 'text',
-	text: 'Hard Camera Presets',
+ category: 'Camera',
+ name: 'Hard Cameras',
+ type: 'text',
+ text: 'Hard Camera Presets',
 }
 
 // Generate 10 similar presets in a loop
 for (let i = 1; i <= 10; i++) {
-	presets[`cam_hard_${i}`] = {
-		type: 'button',
-		category: 'Camera',
-		name: `Camera ${i}`,
-		style: {
-			text: `KAM ${i}\nHARD`,
-			alignment: 'center:top',
-			size: 16,
-			color: combineRgb(0, 0, 0),
-			bgcolor: combineRgb(128, 255, 128), // Green
-			pngalignment: 'center:bottom',
-			png64: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAhCAYAAABX5MJv...',
-		},
-		steps: [
-			{
-				down: [
-					{
-						actionId: 'template',
-						options: {
-							type: 'Camera',
-							variant: `${i}HARD`,
-							bus: 'Program',
-						},
-					},
-				],
-				up: [],
-			},
-		],
-		feedbacks: [],
-	}
+ presets[`cam_hard_${i}`] = {
+  type: 'button',
+  category: 'Camera',
+  name: `Camera ${i}`,
+  style: {
+   text: `KAM ${i}\nHARD`,
+   alignment: 'center:top',
+   size: 16,
+   color: combineRgb(0, 0, 0),
+   bgcolor: combineRgb(128, 255, 128), // Green
+   pngalignment: 'center:bottom',
+   png64: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACEAAAAhCAYAAABX5MJv...',
+  },
+  steps: [
+   {
+    down: [
+     {
+      actionId: 'template',
+      options: {
+       type: 'Camera',
+       variant: `${i}HARD`,
+       bus: 'Program',
+      },
+     },
+    ],
+    up: [],
+   },
+  ],
+  feedbacks: [],
+ }
 }
 ```
 
@@ -502,44 +502,44 @@ A common pattern in broadcast control modules is to create two nearly identical 
 ```typescript
 // Header
 presets['header1'] = {
-	category: 'Camera',
-	name: 'Hard Cameras',
-	type: 'text',
-	text: 'Hard Camera Presets',
+ category: 'Camera',
+ name: 'Hard Cameras',
+ type: 'text',
+ text: 'Hard Camera Presets',
 }
 
 // 10 buttons
 for (let i = 1; i <= 10; i++) {
-	presets[`cam_hard_${i}`] = {
-		type: 'button',
-		category: 'Camera',
-		name: `Camera ${i}`,
-		style: {
-			text: `KAM ${i}\nHARD`,
-			alignment: 'center:top',
-			size: 16,
-			color: combineRgb(0, 0, 0),
-			bgcolor: combineRgb(128, 255, 128), // Light green
-			pngalignment: 'center:bottom',
-			png64: 'data:image/png;base64,...',
-		},
-		steps: [
-			{
-				down: [
-					{
-						actionId: 'template',
-						options: {
-							type: 'Camera',
-							variant: `${i}HARD`, // KEY DIFFERENCE
-							bus: 'Program',
-						},
-					},
-				],
-				up: [],
-			},
-		],
-		feedbacks: [],
-	}
+ presets[`cam_hard_${i}`] = {
+  type: 'button',
+  category: 'Camera',
+  name: `Camera ${i}`,
+  style: {
+   text: `KAM ${i}\nHARD`,
+   alignment: 'center:top',
+   size: 16,
+   color: combineRgb(0, 0, 0),
+   bgcolor: combineRgb(128, 255, 128), // Light green
+   pngalignment: 'center:bottom',
+   png64: 'data:image/png;base64,...',
+  },
+  steps: [
+   {
+    down: [
+     {
+      actionId: 'template',
+      options: {
+       type: 'Camera',
+       variant: `${i}HARD`, // KEY DIFFERENCE
+       bus: 'Program',
+      },
+     },
+    ],
+    up: [],
+   },
+  ],
+  feedbacks: [],
+ }
 }
 ```
 
@@ -548,44 +548,44 @@ for (let i = 1; i <= 10; i++) {
 ```typescript
 // Header
 presets['header2'] = {
-	category: 'Camera',
-	name: 'Soft Cameras',
-	type: 'text',
-	text: 'Soft Camera Presets',
+ category: 'Camera',
+ name: 'Soft Cameras',
+ type: 'text',
+ text: 'Soft Camera Presets',
 }
 
 // 10 buttons
 for (let i = 1; i <= 10; i++) {
-	presets[`cam_soft_${i}`] = {
-		type: 'button',
-		category: 'Camera',
-		name: `Camera ${i}`,
-		style: {
-			text: `KAM ${i}\nSOFT`,
-			alignment: 'center:top',
-			size: 16,
-			color: combineRgb(0, 0, 0),
-			bgcolor: combineRgb(128, 255, 128), // Light green
-			pngalignment: 'center:bottom',
-			png64: 'data:image/png;base64,...',
-		},
-		steps: [
-			{
-				down: [
-					{
-						actionId: 'template',
-						options: {
-							type: 'Camera',
-							variant: `${i}SOFT`, // KEY DIFFERENCE
-							bus: 'Program',
-						},
-					},
-				],
-				up: [],
-			},
-		],
-		feedbacks: [],
-	}
+ presets[`cam_soft_${i}`] = {
+  type: 'button',
+  category: 'Camera',
+  name: `Camera ${i}`,
+  style: {
+   text: `KAM ${i}\nSOFT`,
+   alignment: 'center:top',
+   size: 16,
+   color: combineRgb(0, 0, 0),
+   bgcolor: combineRgb(128, 255, 128), // Light green
+   pngalignment: 'center:bottom',
+   png64: 'data:image/png;base64,...',
+  },
+  steps: [
+   {
+    down: [
+     {
+      actionId: 'template',
+      options: {
+       type: 'Camera',
+       variant: `${i}SOFT`, // KEY DIFFERENCE
+       bus: 'Program',
+      },
+     },
+    ],
+    up: [],
+   },
+  ],
+  feedbacks: [],
+ }
 }
 ```
 
@@ -626,17 +626,17 @@ Group related presets using text headers:
 
 ```typescript
 presets['header_cameras'] = {
-	category: 'Camera',
-	name: 'Cameras',
-	type: 'text',
-	text: 'Camera Presets',
+ category: 'Camera',
+ name: 'Cameras',
+ type: 'text',
+ text: 'Camera Presets',
 }
 
 presets['header_external'] = {
-	category: 'External',
-	name: 'External Sources',
-	type: 'text',
-	text: 'External Source Presets',
+ category: 'External',
+ name: 'External Sources',
+ type: 'text',
+ text: 'External Source Presets',
 }
 ```
 
@@ -707,30 +707,30 @@ presets['cam_2'] = { ... }
 
 ```typescript
 interface ButtonPreset {
-	type: 'button' // Required
-	category: string // Required - organization
-	name: string // Required - display name
-	style: {
-		text: string // Optional but recommended
-		size: string // Optional
-		color: number // Optional (text color)
-		bgcolor: number // Optional (background)
-		alignment?: string // Optional
-		pngalignment?: string // Optional (for icons)
-		png64?: string // Optional (base64 icon)
-	}
-	steps: Array<{
-		// Required
-		down: Array<ActionDefinition> // Required
-		up: Array<ActionDefinition> // Required
-	}>
-	feedbacks: Array<{
-		// Required (can be empty)
-		feedbackId: string
-		options: any
-		style: any
-		isInverted?: boolean
-	}>
+ type: 'button' // Required
+ category: string // Required - organization
+ name: string // Required - display name
+ style: {
+  text: string // Optional but recommended
+  size: string // Optional
+  color: number // Optional (text color)
+  bgcolor: number // Optional (background)
+  alignment?: string // Optional
+  pngalignment?: string // Optional (for icons)
+  png64?: string // Optional (base64 icon)
+ }
+ steps: Array<{
+  // Required
+  down: Array<ActionDefinition> // Required
+  up: Array<ActionDefinition> // Required
+ }>
+ feedbacks: Array<{
+  // Required (can be empty)
+  feedbackId: string
+  options: any
+  style: any
+  isInverted?: boolean
+ }>
 }
 ```
 
@@ -738,10 +738,10 @@ interface ButtonPreset {
 
 ```typescript
 interface TextPreset {
-	type: 'text' // Required
-	category: string // Required
-	name: string // Required
-	text: string // Required - display text
+ type: 'text' // Required
+ category: string // Required
+ name: string // Required
+ text: string // Required - display text
 }
 ```
 
@@ -811,10 +811,10 @@ Start by adding a header to organize the first group of cameras:
 
 ```javascript
 presets['header_pgm_cameras'] = {
-	category: 'Switcher/Program/Sources/Cameras',
-	name: 'Program Cameras',
-	type: 'text',
-	text: 'Program Camera Sources',
+ category: 'Switcher/Program/Sources/Cameras',
+ name: 'Program Cameras',
+ type: 'text',
+ text: 'Program Camera Sources',
 }
 ```
 
@@ -831,29 +831,29 @@ Create the initial preset buttons. For cameras 1 and 2, define them individually
 
 ```javascript
 presets['pgm_source_cam3'] = {
-	type: 'button',
-	category: 'Switcher/Program/Sources/Cameras',
-	name: '3. Camera 3', // Numbered for sorting
-	style: {
-		text: 'PGM\\nCAM 3', // Multi-line with \n
-		size: 'auto',
-		color: combineRgb(255, 255, 255), // White text
-		bgcolor: combineRgb(255, 0, 0), // Red background
-	},
-	steps: [
-		{
-			down: [
-				{
-					actionId: 'sample_action',
-					options: {
-						num: 3, // Sequential numbering
-					},
-				},
-			],
-			up: [],
-		},
-	],
-	feedbacks: [],
+ type: 'button',
+ category: 'Switcher/Program/Sources/Cameras',
+ name: '3. Camera 3', // Numbered for sorting
+ style: {
+  text: 'PGM\\nCAM 3', // Multi-line with \n
+  size: 'auto',
+  color: combineRgb(255, 255, 255), // White text
+  bgcolor: combineRgb(255, 0, 0), // Red background
+ },
+ steps: [
+  {
+   down: [
+    {
+     actionId: 'sample_action',
+     options: {
+      num: 3, // Sequential numbering
+     },
+    },
+   ],
+   up: [],
+  },
+ ],
+ feedbacks: [],
 }
 ```
 
@@ -871,10 +871,10 @@ After the first 6 cameras, add a visual break with a second header:
 
 ```javascript
 presets['header_pgm_cameras_2'] = {
-	category: 'Switcher/Program/Sources/Cameras',
-	name: 'Program Cameras (Continued)', // Different name for sorting
-	type: 'text',
-	text: 'Additional Camera Sources',
+ category: 'Switcher/Program/Sources/Cameras',
+ name: 'Program Cameras (Continued)', // Different name for sorting
+ type: 'text',
+ text: 'Additional Camera Sources',
 }
 ```
 
@@ -890,29 +890,29 @@ Repeat the button pattern for cameras 7-12 with the same structure:
 
 ```javascript
 presets['pgm_source_cam7'] = {
-	type: 'button',
-	category: 'Switcher/Program/Sources/Cameras',
-	name: '7. Camera 7',
-	style: {
-		text: 'PGM\\nCAM 7',
-		size: 'auto',
-		color: combineRgb(255, 255, 255),
-		bgcolor: combineRgb(255, 0, 0),
-	},
-	steps: [
-		{
-			down: [
-				{
-					actionId: 'sample_action',
-					options: {
-						num: 7,
-					},
-				},
-			],
-			up: [],
-		},
-	],
-	feedbacks: [],
+ type: 'button',
+ category: 'Switcher/Program/Sources/Cameras',
+ name: '7. Camera 7',
+ style: {
+  text: 'PGM\\nCAM 7',
+  size: 'auto',
+  color: combineRgb(255, 255, 255),
+  bgcolor: combineRgb(255, 0, 0),
+ },
+ steps: [
+  {
+   down: [
+    {
+     actionId: 'sample_action',
+     options: {
+      num: 7,
+     },
+    },
+   ],
+   up: [],
+  },
+ ],
+ feedbacks: [],
 }
 
 // ... repeat for cameras 8-12 with same pattern
@@ -949,76 +949,76 @@ Use a loop to generate cameras programmatically:
 ```javascript
 // Header
 presets['header_pgm_cameras'] = {
-	category: 'Switcher/Program/Sources/Cameras',
-	name: 'Program Cameras',
-	type: 'text',
-	text: 'Program Camera Sources',
+ category: 'Switcher/Program/Sources/Cameras',
+ name: 'Program Cameras',
+ type: 'text',
+ text: 'Program Camera Sources',
 }
 
 // Generate cameras 1-6 dynamically
 for (let i = 1; i <= 6; i++) {
-	presets[`pgm_source_cam${i}`] = {
-		type: 'button',
-		category: 'Switcher/Program/Sources/Cameras',
-		name: `${i}. Camera ${i}`,
-		style: {
-			text: `PGM\\nCAM ${i}`,
-			size: 'auto',
-			color: combineRgb(255, 255, 255),
-			bgcolor: combineRgb(255, 0, 0),
-		},
-		steps: [
-			{
-				down: [
-					{
-						actionId: 'sample_action',
-						options: {
-							num: i,
-						},
-					},
-				],
-				up: [],
-			},
-		],
-		feedbacks: [],
-	}
+ presets[`pgm_source_cam${i}`] = {
+  type: 'button',
+  category: 'Switcher/Program/Sources/Cameras',
+  name: `${i}. Camera ${i}`,
+  style: {
+   text: `PGM\\nCAM ${i}`,
+   size: 'auto',
+   color: combineRgb(255, 255, 255),
+   bgcolor: combineRgb(255, 0, 0),
+  },
+  steps: [
+   {
+    down: [
+     {
+      actionId: 'sample_action',
+      options: {
+       num: i,
+      },
+     },
+    ],
+    up: [],
+   },
+  ],
+  feedbacks: [],
+ }
 }
 
 // Second header
 presets['header_pgm_cameras_2'] = {
-	category: 'Switcher/Program/Sources/Cameras',
-	name: 'Program Cameras (Continued)',
-	type: 'text',
-	text: 'Additional Camera Sources',
+ category: 'Switcher/Program/Sources/Cameras',
+ name: 'Program Cameras (Continued)',
+ type: 'text',
+ text: 'Additional Camera Sources',
 }
 
 // Generate cameras 7-12 dynamically
 for (let i = 7; i <= 12; i++) {
-	presets[`pgm_source_cam${i}`] = {
-		type: 'button',
-		category: 'Switcher/Program/Sources/Cameras',
-		name: `${i}. Camera ${i}`,
-		style: {
-			text: `PGM\\nCAM ${i}`,
-			size: 'auto',
-			color: combineRgb(255, 255, 255),
-			bgcolor: combineRgb(255, 0, 0),
-		},
-		steps: [
-			{
-				down: [
-					{
-						actionId: 'sample_action',
-						options: {
-							num: i,
-						},
-					},
-				],
-				up: [],
-			},
-		],
-		feedbacks: [],
-	}
+ presets[`pgm_source_cam${i}`] = {
+  type: 'button',
+  category: 'Switcher/Program/Sources/Cameras',
+  name: `${i}. Camera ${i}`,
+  style: {
+   text: `PGM\\nCAM ${i}`,
+   size: 'auto',
+   color: combineRgb(255, 255, 255),
+   bgcolor: combineRgb(255, 0, 0),
+  },
+  steps: [
+   {
+    down: [
+     {
+      actionId: 'sample_action',
+      options: {
+       num: i,
+      },
+     },
+    ],
+    up: [],
+   },
+  ],
+  feedbacks: [],
+ }
 }
 ```
 

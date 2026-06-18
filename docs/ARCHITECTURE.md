@@ -1,6 +1,6 @@
 # Architecture — Detailed File Reference
 
-This document expands on the tactical DDD layers described in [CLAUDE.md](CLAUDE.md).
+This document expands on the tactical DDD layers described in [CLAUDE.md](../CLAUDE.md).
 
 ## `domain/` — Domain Layer
 

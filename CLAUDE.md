@@ -16,7 +16,7 @@ The project uses **tactical Domain-Driven Design** patterns. Dependencies flow i
 - **`main.js`** — composition root. Wires domain, infrastructure, and application together.
 - **`test/`** — mirrors source directory structure.
 
-See [ARCHITECTURE.md](ARCHITECTURE.md) for detailed per-file descriptions.
+See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for detailed per-file descriptions.
 
 ## Build and Test
 
@@ -43,16 +43,3 @@ Use `@browser` / Chrome integration to read module logs from Companion's debug p
 - Use `get_page_text` on the debug tab to read logs — module logs appear on the page, not in the browser console.
 - Use `find` + `computer` to click "Clear log" button at the top of the debug page before reading to reduce noise.
 - Do not add temporary `console.log` lines to diagnose issues. Use `logger.debug` if needed — it shows up on the Companion debug page.
-
-## Testing Conventions
-
-See [testing-guide.md](testing-guide.md) for full patterns.
-
-Key rules:
-
-- Mirror source file structure in `test/` directory
-- ES module imports with `.js` extension required
-- Follow Arrange-Act-Assert pattern with `// arrange`, `// act`, `// assert` comments
-- Use [Faker.js](https://fakerjs.dev/api/) for variable data, NOT for logic-dependent values
-- Use [Efate](https://www.npmjs.com/package/efate) fixtures for complex reusable test data
-- Always test edge cases: `undefined`, `null`, empty objects, empty strings, boundary values

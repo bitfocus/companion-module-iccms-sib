@@ -4,11 +4,11 @@ This document summarizes all available hooks for Companion modules using `@compa
 
 ## Documentation Links
 
-- [Official Companion Module Development Guide](https://github.com/bitfocus/companion-module-base/wiki)
+- [Official Companion Module Development Guide](https://companion.free/for-developers/module-development/)
 - [Module Base API Reference](https://github.com/bitfocus/companion-module-base)
-- [Module Configuration](https://github.com/bitfocus/companion-module-base/wiki/Module-configuration)
-- [Actions](https://github.com/bitfocus/companion-module-base/wiki/Actions)
-- [Feedbacks](https://github.com/bitfocus/companion-module-base/wiki/Feedbacks)
+- [Module Configuration](https://companion.free/for-developers/module-development/connection-basics/user-configuration)
+- [Actions](https://companion.free/for-developers/module-development/connection-basics/actions)
+- [Feedbacks](https://companion.free/for-developers/module-development/connection-basics/feedbacks)
 
 ## Instance Lifecycle Hooks (Required)
 
@@ -110,7 +110,7 @@ getConfigFields() {
 }
 ```
 
-[Configuration Field Types Documentation](https://github.com/bitfocus/companion-module-base/wiki/Module-configuration)
+[Configuration Field Types Documentation](https://companion.free/for-developers/module-development/connection-basics/user-configuration)
 
 ---
 
@@ -202,8 +202,8 @@ Called when an action is added, enabled, or its options change.
 
 ```javascript
 subscribe: async (action, context) => {
-	// Ensure data needed for this action is loaded
-	await this.loadRequiredData(action.options.deviceId)
+ // Ensure data needed for this action is loaded
+ await this.loadRequiredData(action.options.deviceId)
 }
 ```
 
@@ -226,8 +226,8 @@ Called when an action is removed, disabled, or edited.
 
 ```javascript
 unsubscribe: (action, context) => {
-	// Clean up resources for this action
-	this.removeSubscription(action.id)
+ // Clean up resources for this action
+ this.removeSubscription(action.id)
 }
 ```
 
@@ -246,16 +246,16 @@ Implements "learn" functionality to auto-populate action options from the device
 
 ```javascript
 learn: async (action, context) => {
-	const currentState = await this.device.getCurrentState()
-	return {
-		someOption: currentState.value,
-	}
+ const currentState = await this.device.getCurrentState()
+ return {
+  someOption: currentState.value,
+ }
 }
 ```
 
 **Note:** Use `learnTimeout` property to set timeout (default: 5000ms)
 
-[Actions Documentation](https://github.com/bitfocus/companion-module-base/wiki/Actions)
+[Actions Documentation](https://companion.free/for-developers/module-development/connection-basics/actions)
 
 ---
 
@@ -318,8 +318,8 @@ Called when a feedback is added or its options change.
 
 ```javascript
 subscribe: async (feedback, context) => {
-	// Ensure we're monitoring the required state
-	this.startMonitoring(feedback.options.parameter)
+ // Ensure we're monitoring the required state
+ this.startMonitoring(feedback.options.parameter)
 }
 ```
 
@@ -340,7 +340,7 @@ Called when a feedback is removed or edited.
 
 ```javascript
 unsubscribe: (feedback, context) => {
-	this.stopMonitoring(feedback.options.parameter)
+ this.stopMonitoring(feedback.options.parameter)
 }
 ```
 
@@ -359,14 +359,14 @@ Implements "learn" functionality for feedback options.
 
 ```javascript
 learn: async (feedback, context) => {
-	const state = await this.device.getState()
-	return {
-		targetValue: state.currentValue,
-	}
+ const state = await this.device.getState()
+ return {
+  targetValue: state.currentValue,
+ }
 }
 ```
 
-[Feedbacks Documentation](https://github.com/bitfocus/companion-module-base/wiki/Feedbacks)
+[Feedbacks Documentation](https://companion.free/for-developers/module-development/connection-basics/feedbacks)
 
 ---
 
