@@ -78,7 +78,7 @@ export function createRundownControlAction(allRundowns, sibConfig, self) {
 			logger.debug('Rundown control (sib_action_rundown_control): %s', event.options[OPTION_ID.ACTION_TYPE])
 
 			const sibIpPort = sibConfig.sibIpPort
-			const sibToken = sibConfig.sibHelperPass
+			const sibToken = sibConfig.token
 			const sibDeviceId = self.id
 			const actionType = objectPath.get(event.options, OPTION_ID.ACTION_TYPE, ACTION_TYPE.SELECT_RUNDOWN)
 			const rundownId = objectPath.get(event.options, OPTION_ID.RUNDOWN_ID, -1)
