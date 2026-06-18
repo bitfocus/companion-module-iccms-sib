@@ -1,6 +1,12 @@
+import { composeIconWithGradient } from '../../../src/domain/imageProcessing.js'
 import { createPresetsFromTeamsArray } from '../../../src/application/presetFactory/createPresetsFromTeamsArray.js'
 
+vi.mock('../../../src/domain/imageProcessing.js')
+
 describe('createPresetsFromTeamsArray', () => {
+	beforeEach(() => {
+		composeIconWithGradient.mockReturnValue('composed-logo')
+	})
 	test('creates correct presets for teams array', () => {
 		// arrange
 		const team1 = {
@@ -142,5 +148,24 @@ describe('createPresetsFromTeamsArray', () => {
 		// assert
 		expect(actual['team_8_home'].style.png64).toBeUndefined()
 		expect(actual['team_8_guest'].style.png64).toBeUndefined()
+	})
+
+	test('composes logo once per team for both home and guest buttons', () => {
+		// arrange
+		const team = { Id: 9, Name: 'Team Nine', ShortName: 'T-Nine', TeamColorHex: '#001122' }
+		const teamLogos = {
+			getTeamLogoPngBase64: vi.fn((id) => (id === 9 ? 'raw-logo-data' : '')),
+		}
+
+		// act
+		const actual = createPresetsFromTeamsArray([team], teamLogos)
+
+		// assert - composed value on both buttons
+		expect(actual['team_9_home'].style.png64).toBe('composed-logo')
+		expect(actual['team_9_guest'].style.png64).toBe('composed-logo')
+
+		// composed once per team, not once per button
+		expect(composeIconWithGradient).toHaveBeenCalledTimes(1)
+		expect(composeIconWithGradient).toHaveBeenCalledWith('raw-logo-data')
 	})
 })

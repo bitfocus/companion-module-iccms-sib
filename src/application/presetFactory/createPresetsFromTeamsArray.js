@@ -21,7 +21,8 @@ export function createPresetsFromTeamsArray(teams, teamLogos) {
 	const CATEGORY = 'Teams'
 
 	for (const team of teams) {
-		const logoBase64 = teamLogos ? teamLogos.getTeamLogoPngBase64(team.Id) : ''
+		const cachedLogoPng64 = teamLogos ? teamLogos.getTeamLogoPngBase64(team.Id) : ''
+		const composedPng64 = cachedLogoPng64 ? composeIconWithGradient(cachedLogoPng64) : ''
 		// Header
 		const headerId = `header_team_${team.Id}`
 		presets[headerId] = {
@@ -61,9 +62,9 @@ export function createPresetsFromTeamsArray(teams, teamLogos) {
 			}
 
 			// Logo logic
-			if (logoBase64 !== '') {
+			if (composedPng64) {
 				style.color = combineRgb(255, 255, 255)
-				style.png64 = composeIconWithGradient(logoBase64)
+				style.png64 = composedPng64
 			} else {
 				style.color = getForegroundColorFromBackgroundColor(team.TeamColorHex)
 				style.bgcolor = bgClrInt
