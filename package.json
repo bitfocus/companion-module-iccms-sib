@@ -7,7 +7,6 @@
 		"node": "^18.12 || ^22.8"
 	},
 	"scripts": {
-		"dev": "yarn build:watch",
 		"test": "vitest run",
 		"format": "prettier -w .",
 		"lint": "eslint .",

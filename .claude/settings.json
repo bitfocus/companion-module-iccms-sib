@@ -1,7 +1,13 @@
 {
 	"autoMemoryEnabled": false,
 	"permissions": {
-		"allow": ["Bash(mv:*)", "Bash(npm test:*)", "Bash(yarn test:*)"],
+		"allow": [
+			"Bash(mv:*)",
+			"Bash(yarn test:*)",
+			"Bash(yarn lint:*)",
+			"Bash(yarn format:*)",
+			"Bash(yarn package:*)"
+		],
 		"deny": [
 			"Read(file_path:.idea/**)",
 			"Glob(path:.idea/**)",

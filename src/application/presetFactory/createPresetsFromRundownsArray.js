@@ -63,8 +63,7 @@ export function createPresetsFromRundownsArray(allRundowns, sibIcons) {
 			text: 'Move this button to the canvas to activate',
 		}
 
-		const truncatedName =
-			rundown.RundownName.length > 16 ? rundown.RundownName.slice(0, 15) + '…' : rundown.RundownName
+		const truncatedName = rundown.RundownName.length > 16 ? rundown.RundownName.slice(0, 15) + '…' : rundown.RundownName
 
 		const fgColor = getForegroundColorFromBackgroundColor(rundown.ColorHex)
 

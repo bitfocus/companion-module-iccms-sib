@@ -24,7 +24,6 @@ See [ARCHITECTURE.md](docs/ARCHITECTURE.md) for detailed per-file descriptions.
 - **Test Runner**: Vitest
 - **Module System**: ES Modules
 - **Build**: `yarn package`
-- **Dev**: `yarn dev`
 
 ## SIB API Connection Rules
 

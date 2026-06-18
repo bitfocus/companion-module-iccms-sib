@@ -35,8 +35,7 @@ The module fires QuickButton events using the **Trigger ID** shown in SIB.
 
 - **Package manager**: Yarn
 - **Tests**: `yarn test`
-- **Build**: `yarn dist`
-- **Dev**: `yarn dev`
+- **Build**: `yarn package`
 - **Node version**: 18.12+
 
 See the [module development wiki](https://github.com/bitfocus/companion-module-base/wiki) for general Companion module guidance.
@@ -90,4 +89,4 @@ As a one-off, you can instead temporarily turn off real-time scanning (Bitdefend
 
 ## How to Contribute
 
-Mail us :)
+[Open a support ticket](https://support.sportinthebox.com/en-US/new-ticket).

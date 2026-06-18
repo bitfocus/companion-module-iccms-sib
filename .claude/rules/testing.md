@@ -1,6 +1,6 @@
 ---
 paths:
-  - "test/**/*.js"
+  - 'test/**/*.js'
 ---
 
 # Testing Conventions
@@ -60,10 +60,13 @@ it('makes an HTTP call', async () => {
 		}),
 	}
 	http.get.mockImplementation((_, callback) => {
-		callback({ statusCode: 200, on: vi.fn(function (event, listener) {
-			if (event === 'end') listener()
-			return this
-		}) })
+		callback({
+			statusCode: 200,
+			on: vi.fn(function (event, listener) {
+				if (event === 'end') listener()
+				return this
+			}),
+		})
 		return mockEmitter
 	})
 
