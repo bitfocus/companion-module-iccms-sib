@@ -10,8 +10,7 @@
 		"dev": "yarn build:watch",
 		"test": "jest",
 		"format": "prettier -w .",
-		"lint:raw": "eslint",
-		"lint": "yarn lint:raw .",
+		"lint": "eslint .",
 		"package": "companion-module-build"
 	},
 	"description": "Sport In The Box 2 Companion plugin for StreamDeck",
