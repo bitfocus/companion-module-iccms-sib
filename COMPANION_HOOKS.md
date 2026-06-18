@@ -162,7 +162,7 @@ handleStartStopRecordActions(isRecording) {
 
 Define actions using `this.setActionDefinitions(actions)`. Each action definition can include:
 
-### `callback(action, context)` *(required)*
+### `callback(action, context)` _(required)_
 
 Executes when the action is triggered.
 
@@ -187,7 +187,7 @@ Executes when the action is triggered.
 
 ---
 
-### `subscribe(action, context)` *(optional)*
+### `subscribe(action, context)` _(optional)_
 
 Called when an action is added, enabled, or its options change.
 
@@ -202,8 +202,8 @@ Called when an action is added, enabled, or its options change.
 
 ```javascript
 subscribe: async (action, context) => {
-  // Ensure data needed for this action is loaded
-  await this.loadRequiredData(action.options.deviceId)
+	// Ensure data needed for this action is loaded
+	await this.loadRequiredData(action.options.deviceId)
 }
 ```
 
@@ -211,7 +211,7 @@ subscribe: async (action, context) => {
 
 ---
 
-### `unsubscribe(action, context)` *(optional)*
+### `unsubscribe(action, context)` _(optional)_
 
 Called when an action is removed, disabled, or edited.
 
@@ -226,14 +226,14 @@ Called when an action is removed, disabled, or edited.
 
 ```javascript
 unsubscribe: (action, context) => {
-  // Clean up resources for this action
-  this.removeSubscription(action.id)
+	// Clean up resources for this action
+	this.removeSubscription(action.id)
 }
 ```
 
 ---
 
-### `learn(action, context)` *(optional)*
+### `learn(action, context)` _(optional)_
 
 Implements "learn" functionality to auto-populate action options from the device.
 
@@ -246,10 +246,10 @@ Implements "learn" functionality to auto-populate action options from the device
 
 ```javascript
 learn: async (action, context) => {
-  const currentState = await this.device.getCurrentState()
-  return {
-    someOption: currentState.value
-  }
+	const currentState = await this.device.getCurrentState()
+	return {
+		someOption: currentState.value,
+	}
 }
 ```
 
@@ -263,7 +263,7 @@ learn: async (action, context) => {
 
 Define feedbacks using `this.setFeedbackDefinitions(feedbacks)`. Each feedback definition can include:
 
-### `callback(feedback, context)` *(required)*
+### `callback(feedback, context)` _(required)_
 
 Returns the current state of the feedback.
 
@@ -303,7 +303,7 @@ Returns the current state of the feedback.
 
 ---
 
-### `subscribe(feedback, context)` *(optional)*
+### `subscribe(feedback, context)` _(optional)_
 
 Called when a feedback is added or its options change.
 
@@ -318,14 +318,14 @@ Called when a feedback is added or its options change.
 
 ```javascript
 subscribe: async (feedback, context) => {
-  // Ensure we're monitoring the required state
-  this.startMonitoring(feedback.options.parameter)
+	// Ensure we're monitoring the required state
+	this.startMonitoring(feedback.options.parameter)
 }
 ```
 
 ---
 
-### `unsubscribe(feedback, context)` *(optional)*
+### `unsubscribe(feedback, context)` _(optional)_
 
 Called when a feedback is removed or edited.
 
@@ -340,13 +340,13 @@ Called when a feedback is removed or edited.
 
 ```javascript
 unsubscribe: (feedback, context) => {
-  this.stopMonitoring(feedback.options.parameter)
+	this.stopMonitoring(feedback.options.parameter)
 }
 ```
 
 ---
 
-### `learn(feedback, context)` *(optional)*
+### `learn(feedback, context)` _(optional)_
 
 Implements "learn" functionality for feedback options.
 
@@ -359,10 +359,10 @@ Implements "learn" functionality for feedback options.
 
 ```javascript
 learn: async (feedback, context) => {
-  const state = await this.device.getState()
-  return {
-    targetValue: state.currentValue
-  }
+	const state = await this.device.getState()
+	return {
+		targetValue: state.currentValue,
+	}
 }
 ```
 
@@ -416,13 +416,13 @@ Use with `updateStatus()`:
 ```javascript
 import { InstanceStatus } from '@companion-module/base'
 
-InstanceStatus.Ok               // Everything is working
-InstanceStatus.Connecting       // Connecting to device
-InstanceStatus.Disconnected     // Not connected
+InstanceStatus.Ok // Everything is working
+InstanceStatus.Connecting // Connecting to device
+InstanceStatus.Disconnected // Not connected
 InstanceStatus.ConnectionFailure // Connection failed
-InstanceStatus.BadConfig        // Invalid configuration
-InstanceStatus.UnknownWarning   // Warning state
-InstanceStatus.UnknownError     // Error state
+InstanceStatus.BadConfig // Invalid configuration
+InstanceStatus.UnknownWarning // Warning state
+InstanceStatus.UnknownError // Error state
 ```
 
 ---

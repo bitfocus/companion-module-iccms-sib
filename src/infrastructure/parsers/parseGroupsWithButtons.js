@@ -1,7 +1,6 @@
 import { apiQuickButtonGroupWithButtons } from '../sib-api/apiQuickButtonGroupWithButtons.js'
 import objectPath from 'object-path'
 import { parseButtonInGroup } from './parseButtonInGroup.js'
-import { parseApiRundownWithoutItemsDto } from './parseApiRundownWithoutItemsDto.js'
 
 /**
  * Parse groups with buttons and correct serialization values.

@@ -41,7 +41,7 @@ export function createOpenDatabaseAction(sibConfig, sibSocket) {
 
 			try {
 				await sibSocket.openSibDatabaseAsync(cmd)
-			} catch (e) {
+			} catch {
 				logger.error('Got error from socket.')
 			}
 		},

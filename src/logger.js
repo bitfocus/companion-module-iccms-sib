@@ -37,7 +37,7 @@ export const logger = winston.createLogger({
 					return `${ts} | ${level.toUpperCase()} | ${message} | ${
 						Object.keys(args).length ? JSON.stringify(args, null, 2) : ''
 					}`
-				})
+				}),
 			),
 		}),
 	],

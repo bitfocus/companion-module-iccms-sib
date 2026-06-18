@@ -47,7 +47,7 @@ export function createChangeTeamAction(allTeams, sibConfig, sibHttpClientChangeT
 			try {
 				logger.debug('Fire (sib_action_change_team): %s', event.options[actionId.ChangeTeam])
 				sibHttpClientChangeTeamById(sibIpPort, sibTeamType, sibTeamOid)
-			} catch (e) {
+			} catch {
 				logger.error('Got error from teams client.')
 			}
 		},

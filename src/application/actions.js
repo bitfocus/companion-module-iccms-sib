@@ -4,7 +4,6 @@ import { createTriggerEventAction } from './actionFactory/createTriggerEventActi
 import { createOpenDatabaseAction } from './actionFactory/createOpenDatabaseAction.js'
 import { createChangeTeamAction } from './actionFactory/createChangeTeamAction.js'
 import { createRundownControlAction } from './actionFactory/createRundownControlAction.js'
-import { ApiOpenDatabase } from '../infrastructure/sib-api/apiOpenDatabase.js'
 import objectPath from 'object-path'
 import { apiSportTeamType } from '../infrastructure/sib-api/apiSportTeamType.js'
 
@@ -36,7 +35,7 @@ export function updateActionsAtRuntime(
 	sibConfig,
 	sibHttpClientChangeTeamById,
 	allTeams,
-	allRundowns
+	allRundowns,
 ) {
 	logger.debug('Update actions from buttons.')
 
@@ -106,7 +105,7 @@ export function updateActionsAtStartup(self, sibSocket, sibConfig, sibHttpClient
 			try {
 				logger.debug('Fire (sib_action_change_team): %s', event.options[actionId.ChangeTeam])
 				sibHttpClientChangeTeamById(sibIpPort, sibTeamType, sibTeamOid)
-			} catch (e) {
+			} catch {
 				logger.error('Got error from teams client.')
 			}
 		},

@@ -19,7 +19,7 @@ export function parseApiRundownWithoutItemsArray(rJson) {
 	}
 
 	const arrayInstance = new ApiRundownWithoutItemsArray()
-	const parsedRundowns = rJson.map(parseApiRundownWithoutItemsDto).filter(dto => dto !== null)
+	const parsedRundowns = rJson.map(parseApiRundownWithoutItemsDto).filter((dto) => dto !== null)
 	arrayInstance.replace(parsedRundowns)
 
 	return arrayInstance

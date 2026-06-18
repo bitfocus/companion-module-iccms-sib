@@ -3094,12 +3094,14 @@ __metadata:
     efate-faker: "npm:^1.5.0"
     efate-uuid: "npm:^1.5.0"
     eslint: "npm:^9.39.2"
+    globals: "npm:^11.12.0"
     jest: "npm:^29.7.0"
     jest-fetch-mock: "npm:^3.0.3"
     object-path: "npm:^0.11.8"
     path: "npm:^0.12.7"
     pngjs: "npm:^7.0.0"
     prettier: "npm:^3.8.3"
+    semver: "npm:^7.0.0"
     webpack: "npm:^5.94.0"
     webpack-cli: "npm:^5.1.4"
     winston: "npm:^3.11.0"
@@ -4017,7 +4019,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"globals@npm:^11.1.0":
+"globals@npm:^11.1.0, globals@npm:^11.12.0":
   version: 11.12.0
   resolution: "globals@npm:11.12.0"
   checksum: 10c0/758f9f258e7b19226bd8d4af5d3b0dcf7038780fb23d82e6f98932c44e239f884847f1766e8fa9cc5635ccb3204f7fa7314d4408dd4002a5e8ea827b4018f0a1
@@ -6038,6 +6040,15 @@ __metadata:
   bin:
     semver: bin/semver.js
   checksum: 10c0/e3d79b609071caa78bcb6ce2ad81c7966a46a7431d9d58b8800cfa9cb6a63699b3899a0e4bcce36167a284578212d9ae6942b6929ba4aa5015c079a67751d42d
+  languageName: node
+  linkType: hard
+
+"semver@npm:^7.0.0":
+  version: 7.8.4
+  resolution: "semver@npm:7.8.4"
+  bin:
+    semver: bin/semver.js
+  checksum: 10c0/81b7c296fd7927b80f67fa516b75fa1017caac8167795320de28e76ccbc6f7f01763c30ecd10d6a0d8fd089708ab0548a5aebb94b0870e99c2a2b4600a46389b
   languageName: node
   linkType: hard
 

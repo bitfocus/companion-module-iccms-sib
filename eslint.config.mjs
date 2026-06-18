@@ -1,4 +1,5 @@
 import { generateEslintConfig } from '@companion-module/tools/eslint/config.mjs'
+import globals from 'globals'
 
 const baseConfig = await generateEslintConfig({})
 
@@ -7,6 +8,17 @@ const customConfig = [
 	{
 		languageOptions: {
 			sourceType: 'module',
+		},
+	},
+	{
+		files: ['test/**/*.js', '**/*.test.js'],
+		languageOptions: {
+			globals: {
+				...globals.jest,
+			},
+		},
+		rules: {
+			'n/no-unpublished-import': ['error', { allowModules: ['efate', '@faker-js/faker', 'semver'] }],
 		},
 	},
 ]

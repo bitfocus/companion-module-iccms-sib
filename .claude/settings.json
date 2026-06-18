@@ -1,19 +1,15 @@
 {
-  "permissions": {
-    "allow": [
-      "Bash(mv:*)",
-      "Bash(npm test:*)",
-      "Bash(yarn test:*)"
-    ],
-    "deny": [
-      "Read(file_path:.idea/**)",
-      "Glob(path:.idea/**)",
-      "Glob(pattern:.idea/**)",
-      "Grep(path:.idea/**)",
-      "Edit(file_path:.idea/**)",
-      "Write(file_path:.idea/**)",
-      "Bash(cat .idea/**)",
-      "Bash(ls .idea/**)"
-    ]
-  }
+	"permissions": {
+		"allow": ["Bash(mv:*)", "Bash(npm test:*)", "Bash(yarn test:*)"],
+		"deny": [
+			"Read(file_path:.idea/**)",
+			"Glob(path:.idea/**)",
+			"Glob(pattern:.idea/**)",
+			"Grep(path:.idea/**)",
+			"Edit(file_path:.idea/**)",
+			"Write(file_path:.idea/**)",
+			"Bash(cat .idea/**)",
+			"Bash(ls .idea/**)"
+		]
+	}
 }

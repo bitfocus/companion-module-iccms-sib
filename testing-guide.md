@@ -37,20 +37,20 @@ import { parseApiMessageSibInfo } from '../../../infrastructure/parsers/parseApi
 
 ```javascript
 test('Deserialized correctly', () => {
-    // arrange
-    let expected = {
-        SportInTheBoxVersion: '2.8.7257.14899',
-        ResponseDate: '2019-11-14T09:15:11',
-        DatabasePath: 'E:\\SIB\\MySport.SIB2',
-    }
+	// arrange
+	let expected = {
+		SportInTheBoxVersion: '2.8.7257.14899',
+		ResponseDate: '2019-11-14T09:15:11',
+		DatabasePath: 'E:\\SIB\\MySport.SIB2',
+	}
 
-    // act
-    const actual = parseApiMessageSibInfo(expected)
+	// act
+	const actual = parseApiMessageSibInfo(expected)
 
-    // assert
-    expect(actual.SportInTheBoxVersion).toBe(expected.SportInTheBoxVersion)
-    expect(actual.ResponseDate).toBe(expected.ResponseDate)
-    expect(actual.DatabasePath).toBe(expected.DatabasePath)
+	// assert
+	expect(actual.SportInTheBoxVersion).toBe(expected.SportInTheBoxVersion)
+	expect(actual.ResponseDate).toBe(expected.ResponseDate)
+	expect(actual.DatabasePath).toBe(expected.DatabasePath)
 })
 ```
 
@@ -102,16 +102,16 @@ faker.lorem.word()
 ```javascript
 // GOOD - Use faker for variable data
 test('Handles various file paths', () => {
-    const randomPath = faker.system.directoryPath() + path.sep + faker.system.commonFileName('SIB2')
-    const input = { DatabasePath: randomPath }
-    const result = parseFunction(input)
-    expect(result.DatabasePath).toBe(randomPath)
+	const randomPath = faker.system.directoryPath() + path.sep + faker.system.commonFileName('SIB2')
+	const input = { DatabasePath: randomPath }
+	const result = parseFunction(input)
+	expect(result.DatabasePath).toBe(randomPath)
 })
 
 // BAD - Don't use faker for data that affects assertions
 test('Version number parsing', () => {
-    const version = faker.string.alphanumeric(10)  // Unpredictable format!
-    // ...
+	const version = faker.string.alphanumeric(10) // Unpredictable format!
+	// ...
 })
 ```
 
@@ -124,15 +124,15 @@ import { defineFixture } from 'efate'
 import { faker } from '@faker-js/faker'
 
 const sibInfoFixture = defineFixture((t) => {
-    t['SportInTheBoxVersion'].asDate()
-    t['ResponseDate'].as(() => faker.date.anytime().toISOString())
-    t['DatabasePath'].as(() => faker.system.directoryPath() + path.sep + faker.system.commonFileName('SIB2'))
+	t['SportInTheBoxVersion'].asDate()
+	t['ResponseDate'].as(() => faker.date.anytime().toISOString())
+	t['DatabasePath'].as(() => faker.system.directoryPath() + path.sep + faker.system.commonFileName('SIB2'))
 })
 
 test('Example using fixtures', () => {
-    const testData1 = sibInfoFixture.create()
-    const testData2 = sibInfoFixture.create()
-    // testData1 and testData2 have different random values
+	const testData1 = sibInfoFixture.create()
+	const testData2 = sibInfoFixture.create()
+	// testData1 and testData2 have different random values
 })
 ```
 
@@ -141,8 +141,8 @@ test('Example using fixtures', () => {
 ## Jest Matchers Quick Reference
 
 ```javascript
-expect(actual).toBe(expected)              // Strict equality
-expect(actual).toEqual(expected)           // Deep equality
+expect(actual).toBe(expected) // Strict equality
+expect(actual).toEqual(expected) // Deep equality
 expect(value).toBeTruthy()
 expect(value).toBeNull()
 expect(value).toBeUndefined()
@@ -178,13 +178,13 @@ Always test:
 
 ```javascript
 test.each([
-    ['2.8.7257.14899', '2019-11-14T09:15:11'],
-    ['2.15.8630.15619', '2023-08-18T11:13:11'],
+	['2.8.7257.14899', '2019-11-14T09:15:11'],
+	['2.15.8630.15619', '2023-08-18T11:13:11'],
 ])('Parses version %s and date %s', (version, date) => {
-    const input = { SportInTheBoxVersion: version, ResponseDate: date }
-    const result = parseApiMessageSibInfo(input)
-    expect(result.SportInTheBoxVersion).toBe(version)
-    expect(result.ResponseDate).toBe(date)
+	const input = { SportInTheBoxVersion: version, ResponseDate: date }
+	const result = parseApiMessageSibInfo(input)
+	expect(result.SportInTheBoxVersion).toBe(version)
+	expect(result.ResponseDate).toBe(date)
 })
 ```
 
@@ -195,22 +195,22 @@ test.each([
 ```javascript
 // GOOD - Tests don't share state
 describe('Parser tests', () => {
-    test('Test 1', () => {
-        const input1 = { field: 'value1' }
-        const result1 = parseFunction(input1)
-        expect(result1.field).toBe('value1')
-    })
+	test('Test 1', () => {
+		const input1 = { field: 'value1' }
+		const result1 = parseFunction(input1)
+		expect(result1.field).toBe('value1')
+	})
 })
 
 // Use beforeEach() for shared setup
 describe('Parser tests with setup', () => {
-    let testInput
-    beforeEach(() => {
-        testInput = {
-            SportInTheBoxVersion: '2.8.7257.14899',
-            ResponseDate: '2019-11-14T09:15:11',
-        }
-    })
+	let testInput
+	beforeEach(() => {
+		testInput = {
+			SportInTheBoxVersion: '2.8.7257.14899',
+			ResponseDate: '2019-11-14T09:15:11',
+		}
+	})
 })
 ```
 
@@ -254,29 +254,29 @@ import { faker } from '@faker-js/faker'
 import * as path from 'path'
 
 describe('Feature or Component Name', () => {
-    const testFixture = defineFixture((t) => {
-        t['field1'].as(() => faker.date.anytime().toISOString())
-        t['field2'].as(() => faker.system.directoryPath() + path.sep + faker.system.commonFileName('ext'))
-    })
+	const testFixture = defineFixture((t) => {
+		t['field1'].as(() => faker.date.anytime().toISOString())
+		t['field2'].as(() => faker.system.directoryPath() + path.sep + faker.system.commonFileName('ext'))
+	})
 
-    test('Descriptive name for main scenario', () => {
-        // arrange
-        const expected = { field1: 'value1', field2: 'value2' }
+	test('Descriptive name for main scenario', () => {
+		// arrange
+		const expected = { field1: 'value1', field2: 'value2' }
 
-        // act
-        const actual = functionToTest(expected)
+		// act
+		const actual = functionToTest(expected)
 
-        // assert
-        expect(actual.field1).toBe(expected.field1)
-    })
+		// assert
+		expect(actual.field1).toBe(expected.field1)
+	})
 
-    test('Handles edge case: undefined input', () => {
-        // act
-        const result = functionToTest(undefined)
+	test('Handles edge case: undefined input', () => {
+		// act
+		const result = functionToTest(undefined)
 
-        // assert
-        expect(result).toBeNull()
-    })
+		// assert
+		expect(result).toBeNull()
+	})
 })
 ```
 

@@ -23,13 +23,13 @@ import * as path from 'path'
  * // }
  */
 export const sibInfoWithComponentsFixture = defineFixture((t) => {
-  t['SportInTheBoxVersion'].as(() => faker.system.semver())
-  t['ResponseDate'].as(() => faker.date.anytime().toISOString())
-  t['DatabasePath'].as(() => faker.system.directoryPath() + path.sep + faker.system.commonFileName('SIB2'))
-  t['LogOnName'].as(() => faker.system.fileName() + '\\' + faker.person.firstName().toLowerCase())
-  t['ComponentLastModified'].as(() => ({
-    QuickButton: faker.date.anytime().toISOString(),
-    Rundown: faker.date.anytime().toISOString(),
-    Team: faker.date.anytime().toISOString()
-  }))
+	t['SportInTheBoxVersion'].as(() => faker.system.semver())
+	t['ResponseDate'].as(() => faker.date.anytime().toISOString())
+	t['DatabasePath'].as(() => faker.system.directoryPath() + path.sep + faker.system.commonFileName('SIB2'))
+	t['LogOnName'].as(() => faker.system.fileName() + '\\' + faker.person.firstName().toLowerCase())
+	t['ComponentLastModified'].as(() => ({
+		QuickButton: faker.date.anytime().toISOString(),
+		Rundown: faker.date.anytime().toISOString(),
+		Team: faker.date.anytime().toISOString(),
+	}))
 })

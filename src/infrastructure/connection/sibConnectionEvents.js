@@ -47,8 +47,8 @@ export const sibConnectionEvents = {
 	 */
 	OnSibTeamsUpdated: 'sib_teams_updated',
 
-  /**
-   * Rundowns were updated. Recreate presets.
-   */
-  OnSibRundownUpdated: 'sib_rundown_updated',
+	/**
+	 * Rundowns were updated. Recreate presets.
+	 */
+	OnSibRundownUpdated: 'sib_rundown_updated',
 }

@@ -8,8 +8,8 @@
  * @param self
  */
 export function updatePresets(self) {
-  const presets = {}
+	const presets = {}
 
-  // Ever called. All goes via api.
-  self.setPresetDefinitions(presets)
+	// Ever called. All goes via api.
+	self.setPresetDefinitions(presets)
 }

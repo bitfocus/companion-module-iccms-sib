@@ -18,7 +18,6 @@ export function parseCollectionWithGroupsAndButtonsArray(collectionsJson) {
 
 	let collectionObjects = []
 
-
 	try {
 		msgValue.forEach((element) => {
 			try {

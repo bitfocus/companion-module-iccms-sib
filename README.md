@@ -51,10 +51,10 @@ Enable the **Debug messages** option in the connection settings to raise log ver
 
 Local-only debug toggles (gitignored via `DEBUG-*`) — create when needed, never commit:
 
-| Artifact | What's needed |
-| --- | --- |
-| `DEBUG-INSPECT` | Runs the module with the Node inspector to attach a debugger. |
-| `DEBUG-PACKAGED` | Runs the built `pkg/` code instead of `src/`. |
+| Artifact         | What's needed                                                 |
+| ---------------- | ------------------------------------------------------------- |
+| `DEBUG-INSPECT`  | Runs the module with the Node inspector to attach a debugger. |
+| `DEBUG-PACKAGED` | Runs the built `pkg/` code instead of `src/`.                 |
 
 ### Committed IDE config (`.idea/`, `.vscode/`)
 
@@ -79,7 +79,7 @@ a real-time antivirus is quarantining the package archive that Node writes while
 
 Notes:
 
-- **Clearing the cache does not help** — it forces *every* archive to be re-fetched and re-written, exposing them all to the same block.
+- **Clearing the cache does not help** — it forces _every_ archive to be re-fetched and re-written, exposing them all to the same block.
 - The temp location is irrelevant — setting `TMP`/`TEMP` elsewhere fails identically, because it's the act of Node writing the archive that's blocked, not the path.
 
 **Fix** — exempt Node from the scanner so the whole toolchain (Yarn, Jest, webpack) stops being interfered with:

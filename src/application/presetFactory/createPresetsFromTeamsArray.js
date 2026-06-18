@@ -13,96 +13,94 @@ import { logger } from '../../logger.js'
  * @returns {object} presets dictionary
  */
 export function createPresetsFromTeamsArray(teams, teamLogos) {
-  logger.debug('[createPresetsFromTeamsArray] Start creating team presets')
-  if (!Array.isArray(teams) || !teams) {
-    return {}
-  }
-  const presets = {}
-  const CATEGORY = 'Teams'
+	logger.debug('[createPresetsFromTeamsArray] Start creating team presets')
+	if (!Array.isArray(teams) || !teams) {
+		return {}
+	}
+	const presets = {}
+	const CATEGORY = 'Teams'
 
-  for (const team of teams) {
-    const logoBase64 = teamLogos ? teamLogos.getTeamLogoPngBase64(team.Id) : ''
-    // Header
-    const headerId = `header_team_${team.Id}`
-    presets[headerId] = {
-      type: 'text',
-      category: CATEGORY,
-      name: team.Name,
-      text: 'Move this button to the canvas to activate',
-    }
+	for (const team of teams) {
+		const logoBase64 = teamLogos ? teamLogos.getTeamLogoPngBase64(team.Id) : ''
+		// Header
+		const headerId = `header_team_${team.Id}`
+		presets[headerId] = {
+			type: 'text',
+			category: CATEGORY,
+			name: team.Name,
+			text: 'Move this button to the canvas to activate',
+		}
 
-    // Helper for button creation
-    function makeTeamButton(teamType) {
-      let bgClrInt = -1
-      let clr
+		// Helper for button creation
+		function makeTeamButton(teamType) {
+			let bgClrInt = -1
+			let clr
 
-      if (team.TeamColorHex !== '') {
-        clr = colord(team.TeamColorHex).toRgb()
-        bgClrInt = combineRgb(clr.r, clr.g, clr.b)
-      } else {
-        bgClrInt = combineRgb(0, 0, 0)
-      }
+			if (team.TeamColorHex !== '') {
+				clr = colord(team.TeamColorHex).toRgb()
+				bgClrInt = combineRgb(clr.r, clr.g, clr.b)
+			} else {
+				bgClrInt = combineRgb(0, 0, 0)
+			}
 
-      let buttonLabel, buttonName
-      if (teamType === apiSportTeamType.Home) {
-        buttonLabel = 'Change to Home Team'
-        buttonName = `Change home team to ${team.Name}`
-      } else {
-        buttonLabel = 'Change to Guest Team'
-        buttonName = `Change guest team to ${team.Name}`
-      }
+			let buttonName
+			if (teamType === apiSportTeamType.Home) {
+				buttonName = `Change home team to ${team.Name}`
+			} else {
+				buttonName = `Change guest team to ${team.Name}`
+			}
 
-      // Style
-      const style = {
-        text: team.Name,
-        size: 14,
-        alignment: 'center:bottom',
-        color: combineRgb(255, 255, 255),
-        bgcolor: bgClrInt,
-        pngalignment: 'center:center',
-      }
+			// Style
+			const style = {
+				text: team.Name,
+				size: 14,
+				alignment: 'center:bottom',
+				color: combineRgb(255, 255, 255),
+				bgcolor: bgClrInt,
+				pngalignment: 'center:center',
+			}
 
-      // Logo logic
-      if (logoBase64 !== '') {
-        style.color = combineRgb(255, 255, 255)
-        style.png64 = composeIconWithGradient(logoBase64)
-      } else {
-        style.color = getForegroundColorFromBackgroundColor(team.TeamColorHex)
-        style.bgcolor = bgClrInt
-      }
+			// Logo logic
+			if (logoBase64 !== '') {
+				style.color = combineRgb(255, 255, 255)
+				style.png64 = composeIconWithGradient(logoBase64)
+			} else {
+				style.color = getForegroundColorFromBackgroundColor(team.TeamColorHex)
+				style.bgcolor = bgClrInt
+			}
 
-      return {
-        type: 'button',
-        category: CATEGORY,
-        name: buttonName,
-        style,
-        steps: [
-          {
-            down: [
-              {
-                actionId: actionId.ChangeTeam,
-                options: {
-                  team_type: teamType,
-                  team_oid: team.Id,
-                },
-              },
-            ],
-            up: [],
-          },
-        ],
-        feedbacks: [],
-      }
-    }
+			return {
+				type: 'button',
+				category: CATEGORY,
+				name: buttonName,
+				style,
+				steps: [
+					{
+						down: [
+							{
+								actionId: actionId.ChangeTeam,
+								options: {
+									team_type: teamType,
+									team_oid: team.Id,
+								},
+							},
+						],
+						up: [],
+					},
+				],
+				feedbacks: [],
+			}
+		}
 
-    // Home team button
-    const homeButtonId = `team_${team.Id}_home`
-    presets[homeButtonId] = makeTeamButton(apiSportTeamType.Home)
+		// Home team button
+		const homeButtonId = `team_${team.Id}_home`
+		presets[homeButtonId] = makeTeamButton(apiSportTeamType.Home)
 
-    // Guest team button
-    const guestButtonId = `team_${team.Id}_guest`
-    presets[guestButtonId] = makeTeamButton(apiSportTeamType.Guest)
-  }
+		// Guest team button
+		const guestButtonId = `team_${team.Id}_guest`
+		presets[guestButtonId] = makeTeamButton(apiSportTeamType.Guest)
+	}
 
-  logger.debug('[createPresetsFromTeamsArray] Finished creating team presets')
-  return presets
+	logger.debug('[createPresetsFromTeamsArray] Finished creating team presets')
+	return presets
 }

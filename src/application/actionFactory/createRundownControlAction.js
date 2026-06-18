@@ -1,4 +1,3 @@
-import { actionId } from '../actionId.js'
 import { getChoicesForRundownAction } from '../presetFactory/getChoicesForRundownAction.js'
 import { logger } from '../../logger.js'
 import objectPath from 'object-path'
@@ -37,10 +36,8 @@ const ACTION_TYPE = {
  * @private
  */
 function buildShowRundownDropdownExpression(actionTypes) {
-    const conditions = actionTypes.map(
-        (actionType) => `$(this:${OPTION_ID.ACTION_TYPE}) == "${actionType}"`
-    );
-    return conditions.join(' || ');
+	const conditions = actionTypes.map((actionType) => `$(this:${OPTION_ID.ACTION_TYPE}) == "${actionType}"`)
+	return conditions.join(' || ')
 }
 
 /**
@@ -74,10 +71,7 @@ export function createRundownControlAction(allRundowns, sibConfig, self) {
 				default: -1,
 				tooltip: 'Select rundown from list',
 				choices: getChoicesForRundownAction(allRundowns),
-				isVisibleExpression: buildShowRundownDropdownExpression([
-					ACTION_TYPE.SELECT_RUNDOWN,
-					ACTION_TYPE.RUN_LINE,
-				]),
+				isVisibleExpression: buildShowRundownDropdownExpression([ACTION_TYPE.SELECT_RUNDOWN, ACTION_TYPE.RUN_LINE]),
 			},
 		],
 		callback: async (event) => {

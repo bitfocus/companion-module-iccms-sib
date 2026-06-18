@@ -35,8 +35,6 @@ export function parseBgColorToPresetBgColor(clrHex) {
 		bgClrInt = combineRgb(255, 0, 0)
 	} else if (clrHex === '#838383FF') {
 		bgClrInt = combineRgb(255, 0, 0)
-	} else if (clrHex === '#000000') {
-		bgClrInt = combineRgb(255, 0, 0)
 	} else {
 		let clr = colord(clrHex).toRgb()
 

@@ -4,21 +4,21 @@ describe('ApiRundownWithoutItemsArray deserialization', () => {
 	test('Deserialized correctly', () => {
 		// arrange
 		const input = [
-      {
-        "Id": 7,
-        "Order": 1,
-        "Name": "Id 7 - LightCoral",
-        "ColorHex": "#FF9999",
-        "IconId": "rundown"
-      },
-      {
-        "Id": 6,
-        "Order": 2,
-        "Name": "Id 5 - Rundown - Grey",
-        "ColorHex": "#000000",
-        "IconId": "rundown"
-      }
-    ]
+			{
+				Id: 7,
+				Order: 1,
+				Name: 'Id 7 - LightCoral',
+				ColorHex: '#FF9999',
+				IconId: 'rundown',
+			},
+			{
+				Id: 6,
+				Order: 2,
+				Name: 'Id 5 - Rundown - Grey',
+				ColorHex: '#000000',
+				IconId: 'rundown',
+			},
+		]
 
 		// act
 		const actual = parseApiRundownWithoutItemsArray(input)
