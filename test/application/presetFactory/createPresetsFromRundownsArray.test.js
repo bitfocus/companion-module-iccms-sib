@@ -98,6 +98,25 @@ describe('createPresetsFromRundownsArray', () => {
 		expect(composeIconWithGradient).toHaveBeenCalledWith('raw-png-data')
 	})
 
+	test('omits png64 when composeIconWithGradient returns empty string (compose error)', () => {
+		// arrange
+		const sibIcons = makeSibIcons('icon-abc', 'raw-png-data')
+		composeIconWithGradient.mockReturnValue('')
+		const allRundowns = {
+			Rundowns: [{ Id: 9, RundownName: 'Overtime', ColorHex: '#000000', IconId: 'icon-abc' }],
+		}
+
+		// act
+		const actual = createPresetsFromRundownsArray(allRundowns, sibIcons)
+
+		// assert
+		for (const actionId of ACTION_IDS) {
+			const preset = actual[`rundown_9_${actionId}`]
+			expect(preset.style.png64).toBeUndefined()
+			expect(preset.previewStyle.png64).toBeUndefined()
+		}
+	})
+
 	test('omits png64 when icon is not in sibIcons cache', () => {
 		// arrange
 		const sibIcons = makeSibIcons('other-icon', 'raw-png-data')

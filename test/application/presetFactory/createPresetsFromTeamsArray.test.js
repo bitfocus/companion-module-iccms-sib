@@ -152,6 +152,27 @@ describe('createPresetsFromTeamsArray', () => {
 		expect(actual['team_8_guest'].style.png64).toBeUndefined()
 	})
 
+	test('does not set png64 when composeIconWithGradient returns empty string (compose error)', () => {
+		// arrange
+		composeIconWithGradient.mockReturnValue('')
+		const team = {
+			Id: 10,
+			Name: 'Team Ten',
+			ShortName: 'T-Ten',
+			TeamColorHex: '#123456',
+		}
+		const teamLogos = {
+			getTeamLogoPngBase64: vi.fn(() => 'raw-logo-data'),
+		}
+
+		// act
+		const actual = createPresetsFromTeamsArray([team], teamLogos)
+
+		// assert
+		expect(actual['team_10_home'].style.png64).toBeUndefined()
+		expect(actual['team_10_guest'].style.png64).toBeUndefined()
+	})
+
 	test('composes logo once per team for both home and guest buttons', () => {
 		// arrange
 		const team = { Id: 9, Name: 'Team Nine', ShortName: 'T-Nine', TeamColorHex: '#001122' }
