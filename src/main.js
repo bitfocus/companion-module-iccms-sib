@@ -387,14 +387,14 @@ class SibPluginInstance extends InstanceBase {
 				id: configFieldId.SibPass,
 				label: 'API Password',
 				tooltip: 'Same password as in General settings - API',
-				width: 16,
+				width: 12,
 			},
 			{
 				type: 'textinput',
 				id: configFieldId.SibHelperPass,
 				label: 'Helper Password',
 				tooltip: 'Password from service helper in tray menu.',
-				width: 16,
+				width: 12,
 			},
 			{
 				type: 'checkbox',
