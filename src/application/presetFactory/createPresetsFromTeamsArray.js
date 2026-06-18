@@ -22,6 +22,7 @@ export function createPresetsFromTeamsArray(teams, teamLogos) {
 
 	for (const team of teams) {
 		const cachedLogoPng64 = teamLogos ? teamLogos.getTeamLogoPngBase64(team.Id) : ''
+		// Composed once per team; home and guest buttons share the result.
 		const composedPng64 = cachedLogoPng64 ? composeIconWithGradient(cachedLogoPng64) : ''
 		// Header
 		const headerId = `header_team_${team.Id}`

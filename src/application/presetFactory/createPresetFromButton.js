@@ -80,6 +80,7 @@ export function createPresetFromButton(parentCategoryId, qb, sibIcons, composedI
 	}
 
 	if (sibIcons.hasIcon(qb.IconId)) {
+		// Composed once per iconId across all buttons in the build; cache is shared by the caller.
 		if (!composedIconCache.has(qb.IconId)) {
 			const cachedIconPng64 = sibIcons.getIconPngBase64(qb.IconId)
 			composedIconCache.set(qb.IconId, cachedIconPng64 ? composeIconWithGradient(cachedIconPng64) : '')

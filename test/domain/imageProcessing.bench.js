@@ -1,17 +1,17 @@
 /*
  * Benchmarks for composeIconWithGradient (src/domain/imageProcessing.js).
- * Covers M4: synchronous PNG composite on Companion's main thread with no memoization.
+ * Covers M4: synchronous PNG composite cost on Companion's main thread.
  * Last run: 2026-06-18, Node v22.23.0, Windows 10, Vitest 4.1.9
  *
- * single call - small icon (16x16): 0.62 ms
- * single call - typical icon (72x72): 0.74 ms
- * single call - large icon (200x200): 1.50 ms
- * intra-build redundancy - 4x same icon (1 rundown x 4 action types): 2.59 ms
- * intra-build redundancy - 2x same logo (1 team, home + guest): 1.25 ms
- * full preset build - 75 quick buttons (TEST_ManyIcons fixture): 40.9 ms
- * full preset build - 20 teams x 2 buttons: 22.5 ms
- * full preset build - 5 rundowns x 4 action types (redundant 4x per rundown): 9.9 ms
- * full sync simulation - 75 buttons + 20 teams + 5 rundowns: ~73 ms per data-change event
+ * single call - small icon (16x16): 0.54 ms
+ * single call - typical icon (72x72): 0.68 ms
+ * single call - large icon (200x200): 1.45 ms
+ * intra-build redundancy - 4x same icon (1 rundown x 4 action types): 2.52 ms
+ * intra-build redundancy - 2x same logo (1 team, home + guest): 1.17 ms
+ * full preset build - 75 quick buttons (TEST_ManyIcons fixture): 38.6 ms
+ * full preset build - 20 teams x 2 buttons (pre-fix baseline, 40 composites): 22.2 ms
+ * full preset build - 5 rundowns x 4 action types (pre-fix baseline, 20 composites): 9.83 ms
+ * full sync simulation - 75 buttons + 20 teams + 5 rundowns (pre-fix baseline): ~72 ms per data-change event
  */
 import { bench, describe } from 'vitest'
 import { PNG } from 'pngjs'

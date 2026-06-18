@@ -72,6 +72,7 @@ export function createPresetsFromRundownsArray(allRundowns, sibIcons) {
 			sibIcons?.hasIcon && rundown.IconId && sibIcons.hasIcon(rundown.IconId)
 				? sibIcons.getIconPngBase64(rundown.IconId)
 				: ''
+		// Composed once per rundown; all ACTION_TYPES presets share the result.
 		const composedPng64 = cachedIconPng64 ? composeIconWithGradient(cachedIconPng64) : ''
 		if (!composedPng64) logger.debug('Rundown preset. Missing icon: %s', rundown.IconId)
 

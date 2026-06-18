@@ -25,6 +25,7 @@ export function createPresetsFromCollectionsWithGroupsAndButtons(collections, si
 		return {}
 	}
 	const presets = {}
+	// Shared across all collections/groups/buttons in this build to avoid compositing the same icon more than once.
 	const composedIconCache = new Map()
 
 	// Forward slashes are used as separators, remove them from names.
