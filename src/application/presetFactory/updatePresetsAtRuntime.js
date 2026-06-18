@@ -6,6 +6,9 @@ import { logger } from '../../logger.js'
 /**
  * Aggregates and sets all presets on the Companion module.
  *
+ * Called only on SIB data-change events (rundowns, teams, quick buttons), not on every
+ * heartbeat poll. Verified against a live SIB instance.
+ *
  * @param {SibPluginInstance} cmpModule
  * @param {SibComputer} sibComputer
  * @param {SibIcons} sibIcons

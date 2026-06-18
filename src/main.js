@@ -159,7 +159,8 @@ class SibPluginInstance extends InstanceBase {
 				logger.error(err)
 			})
 
-			// Data updates.
+			// These handlers fire only when SIB reports a data change via ComponentLastModified —
+			// not on every heartbeat poll. Each triggers a full preset rebuild.
 			this.#sibConnection.on(sibConnectionEvents.OnSibDatabaseChanges, (value) => {
 				logger.debug(`Got connected data.`)
 				this.#sibComputer.setSibInfo(value)

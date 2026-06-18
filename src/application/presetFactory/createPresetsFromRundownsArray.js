@@ -7,6 +7,9 @@ import { logger } from '../../logger.js'
 
 /**
  * Generates Companion presets for all rundowns.
+ *
+ * Called only when rundown data has changed, not on every heartbeat poll.
+ *
  * @param {ApiRundownWithoutItemsArray} allRundowns
  * @param {SibIcons} sibIcons
  * @returns {object} presets dictionary
@@ -60,19 +63,24 @@ export function createPresetsFromRundownsArray(allRundowns, sibIcons) {
 			text: 'Move this button to the canvas to activate',
 		}
 
+		const truncatedName =
+			rundown.RundownName.length > 16 ? rundown.RundownName.slice(0, 15) + '…' : rundown.RundownName
+
+		const fgColor = getForegroundColorFromBackgroundColor(rundown.ColorHex)
+
+		const cachedIconPng64 =
+			sibIcons?.hasIcon && rundown.IconId && sibIcons.hasIcon(rundown.IconId)
+				? sibIcons.getIconPngBase64(rundown.IconId)
+				: ''
+		const composedPng64 = cachedIconPng64 ? composeIconWithGradient(cachedIconPng64) : ''
+		if (!composedPng64) logger.debug('Rundown preset. Missing icon: %s', rundown.IconId)
+
 		// Buttons
 		for (const action of ACTION_TYPES) {
 			const presetId = `rundown_${rundown.Id}_${action.id}`
-			// Helper to truncate rundown name if too long
-			function truncateName(name, maxLen = 16) {
-				return name.length > maxLen ? name.slice(0, maxLen - 1) + '…' : name
-			}
-			const truncatedName = truncateName(rundown.RundownName)
 
-			// Use rundown color/icon if available
 			let bgClrInt = parseBgColorToPresetBgColor(rundown.ColorHex)
 			if (!bgClrInt || bgClrInt === 16711680) bgClrInt = action.bgcolor
-			const fgColor = getForegroundColorFromBackgroundColor(rundown.ColorHex)
 
 			const style = {
 				text: `${truncatedName}\\n${action.text}`,
@@ -83,12 +91,7 @@ export function createPresetsFromRundownsArray(allRundowns, sibIcons) {
 				pngalignment: 'center:center',
 			}
 
-			// Add icon if available
-			if (sibIcons?.hasIcon && rundown.IconId && sibIcons.hasIcon(rundown.IconId)) {
-				style.png64 = composeIconWithGradient(sibIcons.getIconPngBase64(rundown.IconId))
-			} else {
-				logger.debug('Rundown preset. Missing icon: %s', rundown.IconId)
-			}
+			if (composedPng64) style.png64 = composedPng64
 
 			// Preview style for preset browser
 			const previewStyle = {
@@ -99,7 +102,7 @@ export function createPresetsFromRundownsArray(allRundowns, sibIcons) {
 				bgcolor: bgClrInt,
 				pngalignment: 'center:center',
 			}
-			if (style.png64) previewStyle.png64 = style.png64
+			if (composedPng64) previewStyle.png64 = composedPng64
 
 			// Options for action
 			const options = {
