@@ -25,7 +25,7 @@ const customConfig = [
 			},
 		},
 		rules: {
-			'n/no-unpublished-import': ['error', { allowModules: ['efate', '@faker-js/faker', 'semver'] }],
+			'n/no-unpublished-import': ['error', { allowModules: ['vitest', 'efate', '@faker-js/faker', 'semver'] }],
 		},
 	},
 ]
