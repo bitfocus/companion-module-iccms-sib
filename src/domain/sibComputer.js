@@ -7,7 +7,7 @@ import { logger } from '../logger.js'
  */
 export class SibComputer {
 	/**
-	 * Info about current database.
+	 * Info about the current database.
 	 * @type { ApiMessageSibInfo }
 	 */
 	#sibInfo = undefined
@@ -44,7 +44,7 @@ export class SibComputer {
 	}
 
 	/**
-	 * Set db info from network.
+	 * Set db info from the network.
 	 * @param {ApiMessageSibInfo} parsedInfo
 	 */
 	setSibInfo(parsedInfo) {
@@ -101,7 +101,7 @@ export class SibComputer {
 	}
 
 	/**
-	 * Set db info from network.
+	 * Set db info from the network.
 	 * @param {apiQuickButtonCollectionWithGroupsAndButtons[]} parsedCollections
 	 */
 	setSibCollections(parsedCollections) {
@@ -128,8 +128,6 @@ export class SibComputer {
 	getCollectionsWithButtons() {
 		let colForPresets = []
 
-		if (!colForPresets) return colForPresets
-
 		if (!Array.isArray(this.#sibCollections) || !this.#sibCollections.length) {
 			return []
 		}
@@ -152,13 +150,13 @@ export class SibComputer {
 	 */
 	setSibTeams(parsedTeams) {
 		if (typeof parsedTeams == 'undefined') {
-			this.#sibCollections = []
+			this.#sibTeams = []
 			logger.warn('CMP. Teams collection is undefined.')
 			return
 		}
 
 		if (!Array.isArray(parsedTeams) || !parsedTeams.length) {
-			this.#sibCollections = []
+			this.#sibTeams = []
 			logger.warn('CMP. Teams collection is not array.')
 			return
 		}
@@ -168,13 +166,11 @@ export class SibComputer {
 
 	/**
 	 * Get saved teams.
-	 * Doesn't include 'no team' row.
+	 * Doesn't include a 'no team' row.
 	 * @returns {ApiSportTeamWithoutPlayers[]}
 	 */
 	getSibTeams() {
 		let colTeams = []
-
-		if (!colTeams) return colTeams
 
 		if (!Array.isArray(this.#sibTeams) || !this.#sibTeams.length) {
 			return []
@@ -233,6 +229,6 @@ export class SibComputer {
 	 * @returns {string}
 	 */
 	getApiUrl() {
-		return this.#sibConnectionConfig.sibIpPort
+		return this.#sibConnectionConfig?.sibIpPort ?? ''
 	}
 }

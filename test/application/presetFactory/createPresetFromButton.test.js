@@ -1,3 +1,4 @@
+import { vi } from 'vitest'
 import { composeIconWithGradient } from '../../../src/domain/imageProcessing.js'
 import { apiQuickButtonInGroup } from '../../../src/infrastructure/sib-api/apiQuickButtonInGroup.js'
 import { SibIcons } from '../../../src/domain/sibIcons.js'

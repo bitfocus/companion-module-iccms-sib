@@ -1,3 +1,4 @@
+import { vi } from 'vitest'
 import { composeIconWithGradient } from '../../../src/domain/imageProcessing.js'
 import { createPresetsFromRundownsArray } from '../../../src/application/presetFactory/createPresetsFromRundownsArray.js'
 
