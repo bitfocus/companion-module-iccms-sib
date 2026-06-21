@@ -28,7 +28,7 @@
 		"ws": "^8.20.1"
 	},
 	"devDependencies": {
-		"@babel/core": "^7.23.7",
+		"@babel/core": "^7.29.6",
 		"@babel/preset-env": "^7.23.8",
 		"@companion-module/tools": "^2.4.2",
 		"@faker-js/faker": "^8.3.1",
