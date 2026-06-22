@@ -25,6 +25,25 @@ With `globals: true` in `vitest.config.mjs`, test globals (`describe`, `it`, `te
 import { vi } from 'vitest'
 ```
 
+## Naming the System Under Test
+
+Name the instance of the class being tested `sut` (system under test). This makes it unambiguous which object the test is exercising versus its collaborators/dependencies:
+
+```javascript
+test('Connects with token', () => {
+	// arrange
+	const sut = new SibComputer(cfg)
+
+	// act
+	const actual = sut.connect()
+
+	// assert
+	expect(actual).toBe(true)
+})
+```
+
+Keep descriptive names for collaborators and inputs (e.g. `cfg`, `sibIcons`, `expected`).
+
 ## Arrange-Act-Assert
 
 Always structure tests with these comments:
