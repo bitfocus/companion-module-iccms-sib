@@ -101,14 +101,7 @@ class SibPluginInstance extends InstanceBase {
 				logger.level = 'error'
 			}
 
-			this.#sibConfig = new SibConnection(
-				sibHost,
-				sibPort,
-				sibPass,
-				sibDebug,
-				sibToken,
-				sibDisableDataFetch,
-			)
+			this.#sibConfig = new SibConnection(sibHost, sibPort, sibPass, sibDebug, sibToken, sibDisableDataFetch)
 
 			this.#sibComputer = new SibComputer()
 			this.#sibIcons = new SibIcons()
@@ -361,14 +354,7 @@ class SibPluginInstance extends InstanceBase {
 			logger.level = 'error'
 		}
 
-		this.#sibConfig = new SibConnection(
-			sibHost,
-			sibPort,
-			sibPass,
-			sibDebug,
-			sibToken,
-			sibDisableDataFetch,
-		)
+		this.#sibConfig = new SibConnection(sibHost, sibPort, sibPass, sibDebug, sibToken, sibDisableDataFetch)
 
 		this.#sibComputer.setConnectionConfig(this.#sibConfig)
 		await this.#sibConnection.connectToSib(this.#sibConfig)
