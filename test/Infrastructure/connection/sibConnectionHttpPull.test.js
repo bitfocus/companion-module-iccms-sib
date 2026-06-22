@@ -173,4 +173,81 @@ describe('SibConnectionHttpPull — selective component fetching', () => {
 		expect(events.connected).toBe(1)
 		expect(events.errors).toEqual([])
 	})
+
+	it('does not flicker Ok ↔ ConnectionFailure while a data fetch keeps failing — reports only the error, never connected', async () => {
+		// arrange — heartbeat always succeeds, but teams fails (non-429) on every tick. Legacy info
+		// (no ComponentLastModified) makes every tick re-fetch, so teams fails on each tick.
+		// Plain info without ComponentLastModified — the SUT treats this as legacy and fetches all
+		// components every tick, so the failing teams call recurs on each tick.
+		const info = { DatabasePath: 'legacy-db' }
+		mocks.sibHttpClientGetSibInfo.mockResolvedValue(info)
+		mocks.sibHttpClientGetTeams.mockRejectedValue(new Error('boom'))
+		mocks.sibHttpClientGetQuickButtonCollectionsAsync.mockResolvedValue([])
+		mocks.sibHttpClientGetRundownsWithoutItems.mockResolvedValue([])
+
+		const events = { connected: 0, errors: [] }
+		connection = new SibConnectionHttpPull()
+		connection.on(sibConnectionEvents.OnSibConnected, () => (events.connected += 1))
+		connection.on(sibConnectionEvents.OnSibError, (m) => events.errors.push(m))
+
+		// act — tick 1 (inside connectToSib) plus two more ticks.
+		await connection.connectToSib(config)
+		await vi.advanceTimersByTimeAsync(config.pullIntervall)
+		await vi.advanceTimersByTimeAsync(config.pullIntervall)
+
+		// assert — Ok is NEVER emitted (no green blink); failure is reported once per tick.
+		expect(events.connected).toBe(0)
+		expect(events.errors.length).toBe(3)
+	})
+
+	it('emits OnSibConnected only after the failing data fetch recovers', async () => {
+		// arrange — teams fails the first two ticks, then succeeds on the third.
+		// Plain info without ComponentLastModified — the SUT treats this as legacy and fetches all
+		// components every tick, so the failing teams call recurs on each tick.
+		const info = { DatabasePath: 'legacy-db' }
+		mocks.sibHttpClientGetSibInfo.mockResolvedValue(info)
+		mocks.sibHttpClientGetTeams
+			.mockRejectedValueOnce(new Error('boom')) // tick 1
+			.mockRejectedValueOnce(new Error('boom')) // tick 2
+			.mockResolvedValue([]) // tick 3: recovered
+		mocks.sibHttpClientGetQuickButtonCollectionsAsync.mockResolvedValue([])
+		mocks.sibHttpClientGetRundownsWithoutItems.mockResolvedValue([])
+
+		const events = { connected: 0, errors: [] }
+		connection = new SibConnectionHttpPull()
+		connection.on(sibConnectionEvents.OnSibConnected, () => (events.connected += 1))
+		connection.on(sibConnectionEvents.OnSibError, (m) => events.errors.push(m))
+
+		// act & assert — no Ok until the fetch recovers on tick 3.
+		await connection.connectToSib(config) // tick 1: fail
+		expect(events.connected).toBe(0)
+		await vi.advanceTimersByTimeAsync(config.pullIntervall) // tick 2: fail
+		expect(events.connected).toBe(0)
+		await vi.advanceTimersByTimeAsync(config.pullIntervall) // tick 3: recover
+		expect(events.connected).toBe(1)
+		expect(events.errors.length).toBe(2)
+	})
+
+	it('reports connected (not failed) when a data fetch is rate-limited with a 429', async () => {
+		// arrange — teams 429s; SIB is reachable, just throttling.
+		// Plain info without ComponentLastModified — the SUT treats this as legacy and fetches all
+		// components every tick, so the failing teams call recurs on each tick.
+		const info = { DatabasePath: 'legacy-db' }
+		mocks.sibHttpClientGetSibInfo.mockResolvedValue(info)
+		mocks.sibHttpClientGetTeams.mockRejectedValue(new mocks.SibRateLimitError())
+		mocks.sibHttpClientGetQuickButtonCollectionsAsync.mockResolvedValue([])
+		mocks.sibHttpClientGetRundownsWithoutItems.mockResolvedValue([])
+
+		const events = { connected: 0, errors: [] }
+		connection = new SibConnectionHttpPull()
+		connection.on(sibConnectionEvents.OnSibConnected, () => (events.connected += 1))
+		connection.on(sibConnectionEvents.OnSibError, (m) => events.errors.push(m))
+
+		// act — one tick.
+		await connection.connectToSib(config)
+
+		// assert — connected reported, no error raised.
+		expect(events.errors).toEqual([])
+		expect(events.connected).toBe(1)
+	})
 })

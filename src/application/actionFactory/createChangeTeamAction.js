@@ -1,4 +1,3 @@
-import { actionId } from '../actionId.js'
 import { apiSportTeamType } from '../../infrastructure/sib-api/apiSportTeamType.js'
 import { getChoicesForChangeTeamAction } from '../presetFactory/getChoicesForChangeTeamAction.js'
 import { logger } from '../../logger.js'
@@ -36,7 +35,7 @@ export function createChangeTeamAction(allTeams, sibConfig, sibHttpClientChangeT
 			},
 		],
 		callback: async (event) => {
-			logger.debug('Change team (sib_action_change_team): %s', event.options[actionId.ChangeTeam])
+			logger.debug('Change team (sib_action_change_team): %s', JSON.stringify(event.options))
 
 			const sibIpPort = sibConfig.sibIpPort
 			const sibTeamType = objectPath.get(event.options, 'team_type', 'h')
@@ -44,7 +43,7 @@ export function createChangeTeamAction(allTeams, sibConfig, sibHttpClientChangeT
 
 			logger.debug('Change team from startup. Type %s, id %s.', sibTeamType, sibTeamOid)
 
-			logger.debug('Fire (sib_action_change_team): %s', event.options[actionId.ChangeTeam])
+			logger.debug('Fire (sib_action_change_team): %s', JSON.stringify(event.options))
 			// Fire-and-forget: the client self-handles failures via its own req.on('error') handler
 			// and request timeout in sibHttpClient.js, so no try/catch is needed here.
 			sibHttpClientChangeTeamById(sibIpPort, sibTeamType, sibTeamOid, sibConfig.token)

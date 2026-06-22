@@ -1,4 +1,3 @@
-import { actionId } from '../actionId.js'
 import { ApiOpenDatabase } from '../../infrastructure/sib-api/apiOpenDatabase.js'
 import { logger } from '../../logger.js'
 import objectPath from 'object-path'
@@ -30,7 +29,7 @@ export function createOpenDatabaseAction(sibConfig, sibSocket) {
 			},
 		],
 		callback: async (event) => {
-			logger.debug('Fire open database (sib_action_open_database): %s', event.options[actionId.OpenDatabase])
+			logger.debug('Fire open database (sib_action_open_database): %s', JSON.stringify(event.options))
 
 			const sibIpPort = sibConfig.sibIpPort
 			const sibDbpath = objectPath.get(event.options, 'db_path', '')

@@ -158,16 +158,16 @@ export class SibConnectionHttpPull extends EventEmitter {
 		let sinInfo
 		let currComponent
 
+		// Set when a heavy data fetch fails (non-429) this tick. Connection status is reported ONCE,
+		// at the heartbeat-up exits below: Ok unless this flag is set. Emitting Ok up front (before
+		// the fetches) and OnSibError later was the Ok ↔ ConnectionFailure flicker — a persistently
+		// failing fetch flipped the status to Ok every tick before the retry failed again.
+		let tickHadDataError = false
+
 		try {
 			sinInfo = await sibHttpClientGetSibInfo(this.#sibConfig.sibIpPort, this.#deviceId)
 
 			currComponent = sinInfo && sinInfo.ComponentLastModified ? sinInfo.ComponentLastModified : null
-
-			// The heartbeat just succeeded, so the connection is up. The heartbeat is the ONLY thing
-			// that decides connection state. Report it here, NOT at the end of the tick, so a later
-			// data-fetch failure (e.g. bad token) can mark the status failed without this success
-			// overwriting it again — that overwrite was the ConnectionFailure → Ok flicker.
-			this.emit(sibConnectionEvents.OnSibConnected)
 
 			// Always emit db info changes if changed
 			if (!(JSON.stringify(this.#prevSibInfo) === JSON.stringify(sinInfo))) {
@@ -179,6 +179,8 @@ export class SibConnectionHttpPull extends EventEmitter {
 			if (this.#sibConfig.disableDataFetch === true) {
 				logger.debug('Data fetching disabled. Skipping heavy API calls.')
 				this.#prevSibInfo = sinInfo
+				// Heartbeat up and nothing to fetch — report connected.
+				this.emit(sibConnectionEvents.OnSibConnected)
 				return
 			}
 
@@ -221,12 +223,14 @@ export class SibConnectionHttpPull extends EventEmitter {
 					if (hasCurr) this.#fetchedTeamTimestamp = currComponent.Team
 				} catch (error) {
 					if (error instanceof SibRateLimitError) {
-						// 429 is benign — SIB is up, just throttling. Leave the connected status (set
-						// right after the heartbeat) in place and skip the rest; we retry next tick.
+						// 429 is benign — SIB is up, just throttling. Report connected (unless an earlier
+						// fetch this tick already failed) and skip the rest; we retry next tick.
 						logger.warn('Rate limited by SIB on teams. Skipping remaining calls.')
 						this.#prevSibInfo = sinInfo
+						if (!tickHadDataError) this.emit(sibConnectionEvents.OnSibConnected)
 						return
 					}
+					tickHadDataError = true
 					logger.error('Sib request for teams failed, %s', error)
 					this.emit(sibConnectionEvents.OnSibError, 'Request to sib failed. Check password in settings.')
 				}
@@ -254,8 +258,10 @@ export class SibConnectionHttpPull extends EventEmitter {
 					if (error instanceof SibRateLimitError) {
 						logger.warn('Rate limited by SIB on collections. Skipping remaining calls.')
 						this.#prevSibInfo = sinInfo
+						if (!tickHadDataError) this.emit(sibConnectionEvents.OnSibConnected)
 						return
 					}
+					tickHadDataError = true
 					logger.error('Sib request for collections failed, %s', error)
 					this.emit(sibConnectionEvents.OnSibError, 'Request to sib failed. Check password in settings.')
 				}
@@ -282,17 +288,21 @@ export class SibConnectionHttpPull extends EventEmitter {
 					if (error instanceof SibRateLimitError) {
 						logger.warn('Rate limited by SIB on rundowns. Skipping remaining calls.')
 						this.#prevSibInfo = sinInfo
+						if (!tickHadDataError) this.emit(sibConnectionEvents.OnSibConnected)
 						return
 					}
+					tickHadDataError = true
 					logger.error('Sib request for rundowns failed, %s', error)
 					this.emit(sibConnectionEvents.OnSibError, 'Request to sib failed. Check password in settings.')
 				}
 			}
 
-			// Save latest SIB info for next tick. The connection status was already reported right
-			// after the heartbeat — we deliberately do NOT re-emit OnSibConnected here, so any
-			// data-fetch failure above remains the last status instead of being overwritten by Ok.
+			// Save latest SIB info for next tick.
 			this.#prevSibInfo = sinInfo
+
+			// Report connected once, here at the end — unless a data fetch above failed, in which case
+			// OnSibError was already emitted and we leave that status in place.
+			if (!tickHadDataError) this.emit(sibConnectionEvents.OnSibConnected)
 
 			logger.debug('Timer tick. Done.')
 		} catch (error) {
