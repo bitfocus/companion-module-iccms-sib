@@ -320,6 +320,11 @@ class SibPluginInstance extends InstanceBase {
 	async configUpdated(config) {
 		this.log('debug', `configUpdated.`)
 
+		// Cancel any pending icon-retry timer from the old cycle so it can't fire an orphaned
+		// sync (with HTTP icon/logo fetches) alongside the new cycle's syncs, and reset the
+		// retry counter so the new config gets a fresh set of attempts.
+		this.#resetIconRetry()
+
 		// Tear down the previous poll cycle before reconnecting so the old timer can't keep
 		// ticking alongside the new one. A tick already mid-await may still emit once into the
 		// new cycle; the next fresh tick overwrites it.
