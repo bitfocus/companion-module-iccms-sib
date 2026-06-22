@@ -389,11 +389,13 @@ class SibPluginInstance extends InstanceBase {
 				label: 'Sport In The Box api port',
 				tooltip: 'Default is 8080',
 				width: 4,
+				// Numeric default is fine: field is hidden and Regex.PORT validates the stringified value.
 				default: 8080,
 				regex: Regex.PORT,
 				isVisibleExpression: 'false',
 			},
 			{
+				// Plaintext is OK: no 'secret' field type available in this SDK.
 				type: 'textinput',
 				id: configFieldId.SibPass,
 				label: 'API Password',
@@ -401,6 +403,7 @@ class SibPluginInstance extends InstanceBase {
 				width: 12,
 			},
 			{
+				// Plaintext is OK: no 'secret' field type available in this SDK.
 				type: 'textinput',
 				id: configFieldId.SibHelperPass,
 				label: 'Helper Password',
