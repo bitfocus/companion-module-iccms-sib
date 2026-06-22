@@ -31,23 +31,43 @@ export class SibWebSocket {
 			logger.debug('Send open database: %s via %s', JSON.stringify(db), localWsUrl)
 
 			let ws = new WebSocket(localWsUrl)
+			let settled = false
 
 			ws.on('open', () => {
 				logger.debug('ws, open. Send data.')
 
 				const jCommand = JSON.stringify(db)
-				ws.send(jCommand)
+				ws.send(jCommand, (err) => {
+					if (err) {
+						logger.error('ws, send error. %s', JSON.stringify(err))
+						if (!settled) {
+							settled = true
+							reject(err)
+						}
+					} else if (!settled) {
+						settled = true
+						resolve()
+					}
 
-				resolve()
+					// Close the socket once the command is flushed; otherwise each
+					// Open-Database action would leak an open connection.
+					ws.close()
+				})
 			})
 			ws.on('close', (code) => {
 				logger.debug('ws, close.')
-				reject(code)
+				if (!settled) {
+					settled = true
+					reject(code)
+				}
 			})
 
 			ws.on('error', (data) => {
 				logger.error('ws, error. %s', JSON.stringify(data))
-				reject(data)
+				if (!settled) {
+					settled = true
+					reject(data)
+				}
 			})
 		})
 	}
