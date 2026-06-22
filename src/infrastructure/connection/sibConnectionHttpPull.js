@@ -288,6 +288,9 @@ export class SibConnectionHttpPull extends EventEmitter {
 			// Save latest SIB info for next tick
 			this.#prevSibInfo = sinInfo
 
+			// NOTE: a non-rate-limit failure above emits OnSibError but does NOT return, so this
+			// OnSibConnected overwrites it in the UI. Intentional (unlike the rate-limit branches):
+			// one endpoint's blip shouldn't block the others, and failed fetches retry next tick.
 			this.emit(sibConnectionEvents.OnSibConnected)
 
 			logger.debug('Timer tick. Done.')
