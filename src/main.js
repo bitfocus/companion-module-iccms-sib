@@ -163,73 +163,85 @@ class SibPluginInstance extends InstanceBase {
 			})
 
 			this.#sibConnection.on(sibConnectionEvents.OnSibRundownUpdated, async (value) => {
-				logger.debug(`Got rundown data.`)
-				this.#resetIconRetry()
-				this.#sibComputer.setSibRundowns(value)
+				try {
+					logger.debug(`Got rundown data.`)
+					this.#resetIconRetry()
+					this.#sibComputer.setSibRundowns(value)
 
-				let allTeams = this.#sibComputer.getSibTeams()
-				let allRundowns = this.#sibComputer.getSibRundowns()
-				let qbCollections = this.#sibComputer.getCollectionsWithButtons()
+					let allTeams = this.#sibComputer.getSibTeams()
+					let allRundowns = this.#sibComputer.getSibRundowns()
+					let qbCollections = this.#sibComputer.getCollectionsWithButtons()
 
-				const iconsComplete = await syncSibDataToCompanion(
-					this.#sibComputer,
-					this.#sibIcons,
-					this.#teamLogos,
-					qbCollections,
-					this,
-					this.#sibSocket,
-					allTeams,
-					allRundowns,
-				)
+					const iconsComplete = await syncSibDataToCompanion(
+						this.#sibComputer,
+						this.#sibIcons,
+						this.#teamLogos,
+						qbCollections,
+						this,
+						this.#sibSocket,
+						allTeams,
+						allRundowns,
+					)
 
-				this.#handleSyncResult(iconsComplete)
+					this.#handleSyncResult(iconsComplete)
+				} catch (e) {
+					logger.error('Rundown sync failed: %s', e?.message ?? e)
+				}
 			})
 
 			this.#sibConnection.on(sibConnectionEvents.OnSibTeamsUpdated, async (value) => {
-				logger.debug(`Got teams data.`)
-				this.#resetIconRetry()
-				this.#sibComputer.setSibTeams(value)
+				try {
+					logger.debug(`Got teams data.`)
+					this.#resetIconRetry()
+					this.#sibComputer.setSibTeams(value)
 
-				let allTeams = this.#sibComputer.getSibTeams()
-				let allRundowns = this.#sibComputer.getSibRundowns()
-				let qbCollections = this.#sibComputer.getCollectionsWithButtons()
+					let allTeams = this.#sibComputer.getSibTeams()
+					let allRundowns = this.#sibComputer.getSibRundowns()
+					let qbCollections = this.#sibComputer.getCollectionsWithButtons()
 
-				const iconsComplete = await syncSibDataToCompanion(
-					this.#sibComputer,
-					this.#sibIcons,
-					this.#teamLogos,
-					qbCollections,
-					this,
-					this.#sibSocket,
-					allTeams,
-					allRundowns,
-				)
+					const iconsComplete = await syncSibDataToCompanion(
+						this.#sibComputer,
+						this.#sibIcons,
+						this.#teamLogos,
+						qbCollections,
+						this,
+						this.#sibSocket,
+						allTeams,
+						allRundowns,
+					)
 
-				this.#handleSyncResult(iconsComplete)
+					this.#handleSyncResult(iconsComplete)
+				} catch (e) {
+					logger.error('Teams sync failed: %s', e?.message ?? e)
+				}
 			})
 
 			this.#sibConnection.on(sibConnectionEvents.OnSibQuickButtonsUpdated, async (value) => {
-				logger.debug(`Got QuickButtons data.`)
-				this.#resetIconRetry()
+				try {
+					logger.debug(`Got QuickButtons data.`)
+					this.#resetIconRetry()
 
-				const qbCollections = parseCollectionWithGroupsAndButtonsArray(value)
-				this.#sibComputer.setSibCollections(qbCollections)
+					const qbCollections = parseCollectionWithGroupsAndButtonsArray(value)
+					this.#sibComputer.setSibCollections(qbCollections)
 
-				let allTeams = this.#sibComputer.getSibTeams()
-				let allRundowns = this.#sibComputer.getSibRundowns()
+					let allTeams = this.#sibComputer.getSibTeams()
+					let allRundowns = this.#sibComputer.getSibRundowns()
 
-				const iconsComplete = await syncSibDataToCompanion(
-					this.#sibComputer,
-					this.#sibIcons,
-					this.#teamLogos,
-					qbCollections,
-					this,
-					this.#sibSocket,
-					allTeams,
-					allRundowns,
-				)
+					const iconsComplete = await syncSibDataToCompanion(
+						this.#sibComputer,
+						this.#sibIcons,
+						this.#teamLogos,
+						qbCollections,
+						this,
+						this.#sibSocket,
+						allTeams,
+						allRundowns,
+					)
 
-				this.#handleSyncResult(iconsComplete)
+					this.#handleSyncResult(iconsComplete)
+				} catch (e) {
+					logger.error('QuickButtons sync failed: %s', e?.message ?? e)
+				}
 			})
 
 			// Connect after listeners are registered so the first tick's events are handled.
@@ -284,22 +296,26 @@ class SibPluginInstance extends InstanceBase {
 		logger.debug('Scheduling icon retry %d/%d.', this.#iconRetryCount, this.#maxIconRetries)
 
 		this.#iconRetryTimer = setTimeout(async () => {
-			let allTeams = this.#sibComputer.getSibTeams()
-			let allRundowns = this.#sibComputer.getSibRundowns()
-			let qbCollections = this.#sibComputer.getCollectionsWithButtons()
+			try {
+				let allTeams = this.#sibComputer.getSibTeams()
+				let allRundowns = this.#sibComputer.getSibRundowns()
+				let qbCollections = this.#sibComputer.getCollectionsWithButtons()
 
-			const complete = await syncSibDataToCompanion(
-				this.#sibComputer,
-				this.#sibIcons,
-				this.#teamLogos,
-				qbCollections,
-				this,
-				this.#sibSocket,
-				allTeams,
-				allRundowns,
-			)
+				const complete = await syncSibDataToCompanion(
+					this.#sibComputer,
+					this.#sibIcons,
+					this.#teamLogos,
+					qbCollections,
+					this,
+					this.#sibSocket,
+					allTeams,
+					allRundowns,
+				)
 
-			this.#handleSyncResult(complete)
+				this.#handleSyncResult(complete)
+			} catch (e) {
+				logger.error('Icon retry sync failed: %s', e?.message ?? e)
+			}
 		}, this.#sibConfig.pullIntervall)
 	}
 
