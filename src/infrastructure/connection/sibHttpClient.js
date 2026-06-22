@@ -18,6 +18,36 @@ export class SibRateLimitError extends Error {
 	}
 }
 
+/**
+ * Per-request HTTP timeout in milliseconds.
+ * Must be shorter than the 10s heartbeat interval so a stalled (accepted-but-silent)
+ * SIB fails before the next poll tick would fire, instead of hanging the sequential
+ * poll loop forever. Node's `http.get` has no default timeout, so without this a silent
+ * server never resolves or rejects. See {@link attachRequestTimeout}.
+ * @type {number}
+ */
+const SIB_HTTP_TIMEOUT_MS = 8000
+
+/**
+ * Arm a per-request idle timeout on a {@link http.ClientRequest}. Node's `http.get` has
+ * no default timeout, so a SIB that accepts the connection but never responds would hang
+ * forever. When the socket is idle for {@link SIB_HTTP_TIMEOUT_MS} we destroy the request
+ * (freeing the socket) and invoke {@link onTimeout}, which the caller uses to reject the
+ * owning promise. Done via the request's 'socket' event so each call stays a plain
+ * two-argument `http.get(url, callback)` (keeps the request mock contract in tests).
+ * @param {import('http').ClientRequest} req - The request returned by http.get.
+ * @param {() => void} onTimeout - Invoked after the request is destroyed on timeout.
+ */
+function attachRequestTimeout(req, onTimeout) {
+	req.on('socket', (socket) => {
+		socket.setTimeout(SIB_HTTP_TIMEOUT_MS)
+		socket.on('timeout', () => {
+			req.destroy()
+			onTimeout()
+		})
+	})
+}
+
 const apiHttp = 'http://'
 const apiHb = '/api/hb/'
 const apiQuickButton = '/api/quickbutton'
@@ -73,7 +103,11 @@ export function sibHttpClientTriggerQuickButtonById(baseUrl, triggerId, token) {
 
 	logger.debug('Trigger url: ' + fullUrl)
 
-	http.get(fullUrl).on('error', (err) => {
+	const req = http.get(fullUrl)
+	attachRequestTimeout(req, () => {
+		logger.warn('Trigger request timed out after ' + SIB_HTTP_TIMEOUT_MS + 'ms for id: ' + triggerId)
+	})
+	req.on('error', (err) => {
 		logger.error('Error for id: ' + triggerId + ' ' + err.message)
 	})
 }
@@ -100,38 +134,41 @@ export async function sibHttpClientGetSibInfo(baseUrl, deviceId) {
 
 			let chunks_of_data = []
 
-			http
-				.get(url.toString(), (res) => {
-					if (res.statusCode === 429) {
-						logger.warn('API. Rate limited (429). Url: %s', url.toString())
-						return reject(new SibRateLimitError())
-					}
-					// Reject on any non-2xx status code
-					if (res.statusCode < 200 || res.statusCode >= 300) {
-						logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString())
-						return reject(new Error(`HTTP Error ${res.statusCode}`))
-					}
+			const req = http.get(url.toString(), (res) => {
+				if (res.statusCode === 429) {
+					logger.warn('API. Rate limited (429). Url: %s', url.toString())
+					return reject(new SibRateLimitError())
+				}
+				// Reject on any non-2xx status code
+				if (res.statusCode < 200 || res.statusCode >= 300) {
+					logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString())
+					return reject(new Error(`HTTP Error ${res.statusCode}`))
+				}
 
-					res.on('data', (chunk) => {
-						chunks_of_data.push(chunk)
-					})
+				res.on('data', (chunk) => {
+					chunks_of_data.push(chunk)
+				})
 
-					res.on('end', () => {
-						try {
-							logger.debug('API. Got db info from API. Url: %s', url.toString())
-							const response_body = Buffer.concat(chunks_of_data)
-							const parsed = parseApiMessageSibInfo(response_body.toString())
-							resolve(parsed)
-						} catch (e) {
-							logger.warn('API. Db info processing error: %s', e.message)
-							reject(e)
-						}
-					})
+				res.on('end', () => {
+					try {
+						logger.debug('API. Got db info from API. Url: %s', url.toString())
+						const response_body = Buffer.concat(chunks_of_data)
+						const parsed = parseApiMessageSibInfo(response_body.toString())
+						resolve(parsed)
+					} catch (e) {
+						logger.warn('API. Db info processing error: %s', e.message)
+						reject(e)
+					}
 				})
-				.on('error', (e) => {
-					logger.error("API, can't get db info from API: %s.", e.message)
-					reject(e)
-				})
+			})
+			attachRequestTimeout(req, () => {
+				logger.warn('API. Request timed out after %dms. Url: %s', SIB_HTTP_TIMEOUT_MS, url.toString())
+				reject(new Error(`Request timed out after ${SIB_HTTP_TIMEOUT_MS}ms`))
+			})
+			req.on('error', (e) => {
+				logger.error("API, can't get db info from API: %s.", e.message)
+				reject(e)
+			})
 		} catch (e) {
 			logger.error('Error constructing URL or making request: %s.', e.message)
 			reject(e)
@@ -186,37 +223,40 @@ export async function sibHttpClientGetQuickButtonCollectionsAsync(baseUrl, token
 
 			let rawData = ''
 
-			http
-				.get(url.toString(), (res) => {
-					if (res.statusCode === 429) {
-						logger.warn('API. Rate limited (429). Url: %s', url.toString())
-						return reject(new SibRateLimitError())
-					}
-					// Reject on any non-2xx status code
-					if (res.statusCode < 200 || res.statusCode >= 300) {
-						logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString())
-						return reject(new Error(`HTTP Error ${res.statusCode}`))
-					}
+			const req = http.get(url.toString(), (res) => {
+				if (res.statusCode === 429) {
+					logger.warn('API. Rate limited (429). Url: %s', url.toString())
+					return reject(new SibRateLimitError())
+				}
+				// Reject on any non-2xx status code
+				if (res.statusCode < 200 || res.statusCode >= 300) {
+					logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString())
+					return reject(new Error(`HTTP Error ${res.statusCode}`))
+				}
 
-					res.on('data', (chunk) => {
-						rawData += chunk
-					})
+				res.on('data', (chunk) => {
+					rawData += chunk
+				})
 
-					res.on('end', () => {
-						try {
-							logger.debug('API. Got collections from API. Url: %s', url.toString())
-							const apiData = parseCollectionWithGroupsAndButtonsArray(rawData)
-							resolve(apiData)
-						} catch (e) {
-							logger.warn("API, can't parse qb collection from API: %s.", e.message)
-							reject(e)
-						}
-					})
+				res.on('end', () => {
+					try {
+						logger.debug('API. Got collections from API. Url: %s', url.toString())
+						const apiData = parseCollectionWithGroupsAndButtonsArray(rawData)
+						resolve(apiData)
+					} catch (e) {
+						logger.warn("API, can't parse qb collection from API: %s.", e.message)
+						reject(e)
+					}
 				})
-				.on('error', (e) => {
-					logger.error("API, can't get qb collection from API: %s.", e.message)
-					reject(e)
-				})
+			})
+			attachRequestTimeout(req, () => {
+				logger.warn('API. Request timed out after %dms. Url: %s', SIB_HTTP_TIMEOUT_MS, url.toString())
+				reject(new Error(`Request timed out after ${SIB_HTTP_TIMEOUT_MS}ms`))
+			})
+			req.on('error', (e) => {
+				logger.error("API, can't get qb collection from API: %s.", e.message)
+				reject(e)
+			})
 		} catch (e) {
 			logger.error('Error constructing URL or making request: %s.', e.message)
 			reject(e)
@@ -261,39 +301,47 @@ export function sibHttpClientGetPngIconBase64(baseUrl, token, iconId, deviceId, 
 
 			logger.debug('Called url: ' + url.toString())
 
-			http
-				.get(url.toString(), (res) => {
-					let chunks_of_data = []
+			const req = http.get(url.toString(), (res) => {
+				let chunks_of_data = []
 
-					if (res.statusCode === 429) {
-						logger.warn('API. Rate limited (429). Icon: %s, url: %s', iconId, url.toString())
-						return reject(new SibRateLimitError())
-					}
-					// Reject on any non-2xx status code
-					if (res.statusCode < 200 || res.statusCode >= 300) {
-						logger.error('API. HTTP Error %s. Icon: %s, url: %s', res.statusCode, iconId, url.toString())
-						return reject(new Error(`HTTP Error ${res.statusCode}`))
-					}
+				if (res.statusCode === 429) {
+					logger.warn('API. Rate limited (429). Icon: %s, url: %s', iconId, url.toString())
+					return reject(new SibRateLimitError())
+				}
+				// Reject on any non-2xx status code
+				if (res.statusCode < 200 || res.statusCode >= 300) {
+					logger.error('API. HTTP Error %s. Icon: %s, url: %s', res.statusCode, iconId, url.toString())
+					return reject(new Error(`HTTP Error ${res.statusCode}`))
+				}
 
-					res.on('data', (chunk) => {
-						chunks_of_data.push(chunk)
-					})
-
-					res.on('end', () => {
-						try {
-							logger.debug('API. Got icon: %s, url: %s', iconId, url.toString())
-							const response_body = Buffer.concat(chunks_of_data)
-							resolve(response_body.toString())
-						} catch (e) {
-							logger.warn('API. Icon processing error: %s, url: %s', e.message, url.toString())
-							reject(e)
-						}
-					})
+				res.on('data', (chunk) => {
+					chunks_of_data.push(chunk)
 				})
-				.on('error', (e) => {
-					logger.error('API. Icon request error: %s, url: %s', e.message, url.toString())
-					reject(e)
+
+				res.on('end', () => {
+					try {
+						logger.debug('API. Got icon: %s, url: %s', iconId, url.toString())
+						const response_body = Buffer.concat(chunks_of_data)
+						resolve(response_body.toString())
+					} catch (e) {
+						logger.warn('API. Icon processing error: %s, url: %s', e.message, url.toString())
+						reject(e)
+					}
 				})
+			})
+			attachRequestTimeout(req, () => {
+				logger.warn(
+					'API. Icon request timed out after %dms. Icon: %s, url: %s',
+					SIB_HTTP_TIMEOUT_MS,
+					iconId,
+					url.toString(),
+				)
+				reject(new Error(`Request timed out after ${SIB_HTTP_TIMEOUT_MS}ms`))
+			})
+			req.on('error', (e) => {
+				logger.error('API. Icon request error: %s, url: %s', e.message, url.toString())
+				reject(e)
+			})
 		} catch (e) {
 			logger.error('Error constructing URL or making request: %s', e.message)
 			reject(e)
@@ -330,37 +378,40 @@ export async function sibHttpClientGetTeams(baseUrl, token, deviceId) {
 
 			let rawData = ''
 
-			http
-				.get(url.toString(), (res) => {
-					if (res.statusCode === 429) {
-						logger.warn('API. Rate limited (429). Url: %s', url.toString())
-						return reject(new SibRateLimitError())
-					}
-					// Reject on any non-2xx status code
-					if (res.statusCode < 200 || res.statusCode >= 300) {
-						logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString())
-						return reject(new Error(`HTTP Error ${res.statusCode}`))
-					}
+			const req = http.get(url.toString(), (res) => {
+				if (res.statusCode === 429) {
+					logger.warn('API. Rate limited (429). Url: %s', url.toString())
+					return reject(new SibRateLimitError())
+				}
+				// Reject on any non-2xx status code
+				if (res.statusCode < 200 || res.statusCode >= 300) {
+					logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString())
+					return reject(new Error(`HTTP Error ${res.statusCode}`))
+				}
 
-					res.on('data', (chunk) => {
-						rawData += chunk
-					})
+				res.on('data', (chunk) => {
+					rawData += chunk
+				})
 
-					res.on('end', () => {
-						try {
-							logger.debug('Got teams from api.')
-							const apiData = parseApiSportTeamWithoutPlayersArray(rawData)
-							resolve(apiData)
-						} catch (e) {
-							logger.warn("API, can't parse teams from API: %s.", e.message)
-							reject(e)
-						}
-					})
+				res.on('end', () => {
+					try {
+						logger.debug('Got teams from api.')
+						const apiData = parseApiSportTeamWithoutPlayersArray(rawData)
+						resolve(apiData)
+					} catch (e) {
+						logger.warn("API, can't parse teams from API: %s.", e.message)
+						reject(e)
+					}
 				})
-				.on('error', (e) => {
-					logger.error("API, can't get teams from API: %s.", e.message)
-					reject(e)
-				})
+			})
+			attachRequestTimeout(req, () => {
+				logger.warn('API. Request timed out after %dms. Url: %s', SIB_HTTP_TIMEOUT_MS, url.toString())
+				reject(new Error(`Request timed out after ${SIB_HTTP_TIMEOUT_MS}ms`))
+			})
+			req.on('error', (e) => {
+				logger.error("API, can't get teams from API: %s.", e.message)
+				reject(e)
+			})
 		} catch (e) {
 			logger.error('Error constructing URL or making request: %s.', e.message)
 			reject(e)
@@ -389,7 +440,13 @@ export function sibHttpClientChangeTeamById(baseUrl, teamType, teamOid, token) {
 
 	logger.debug('Change team url: ' + fullUrl)
 
-	http.get(fullUrl).on('error', (err) => {
+	const req = http.get(fullUrl)
+	attachRequestTimeout(req, () => {
+		logger.warn(
+			'Change team request timed out after ' + SIB_HTTP_TIMEOUT_MS + 'ms for team: ' + teamType + ' ' + teamOid,
+		)
+	})
+	req.on('error', (err) => {
 		logger.error('Error for team: ' + teamType + ' ' + teamOid + ' ' + err.message)
 	})
 }
@@ -423,37 +480,40 @@ export async function sibHttpClientGetRundownsWithoutItems(baseUrl, token, devic
 
 			let rawData = ''
 
-			http
-				.get(url.toString(), (res) => {
-					if (res.statusCode === 429) {
-						logger.warn('API. Rate limited (429). Url: %s', url.toString())
-						return reject(new SibRateLimitError())
-					}
-					// Reject on any non-2xx status code
-					if (res.statusCode < 200 || res.statusCode >= 300) {
-						logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString())
-						return reject(new Error(`HTTP Error ${res.statusCode}`))
-					}
+			const req = http.get(url.toString(), (res) => {
+				if (res.statusCode === 429) {
+					logger.warn('API. Rate limited (429). Url: %s', url.toString())
+					return reject(new SibRateLimitError())
+				}
+				// Reject on any non-2xx status code
+				if (res.statusCode < 200 || res.statusCode >= 300) {
+					logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString())
+					return reject(new Error(`HTTP Error ${res.statusCode}`))
+				}
 
-					res.on('data', (chunk) => {
-						rawData += chunk
-					})
+				res.on('data', (chunk) => {
+					rawData += chunk
+				})
 
-					res.on('end', () => {
-						try {
-							logger.debug('Got rundowns without items data from API.')
-							const apiData = parseApiRundownWithoutItemsArray(rawData)
-							resolve(apiData)
-						} catch (e) {
-							logger.warn("API, can't parse rundowns without items from API: %s.", e.message)
-							reject(e)
-						}
-					})
+				res.on('end', () => {
+					try {
+						logger.debug('Got rundowns without items data from API.')
+						const apiData = parseApiRundownWithoutItemsArray(rawData)
+						resolve(apiData)
+					} catch (e) {
+						logger.warn("API, can't parse rundowns without items from API: %s.", e.message)
+						reject(e)
+					}
 				})
-				.on('error', (e) => {
-					logger.error("API, can't get rundowns without items from API: %s.", e.message)
-					reject(e)
-				})
+			})
+			attachRequestTimeout(req, () => {
+				logger.warn('API. Request timed out after %dms. Url: %s', SIB_HTTP_TIMEOUT_MS, url.toString())
+				reject(new Error(`Request timed out after ${SIB_HTTP_TIMEOUT_MS}ms`))
+			})
+			req.on('error', (e) => {
+				logger.error("API, can't get rundowns without items from API: %s.", e.message)
+				reject(e)
+			})
 		} catch (e) {
 			logger.error('Error constructing URL or making request: %s.', e.message)
 			reject(e)
@@ -489,32 +549,35 @@ export async function sibHttpClientRundownSelectedItemRun(baseUrl, rundownId, to
 
 			logger.debug('Called url: ' + url.toString())
 
-			http
-				.get(url.toString(), (res) => {
-					if (res.statusCode === 429) {
-						logger.warn('API. Rate limited (429). Url: %s', url.toString())
-						return reject(new SibRateLimitError())
-					}
-					// Reject on any non-2xx status code
-					if (res.statusCode < 200 || res.statusCode >= 300) {
-						logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString())
-						return reject(new Error(`HTTP Error ${res.statusCode}`))
-					}
+			const req = http.get(url.toString(), (res) => {
+				if (res.statusCode === 429) {
+					logger.warn('API. Rate limited (429). Url: %s', url.toString())
+					return reject(new SibRateLimitError())
+				}
+				// Reject on any non-2xx status code
+				if (res.statusCode < 200 || res.statusCode >= 300) {
+					logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString())
+					return reject(new Error(`HTTP Error ${res.statusCode}`))
+				}
 
-					res.on('end', () => {
-						try {
-							logger.debug('API. Rundown selected item run triggered successfully. Url: %s', url.toString())
-							resolve()
-						} catch (e) {
-							logger.warn('API. Rundown selected item run error: %s', e.message)
-							reject(e)
-						}
-					})
+				res.on('end', () => {
+					try {
+						logger.debug('API. Rundown selected item run triggered successfully. Url: %s', url.toString())
+						resolve()
+					} catch (e) {
+						logger.warn('API. Rundown selected item run error: %s', e.message)
+						reject(e)
+					}
 				})
-				.on('error', (e) => {
-					logger.error("API, can't trigger rundown selected item run: %s.", e.message)
-					reject(e)
-				})
+			})
+			attachRequestTimeout(req, () => {
+				logger.warn('API. Request timed out after %dms. Url: %s', SIB_HTTP_TIMEOUT_MS, url.toString())
+				reject(new Error(`Request timed out after ${SIB_HTTP_TIMEOUT_MS}ms`))
+			})
+			req.on('error', (e) => {
+				logger.error("API, can't trigger rundown selected item run: %s.", e.message)
+				reject(e)
+			})
 		} catch (e) {
 			logger.error('Error constructing URL or making request: %s.', e.message)
 			reject(e)
@@ -549,32 +612,35 @@ export async function sibHttpClientRundownSelectPreviousItem(baseUrl, token, dev
 
 			logger.debug('Called url: ' + url.toString())
 
-			http
-				.get(url.toString(), (res) => {
-					if (res.statusCode === 429) {
-						logger.warn('API. Rate limited (429). Url: %s', url.toString())
-						return reject(new SibRateLimitError())
-					}
-					// Reject on any non-2xx status code
-					if (res.statusCode < 200 || res.statusCode >= 300) {
-						logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString())
-						return reject(new Error(`HTTP Error ${res.statusCode}`))
-					}
+			const req = http.get(url.toString(), (res) => {
+				if (res.statusCode === 429) {
+					logger.warn('API. Rate limited (429). Url: %s', url.toString())
+					return reject(new SibRateLimitError())
+				}
+				// Reject on any non-2xx status code
+				if (res.statusCode < 200 || res.statusCode >= 300) {
+					logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString())
+					return reject(new Error(`HTTP Error ${res.statusCode}`))
+				}
 
-					res.on('end', () => {
-						try {
-							logger.debug('API. Rundown select previous item triggered successfully. Url: %s', url.toString())
-							resolve()
-						} catch (e) {
-							logger.warn('API. Rundown select previous item error: %s', e.message)
-							reject(e)
-						}
-					})
+				res.on('end', () => {
+					try {
+						logger.debug('API. Rundown select previous item triggered successfully. Url: %s', url.toString())
+						resolve()
+					} catch (e) {
+						logger.warn('API. Rundown select previous item error: %s', e.message)
+						reject(e)
+					}
 				})
-				.on('error', (e) => {
-					logger.error("API, can't trigger rundown select previous item: %s.", e.message)
-					reject(e)
-				})
+			})
+			attachRequestTimeout(req, () => {
+				logger.warn('API. Request timed out after %dms. Url: %s', SIB_HTTP_TIMEOUT_MS, url.toString())
+				reject(new Error(`Request timed out after ${SIB_HTTP_TIMEOUT_MS}ms`))
+			})
+			req.on('error', (e) => {
+				logger.error("API, can't trigger rundown select previous item: %s.", e.message)
+				reject(e)
+			})
 		} catch (e) {
 			logger.error('Error constructing URL or making request: %s.', e.message)
 			reject(e)
@@ -609,32 +675,35 @@ export async function sibHttpClientRundownSelectNextItem(baseUrl, token, deviceI
 
 			logger.debug('Called url: ' + url.toString())
 
-			http
-				.get(url.toString(), (res) => {
-					if (res.statusCode === 429) {
-						logger.warn('API. Rate limited (429). Url: %s', url.toString())
-						return reject(new SibRateLimitError())
-					}
-					// Reject on any non-2xx status code
-					if (res.statusCode < 200 || res.statusCode >= 300) {
-						logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString())
-						return reject(new Error(`HTTP Error ${res.statusCode}`))
-					}
+			const req = http.get(url.toString(), (res) => {
+				if (res.statusCode === 429) {
+					logger.warn('API. Rate limited (429). Url: %s', url.toString())
+					return reject(new SibRateLimitError())
+				}
+				// Reject on any non-2xx status code
+				if (res.statusCode < 200 || res.statusCode >= 300) {
+					logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString())
+					return reject(new Error(`HTTP Error ${res.statusCode}`))
+				}
 
-					res.on('end', () => {
-						try {
-							logger.debug('API. Rundown select next item triggered successfully. Url: %s', url.toString())
-							resolve()
-						} catch (e) {
-							logger.warn('API. Rundown select next item error: %s', e.message)
-							reject(e)
-						}
-					})
+				res.on('end', () => {
+					try {
+						logger.debug('API. Rundown select next item triggered successfully. Url: %s', url.toString())
+						resolve()
+					} catch (e) {
+						logger.warn('API. Rundown select next item error: %s', e.message)
+						reject(e)
+					}
 				})
-				.on('error', (e) => {
-					logger.error("API, can't trigger rundown select next item: %s.", e.message)
-					reject(e)
-				})
+			})
+			attachRequestTimeout(req, () => {
+				logger.warn('API. Request timed out after %dms. Url: %s', SIB_HTTP_TIMEOUT_MS, url.toString())
+				reject(new Error(`Request timed out after ${SIB_HTTP_TIMEOUT_MS}ms`))
+			})
+			req.on('error', (e) => {
+				logger.error("API, can't trigger rundown select next item: %s.", e.message)
+				reject(e)
+			})
 		} catch (e) {
 			logger.error('Error constructing URL or making request: %s.', e.message)
 			reject(e)
@@ -670,32 +739,35 @@ export async function sibHttpClientRundownSelect(baseUrl, rundownId, token, devi
 
 			logger.debug('Called url: ' + url.toString())
 
-			http
-				.get(url.toString(), (res) => {
-					if (res.statusCode === 429) {
-						logger.warn('API. Rate limited (429). Url: %s', url.toString())
-						return reject(new SibRateLimitError())
-					}
-					// Reject on any non-2xx status code
-					if (res.statusCode < 200 || res.statusCode >= 300) {
-						logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString())
-						return reject(new Error(`HTTP Error ${res.statusCode}`))
-					}
+			const req = http.get(url.toString(), (res) => {
+				if (res.statusCode === 429) {
+					logger.warn('API. Rate limited (429). Url: %s', url.toString())
+					return reject(new SibRateLimitError())
+				}
+				// Reject on any non-2xx status code
+				if (res.statusCode < 200 || res.statusCode >= 300) {
+					logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString())
+					return reject(new Error(`HTTP Error ${res.statusCode}`))
+				}
 
-					res.on('end', () => {
-						try {
-							logger.debug('API. Rundown select triggered successfully. Url: %s', url.toString())
-							resolve()
-						} catch (e) {
-							logger.warn('API. Rundown select error: %s', e.message)
-							reject(e)
-						}
-					})
+				res.on('end', () => {
+					try {
+						logger.debug('API. Rundown select triggered successfully. Url: %s', url.toString())
+						resolve()
+					} catch (e) {
+						logger.warn('API. Rundown select error: %s', e.message)
+						reject(e)
+					}
 				})
-				.on('error', (e) => {
-					logger.error("API, can't trigger rundown select: %s.", e.message)
-					reject(e)
-				})
+			})
+			attachRequestTimeout(req, () => {
+				logger.warn('API. Request timed out after %dms. Url: %s', SIB_HTTP_TIMEOUT_MS, url.toString())
+				reject(new Error(`Request timed out after ${SIB_HTTP_TIMEOUT_MS}ms`))
+			})
+			req.on('error', (e) => {
+				logger.error("API, can't trigger rundown select: %s.", e.message)
+				reject(e)
+			})
 		} catch (e) {
 			logger.error('Error constructing URL or making request: %s.', e.message)
 			reject(e)
@@ -733,37 +805,40 @@ export async function sibHttpClientGetTeamLogo(baseUrl, teamId, token, deviceId)
 
 			let rawData = ''
 
-			http
-				.get(url.toString(), (res) => {
-					if (res.statusCode === 429) {
-						logger.warn('API. Rate limited (429). Url: %s', url.toString())
-						return reject(new SibRateLimitError())
-					}
-					// Reject on any non-2xx status code
-					if (res.statusCode < 200 || res.statusCode >= 300) {
-						logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString())
-						return reject(new Error(`HTTP Error ${res.statusCode}`))
-					}
+			const req = http.get(url.toString(), (res) => {
+				if (res.statusCode === 429) {
+					logger.warn('API. Rate limited (429). Url: %s', url.toString())
+					return reject(new SibRateLimitError())
+				}
+				// Reject on any non-2xx status code
+				if (res.statusCode < 200 || res.statusCode >= 300) {
+					logger.error('API. HTTP Error %s. Url: %s', res.statusCode, url.toString())
+					return reject(new Error(`HTTP Error ${res.statusCode}`))
+				}
 
-					res.on('data', (chunk) => {
-						rawData += chunk
-					})
+				res.on('data', (chunk) => {
+					rawData += chunk
+				})
 
-					res.on('end', () => {
-						try {
-							logger.debug('API. Got team logo from API. TeamId: %s', teamId)
-							const apiData = parseApiSportTeamLogo(rawData)
-							resolve(apiData)
-						} catch (e) {
-							logger.warn("API, can't parse team logo from API: %s.", e.message)
-							reject(e)
-						}
-					})
+				res.on('end', () => {
+					try {
+						logger.debug('API. Got team logo from API. TeamId: %s', teamId)
+						const apiData = parseApiSportTeamLogo(rawData)
+						resolve(apiData)
+					} catch (e) {
+						logger.warn("API, can't parse team logo from API: %s.", e.message)
+						reject(e)
+					}
 				})
-				.on('error', (e) => {
-					logger.error("API, can't get team logo from API: %s.", e.message)
-					reject(e)
-				})
+			})
+			attachRequestTimeout(req, () => {
+				logger.warn('API. Team logo request timed out after %dms. TeamId: %s', SIB_HTTP_TIMEOUT_MS, teamId)
+				reject(new Error(`Request timed out after ${SIB_HTTP_TIMEOUT_MS}ms`))
+			})
+			req.on('error', (e) => {
+				logger.error("API, can't get team logo from API: %s.", e.message)
+				reject(e)
+			})
 		} catch (e) {
 			logger.error('Error constructing URL or making request: %s.', e.message)
 			reject(e)

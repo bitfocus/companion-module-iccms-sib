@@ -241,4 +241,35 @@ describe('sibHttpClientGetTeams', () => {
 		expect(Array.isArray(result)).toBe(true)
 		expect(result).toHaveLength(0)
 	})
+
+	it('should reject when the request times out instead of hanging (silent SIB)', async () => {
+		// arrange — server accepts the socket but never responds. http.get returns a request
+		// that gets a socket; tripping the socket 'timeout' must reject and destroy the
+		// request rather than leave the promise (and the poll loop) hanging forever.
+		let socketTimeoutCb
+		const fakeSocket = {
+			setTimeout: vi.fn(),
+			on: vi.fn(function (event, cb) {
+				if (event === 'timeout') socketTimeoutCb = cb
+				return this
+			}),
+		}
+		const mockEmitter = {
+			on: vi.fn(function (event, cb) {
+				if (event === 'socket') cb(fakeSocket)
+				return this
+			}),
+			destroy: vi.fn(),
+		}
+		http.get.mockImplementation(() => mockEmitter)
+
+		// act — start the request, then trip the socket timeout
+		const promise = sibHttpClientGetTeams(mockBaseUrl, mockToken, mockDeviceId)
+		socketTimeoutCb()
+
+		// assert
+		await expect(promise).rejects.toThrow(/timed out/i)
+		expect(fakeSocket.setTimeout).toHaveBeenCalledWith(expect.any(Number))
+		expect(mockEmitter.destroy).toHaveBeenCalled()
+	})
 })
