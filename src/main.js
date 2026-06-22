@@ -391,7 +391,7 @@ class SibPluginInstance extends InstanceBase {
 				width: 4,
 				default: 8080,
 				regex: Regex.PORT,
-				isVisible: () => false,
+				isVisibleExpression: 'false',
 			},
 			{
 				type: 'textinput',
@@ -410,7 +410,7 @@ class SibPluginInstance extends InstanceBase {
 			{
 				type: 'checkbox',
 				id: configFieldId.Reconnect, // placeholder.
-				isVisible: () => false,
+				isVisibleExpression: 'false',
 				label: 'Reconnect',
 				tooltip: 'Reconnect on error',
 				width: 6,
@@ -427,7 +427,7 @@ class SibPluginInstance extends InstanceBase {
 			{
 				type: 'checkbox',
 				id: configFieldId.ResetVariables,
-				isVisible: () => false,
+				isVisibleExpression: 'false',
 				label: 'Reset variables',
 				tooltip: 'Reset variables on init and on connect',
 				width: 6,
