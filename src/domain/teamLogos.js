@@ -1,3 +1,4 @@
+import semver from 'semver'
 import { logger } from '../logger.js'
 import { sibHttpClientGetTeamLogo } from '../infrastructure/connection/sibHttpClient.js'
 
@@ -49,9 +50,10 @@ export class TeamLogos {
 			return
 		}
 
-		if (sibVersion.startsWith(this.#sibVersionWithTeamLogosApi)) {
+		const coercedVersion = semver.coerce(sibVersion)
+		if (coercedVersion && semver.lt(coercedVersion, this.#sibVersionWithTeamLogosApi)) {
 			logger.debug(
-				'TEAM LOGOS. Sib needs to be update to get team logos: %s. Version with team logos was released Aug 2023.',
+				'TEAM LOGOS. Sib needs to be updated to get team logos: %s. Version with team logos was released Aug 2023.',
 				sibVersion,
 			)
 			return

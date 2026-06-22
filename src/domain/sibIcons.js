@@ -1,3 +1,4 @@
+import semver from 'semver'
 import { logger } from '../logger.js'
 import { sibHttpClientGetPngIconBase64, SibRateLimitError } from '../infrastructure/connection/sibHttpClient.js'
 
@@ -57,9 +58,10 @@ export class SibIcons {
 			return true
 		}
 
-		if (sibVersion.startsWith(this.#sibVersionWithIconApi)) {
+		const coercedVersion = semver.coerce(sibVersion)
+		if (coercedVersion && semver.lt(coercedVersion, this.#sibVersionWithIconApi)) {
 			logger.debug(
-				'ICONS. Sib needs to be update to get icons: %s. Version with icons was released Aug 2023.',
+				'ICONS. Sib needs to be updated to get icons: %s. Version with icons was released Aug 2023.',
 				sibVersion,
 			)
 			return true
