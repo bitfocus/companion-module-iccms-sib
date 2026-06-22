@@ -255,8 +255,14 @@ class SibPluginInstance extends InstanceBase {
 	async destroy() {
 		this.isInitialized = false
 		clearTimeout(this.#iconRetryTimer)
+
+		// Stop the poll loop first, then drop every listener so a tick that was already
+		// in flight can't emit into syncSibDataToCompanion on this torn-down instance.
+		this.#sibConnection?.disconnectFromSib()
+		this.#sibConnection?.removeAllListeners()
+
 		this.#sibSocket = undefined
-		this.#sibConnection.disconnectFromSib()
+		this.#sibConnection = undefined
 	}
 
 	/**

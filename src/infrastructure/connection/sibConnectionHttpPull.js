@@ -104,10 +104,12 @@ export class SibConnectionHttpPull extends EventEmitter {
 		clearTimeout(this.#pullTimer)
 		this.#pullTimer = null
 
+		// Set initialized before scheduling so an immediate first tick is allowed to
+		// re-arm; #scheduleNextTick bails out once disconnect flips this back to false.
+		this.isInitialized = true
+
 		await this.#apiTimerTick()
 		this.#scheduleNextTick()
-
-		this.isInitialized = true
 
 		logger.debug('Connect done.')
 	}
@@ -129,6 +131,12 @@ export class SibConnectionHttpPull extends EventEmitter {
 	 * Uses setTimeout to ensure ticks never overlap.
 	 */
 	#scheduleNextTick() {
+		// A tick that was already in flight when disconnect cleared the timer would
+		// otherwise re-arm it here, defeating disconnect and leaking the poll loop.
+		if (!this.isInitialized) {
+			return
+		}
+
 		this.#pullTimer = setTimeout(async () => {
 			await this.#apiTimerTick()
 			this.#scheduleNextTick()

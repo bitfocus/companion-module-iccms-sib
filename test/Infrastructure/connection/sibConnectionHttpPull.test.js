@@ -103,6 +103,39 @@ describe('SibConnectionHttpPull — selective component fetching', () => {
 		expect(mocks.sibHttpClientGetTeams).toHaveBeenCalledTimes(3)
 	})
 
+	it('does not re-arm the poll loop when disconnect happens while a tick is in flight', async () => {
+		// arrange — tick 1 succeeds; tick 2 hangs on the info call so we can disconnect mid-flight.
+		const info = sibInfoWithComponentsFixture.create()
+
+		let resolveTick2
+		const tick2InfoPromise = new Promise((resolve) => {
+			resolveTick2 = resolve
+		})
+
+		mocks.sibHttpClientGetSibInfo
+			.mockResolvedValueOnce(info) // tick 1
+			.mockReturnValueOnce(tick2InfoPromise) // tick 2: parked until we resolve it
+			.mockResolvedValue(info) // tick 3+: must never be reached
+		mocks.sibHttpClientGetTeams.mockResolvedValue([])
+		mocks.sibHttpClientGetQuickButtonCollectionsAsync.mockResolvedValue([])
+		mocks.sibHttpClientGetRundownsWithoutItems.mockResolvedValue([])
+
+		connection = new SibConnectionHttpPull()
+
+		// act — tick 1 completes inside connectToSib, tick 2 fires and parks on the info call.
+		await connection.connectToSib(config)
+		await vi.advanceTimersByTimeAsync(config.pullIntervall)
+		expect(mocks.sibHttpClientGetSibInfo).toHaveBeenCalledTimes(2)
+
+		// Disconnect while tick 2 is still awaiting, then let tick 2 finish.
+		connection.disconnectFromSib()
+		resolveTick2(info)
+		await vi.advanceTimersByTimeAsync(config.pullIntervall * 3)
+
+		// assert — the finishing tick did not reschedule, so no tick 3 ever ran.
+		expect(mocks.sibHttpClientGetSibInfo).toHaveBeenCalledTimes(2)
+	})
+
 	it('good path: a fully successful poll fetches every component once and emits each update event with no error', async () => {
 		// arrange
 		const info = sibInfoWithComponentsFixture.create()
