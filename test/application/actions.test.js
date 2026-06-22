@@ -10,7 +10,7 @@ describe('updateActionsAtStartup', () => {
 
 	// token (API pass) and helperToken intentionally differ so we can assert
 	// the startup change-team callback authenticates with the API pass.
-	const sibConfig = new SibConnection('127.0.0.1', 8080, apiPass, false, false, false, helperPass, false)
+	const sibConfig = new SibConnection('127.0.0.1', 8080, apiPass, false, helperPass, false)
 
 	function buildAndInvokeChangeTeam(teamType = 'h', teamOid = 3) {
 		// arrange — capture the action definitions registered on the module

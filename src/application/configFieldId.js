@@ -1,6 +1,6 @@
 /**
  * Module config fields as enum for getConfigFields.
- * @type {{SibPort: string, SibPass: string, SibHelperPass: string, Reconnect: string, DebugMessages: string, SibIpHost: string, ResetVariables: string}}
+ * @type {{SibPort: string, SibPass: string, SibHelperPass: string, DebugMessages: string, SibIpHost: string}}
  */
 export const configFieldId = {
 	// ! IMPORTANT !
@@ -27,19 +27,9 @@ export const configFieldId = {
 	SibHelperPass: 'sib_helper_pass',
 
 	/**
-	 * Not visible, we may want to use other connection method later.
-	 */
-	Reconnect: 'reconnect',
-
-	/**
 	 * Print debug in module console.
 	 */
 	DebugMessages: 'debug_messages',
-
-	/**
-	 * Not visible, not yet implemented, but will be.
-	 */
-	ResetVariables: 'reset_variables',
 
 	/**
 	 * Disable fetching heavy data (teams, quick buttons, rundowns) from SIB API.

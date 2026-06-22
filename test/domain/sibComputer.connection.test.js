@@ -15,7 +15,7 @@ describe('SibComputer — setConnectionConfig / getConnectionConfig / getApiUrl'
 
 		test('returns configured sibIpPort', () => {
 			// arrange
-			const cfg = new SibConnection('192.168.1.100', 8080, '', false, false, false, '', false)
+			const cfg = new SibConnection('192.168.1.100', 8080, '', false, '', false)
 			sibComputer.setConnectionConfig(cfg)
 
 			// act & assert
@@ -26,7 +26,7 @@ describe('SibComputer — setConnectionConfig / getConnectionConfig / getApiUrl'
 	describe('setConnectionConfig / getConnectionConfig', () => {
 		test('saves and retrieves connection config', () => {
 			// arrange
-			const cfg = new SibConnection('127.0.0.1', 8080, 'token123', false, false, false, '', false)
+			const cfg = new SibConnection('127.0.0.1', 8080, 'token123', false, '', false)
 
 			// act
 			sibComputer.setConnectionConfig(cfg)
@@ -37,7 +37,7 @@ describe('SibComputer — setConnectionConfig / getConnectionConfig / getApiUrl'
 
 		test('undefined input does not overwrite existing config', () => {
 			// arrange
-			const cfg = new SibConnection('127.0.0.1', 8080, '', false, false, false, '', false)
+			const cfg = new SibConnection('127.0.0.1', 8080, '', false, '', false)
 			sibComputer.setConnectionConfig(cfg)
 
 			// act

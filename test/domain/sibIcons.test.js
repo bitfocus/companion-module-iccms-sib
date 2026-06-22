@@ -11,7 +11,7 @@ vi.mock('../../src/infrastructure/connection/sibHttpClient.js', () => ({
 describe('Sib icons tests', () => {
 	test.skip('Test to convert svg to png, add first image', async () => {
 		// skip because requires http mock.
-		const cfg = new SibConnection('', 0, '', false, false, false)
+		const cfg = new SibConnection('', 0, '', false)
 
 		// arrange
 
@@ -40,7 +40,7 @@ describe('Sib icons tests', () => {
 	describe('Version gate', () => {
 		test('Skips fetching when SIB version is older than the icon API version', async () => {
 			// arrange
-			const cfg = new SibConnection('', 0, '', false, false, false)
+			const cfg = new SibConnection('', 0, '', false)
 			const sibIcons = new SibIcons()
 
 			// act
@@ -54,7 +54,7 @@ describe('Sib icons tests', () => {
 
 		test('Fetches icons on the exact version that introduced the icon API (regression)', async () => {
 			// arrange
-			const cfg = new SibConnection('', 0, '', false, false, false)
+			const cfg = new SibConnection('', 0, '', false)
 			const sibIcons = new SibIcons()
 
 			// act
@@ -67,7 +67,7 @@ describe('Sib icons tests', () => {
 
 		test('Fetches icons on a newer version', async () => {
 			// arrange
-			const cfg = new SibConnection('', 0, '', false, false, false)
+			const cfg = new SibConnection('', 0, '', false)
 			const sibIcons = new SibIcons()
 
 			// act
@@ -80,7 +80,7 @@ describe('Sib icons tests', () => {
 
 		test('Fetches icons on a non-standard 4-segment version (2.21.2.216)', async () => {
 			// arrange
-			const cfg = new SibConnection('', 0, '', false, false, false)
+			const cfg = new SibConnection('', 0, '', false)
 			const sibIcons = new SibIcons()
 
 			// act
@@ -93,7 +93,7 @@ describe('Sib icons tests', () => {
 
 		test('Fetches icons when the version is empty / unparseable', async () => {
 			// arrange
-			const cfg = new SibConnection('', 0, '', false, false, false)
+			const cfg = new SibConnection('', 0, '', false)
 			const sibIcons = new SibIcons()
 
 			// act

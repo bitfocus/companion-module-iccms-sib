@@ -23,7 +23,7 @@ describe('createRundownControlAction', () => {
 
 	// token (API pass) and helperToken intentionally differ so we can assert
 	// the rundown REST endpoints authenticate with the API pass, not the helper pass.
-	const sibConfig = new SibConnection('127.0.0.1', 8080, apiPass, false, false, false, helperPass, false)
+	const sibConfig = new SibConnection('127.0.0.1', 8080, apiPass, false, helperPass, false)
 	const self = { id: deviceId }
 
 	function invoke(actionType, rundownId = 5) {

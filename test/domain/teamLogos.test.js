@@ -9,7 +9,7 @@ vi.mock('../../src/infrastructure/connection/sibHttpClient.js', () => ({
 describe('Team logos version gate', () => {
 	test('Skips fetching when SIB version is older than the team logo API version', async () => {
 		// arrange
-		const cfg = new SibConnection('', 0, '', false, false, false)
+		const cfg = new SibConnection('', 0, '', false)
 		const teamLogos = new TeamLogos()
 
 		// act
@@ -22,7 +22,7 @@ describe('Team logos version gate', () => {
 
 	test('Fetches team logos on the exact version that introduced the API (regression)', async () => {
 		// arrange
-		const cfg = new SibConnection('', 0, '', false, false, false)
+		const cfg = new SibConnection('', 0, '', false)
 		const teamLogos = new TeamLogos()
 
 		// act
@@ -35,7 +35,7 @@ describe('Team logos version gate', () => {
 
 	test('Fetches team logos on a newer version', async () => {
 		// arrange
-		const cfg = new SibConnection('', 0, '', false, false, false)
+		const cfg = new SibConnection('', 0, '', false)
 		const teamLogos = new TeamLogos()
 
 		// act
@@ -48,7 +48,7 @@ describe('Team logos version gate', () => {
 
 	test('Fetches team logos on a non-standard 4-segment version (2.21.2.216)', async () => {
 		// arrange
-		const cfg = new SibConnection('', 0, '', false, false, false)
+		const cfg = new SibConnection('', 0, '', false)
 		const teamLogos = new TeamLogos()
 
 		// act
@@ -61,7 +61,7 @@ describe('Team logos version gate', () => {
 
 	test('Fetches team logos when the version is empty / unparseable', async () => {
 		// arrange
-		const cfg = new SibConnection('', 0, '', false, false, false)
+		const cfg = new SibConnection('', 0, '', false)
 		const teamLogos = new TeamLogos()
 
 		// act

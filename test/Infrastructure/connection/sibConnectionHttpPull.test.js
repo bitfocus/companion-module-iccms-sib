@@ -30,7 +30,7 @@ describe('SibConnectionHttpPull — selective component fetching', () => {
 	beforeEach(() => {
 		vi.clearAllMocks()
 		vi.useFakeTimers()
-		config = new SibConnection('127.0.0.1', 8080, 'api-pwd', true, false, false, 'helper-pwd', false)
+		config = new SibConnection('127.0.0.1', 8080, 'api-pwd', false, 'helper-pwd', false)
 	})
 
 	afterEach(() => {

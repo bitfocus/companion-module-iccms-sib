@@ -14,7 +14,7 @@ describe('createChangeTeamAction', () => {
 
 	// token (API pass) and helperToken intentionally differ so we can assert
 	// the change-team REST endpoint authenticates with the API pass, not the helper pass.
-	const sibConfig = new SibConnection('127.0.0.1', 8080, apiPass, false, false, false, helperPass, false)
+	const sibConfig = new SibConnection('127.0.0.1', 8080, apiPass, false, helperPass, false)
 
 	async function invoke(teamType = 'h', teamOid = 3) {
 		const action = createChangeTeamAction([], sibConfig, sibHttpClientChangeTeamById)

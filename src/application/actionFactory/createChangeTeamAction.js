@@ -44,12 +44,10 @@ export function createChangeTeamAction(allTeams, sibConfig, sibHttpClientChangeT
 
 			logger.debug('Change team from startup. Type %s, id %s.', sibTeamType, sibTeamOid)
 
-			try {
-				logger.debug('Fire (sib_action_change_team): %s', event.options[actionId.ChangeTeam])
-				sibHttpClientChangeTeamById(sibIpPort, sibTeamType, sibTeamOid, sibConfig.token)
-			} catch {
-				logger.error('Got error from teams client.')
-			}
+			logger.debug('Fire (sib_action_change_team): %s', event.options[actionId.ChangeTeam])
+			// Fire-and-forget: the client self-handles failures via its own req.on('error') handler
+			// and request timeout in sibHttpClient.js, so no try/catch is needed here.
+			sibHttpClientChangeTeamById(sibIpPort, sibTeamType, sibTeamOid, sibConfig.token)
 		},
 	}
 }

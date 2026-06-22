@@ -92,9 +92,7 @@ class SibPluginInstance extends InstanceBase {
 			const sibPort = config[configFieldId.SibPort]
 			const sibPass = config[configFieldId.SibPass]
 			const sibToken = config[configFieldId.SibHelperPass]
-			const sibReconnect = config[configFieldId.Reconnect]
 			const sibDebug = config[configFieldId.DebugMessages]
-			const sibReset = config[configFieldId.ResetVariables]
 			const sibDisableDataFetch = config[configFieldId.DisableDataFetch]
 
 			if (sibDebug) {
@@ -107,9 +105,7 @@ class SibPluginInstance extends InstanceBase {
 				sibHost,
 				sibPort,
 				sibPass,
-				sibReconnect,
 				sibDebug,
-				sibReset,
 				sibToken,
 				sibDisableDataFetch,
 			)
@@ -263,6 +259,11 @@ class SibPluginInstance extends InstanceBase {
 
 		this.#sibSocket = undefined
 		this.#sibConnection = undefined
+
+		// #sibIcons / #teamLogos / #sibComputer are intentionally left untouched: they hold only
+		// in-memory caches (the icon & logo Maps, shared with presets/feedbacks) with no OS
+		// resources, and are released by GC once Companion discards this instance. Only the retry
+		// timer and connection listeners need explicit teardown (handled above).
 	}
 
 	/**
@@ -330,9 +331,7 @@ class SibPluginInstance extends InstanceBase {
 		const sibPort = config[configFieldId.SibPort]
 		const sibPass = config[configFieldId.SibPass]
 		const sibToken = config[configFieldId.SibHelperPass]
-		const sibReconnect = config[configFieldId.Reconnect]
 		const sibDebug = config[configFieldId.DebugMessages]
-		const sibReset = config[configFieldId.ResetVariables]
 		const sibDisableDataFetch = config[configFieldId.DisableDataFetch]
 
 		if (sibDebug) {
@@ -345,9 +344,7 @@ class SibPluginInstance extends InstanceBase {
 			sibHost,
 			sibPort,
 			sibPass,
-			sibReconnect,
 			sibDebug,
-			sibReset,
 			sibToken,
 			sibDisableDataFetch,
 		)
@@ -412,27 +409,9 @@ class SibPluginInstance extends InstanceBase {
 			},
 			{
 				type: 'checkbox',
-				id: configFieldId.Reconnect, // placeholder.
-				isVisibleExpression: 'false',
-				label: 'Reconnect',
-				tooltip: 'Reconnect on error',
-				width: 6,
-				default: true,
-			},
-			{
-				type: 'checkbox',
 				id: configFieldId.DebugMessages,
 				label: 'Debug messages',
 				tooltip: 'Log incoming and outgoing messages',
-				width: 6,
-				default: false,
-			},
-			{
-				type: 'checkbox',
-				id: configFieldId.ResetVariables,
-				isVisibleExpression: 'false',
-				label: 'Reset variables',
-				tooltip: 'Reset variables on init and on connect',
 				width: 6,
 				default: false,
 			},

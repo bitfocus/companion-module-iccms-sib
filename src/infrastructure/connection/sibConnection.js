@@ -26,14 +26,12 @@ export class SibConnection {
 	 * @param {number} sibPort
 	 * @param {string} token - REST API password (`configFieldId.SibPass`). Appended as a
 	 *   path segment to `/api/...` calls; required when the SIB API is password-protected.
-	 * @param {boolean} reconnect
 	 * @param {boolean} printDebug
-	 * @param {boolean} resetVars
 	 * @param {string} helperToken - SIB tray helper password (`configFieldId.SibHelperPass`).
 	 *   Used only by the WebSocket / open-database paths, NOT by the REST API.
 	 * @param {boolean} disableDataFetch - disable heavy API calls (teams, quick buttons, rundowns).
 	 */
-	constructor(sibIp, sibPort, token, reconnect, printDebug, resetVars, helperToken, disableDataFetch) {
+	constructor(sibIp, sibPort, token, printDebug, helperToken, disableDataFetch) {
 		this.sibIp = sibIp
 		this.sibPort = sibPort
 
@@ -58,9 +56,7 @@ export class SibConnection {
 		 */
 		this.sibIpPort = sibIp + ':' + sibPort
 
-		this.reconnect = reconnect
 		this.debugMessages = printDebug
-		this.resetVariables = resetVars
 		this.pullIntervall = 10000
 		this.disableDataFetch = !!disableDataFetch
 	}
