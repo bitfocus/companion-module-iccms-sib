@@ -41,7 +41,12 @@ export function updateActionsAtRuntime(
 
 	const my_actions = {}
 
-	my_actions[actionId.TriggerEvent] = createTriggerEventAction(qbCollections, restBaseUrl, sibHttpClientTriggerQbById)
+	my_actions[actionId.TriggerEvent] = createTriggerEventAction(
+		qbCollections,
+		restBaseUrl,
+		sibHttpClientTriggerQbById,
+		sibConfig.token,
+	)
 	my_actions[actionId.OpenDatabase] = createOpenDatabaseAction(sibConfig, sibSocket)
 	my_actions[actionId.ChangeTeam] = createChangeTeamAction(allTeams, sibConfig, sibHttpClientChangeTeamById)
 	my_actions[actionId.Rundown] = createRundownControlAction(allRundowns, sibConfig, self)
@@ -104,7 +109,7 @@ export function updateActionsAtStartup(self, sibSocket, sibConfig, sibHttpClient
 
 			try {
 				logger.debug('Fire (sib_action_change_team): %s', event.options[actionId.ChangeTeam])
-				sibHttpClientChangeTeamById(sibIpPort, sibTeamType, sibTeamOid)
+				sibHttpClientChangeTeamById(sibIpPort, sibTeamType, sibTeamOid, sibConfig.token)
 			} catch {
 				logger.error('Got error from teams client.')
 			}
