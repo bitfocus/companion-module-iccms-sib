@@ -194,7 +194,8 @@ export class SibConnectionHttpPull extends EventEmitter {
 					if (error instanceof SibRateLimitError) {
 						logger.warn('Rate limited by SIB on teams. Skipping remaining calls.')
 						this.emit(sibConnectionEvents.OnSibError, 'Rate limited by SIB. Waiting for next tick.')
-						this.#prevSibInfo = sinInfo
+						// Do not advance #prevSibInfo: keep the previous ComponentLastModified so the
+						// next tick still sees a Team change and retries this fetch.
 						return
 					}
 					logger.error('Sib request for teams failed, %s', error)
@@ -221,7 +222,8 @@ export class SibConnectionHttpPull extends EventEmitter {
 					if (error instanceof SibRateLimitError) {
 						logger.warn('Rate limited by SIB on collections. Skipping remaining calls.')
 						this.emit(sibConnectionEvents.OnSibError, 'Rate limited by SIB. Waiting for next tick.')
-						this.#prevSibInfo = sinInfo
+						// Do not advance #prevSibInfo: keep the previous ComponentLastModified so the
+						// next tick still sees a QuickButton change and retries this fetch.
 						return
 					}
 					logger.error('Sib request for collections failed, %s', error)
@@ -247,7 +249,8 @@ export class SibConnectionHttpPull extends EventEmitter {
 					if (error instanceof SibRateLimitError) {
 						logger.warn('Rate limited by SIB on rundowns. Skipping remaining calls.')
 						this.emit(sibConnectionEvents.OnSibError, 'Rate limited by SIB. Waiting for next tick.')
-						this.#prevSibInfo = sinInfo
+						// Do not advance #prevSibInfo: keep the previous ComponentLastModified so the
+						// next tick still sees a Rundown change and retries this fetch.
 						return
 					}
 					logger.error('Sib request for rundowns failed, %s', error)
