@@ -53,6 +53,28 @@ export class SibConnectionHttpPull extends EventEmitter {
 	#prevRundowns
 
 	/**
+	 * ComponentLastModified.Team timestamp at which teams were last SUCCESSFULLY fetched.
+	 * Advanced only on a successful teams fetch, so a failed fetch (rate-limited or otherwise)
+	 * keeps the old value and is retried on the next tick.
+	 * @type {string|null}
+	 */
+	#fetchedTeamTimestamp
+
+	/**
+	 * ComponentLastModified.QuickButton timestamp at which quick button collections were
+	 * last SUCCESSFULLY fetched. Advanced only on success; see {@link #fetchedTeamTimestamp}.
+	 * @type {string|null}
+	 */
+	#fetchedQuickButtonTimestamp
+
+	/**
+	 * ComponentLastModified.Rundown timestamp at which rundowns were last SUCCESSFULLY fetched.
+	 * Advanced only on success; see {@link #fetchedTeamTimestamp}.
+	 * @type {string|null}
+	 */
+	#fetchedRundownTimestamp
+
+	/**
 	 * Unique ID that used to identify module in sib.
 	 * Not currently used.
 	 * @type {string}
@@ -75,6 +97,9 @@ export class SibConnectionHttpPull extends EventEmitter {
 		this.#prevTeams = null
 		this.#prevCollections = null
 		this.#prevRundowns = null
+		this.#fetchedTeamTimestamp = null
+		this.#fetchedQuickButtonTimestamp = null
+		this.#fetchedRundownTimestamp = null
 
 		clearTimeout(this.#pullTimer)
 		this.#pullTimer = null
@@ -123,8 +148,6 @@ export class SibConnectionHttpPull extends EventEmitter {
 		}
 
 		let sinInfo
-		let prevComponent =
-			this.#prevSibInfo && this.#prevSibInfo.ComponentLastModified ? this.#prevSibInfo.ComponentLastModified : null
 		let currComponent
 
 		try {
@@ -146,38 +169,28 @@ export class SibConnectionHttpPull extends EventEmitter {
 				return
 			}
 
-			// Determine if we have component timestamps for selective updates
-			const hasPrev = !!prevComponent
+			// Decide which components to fetch by comparing the current ComponentLastModified
+			// timestamps against the timestamp at which each component was last SUCCESSFULLY
+			// fetched. With no current timestamps (legacy SIB) fetch all. Because each baseline
+			// advances only on success, a failed fetch is retried on the next tick.
 			const hasCurr = !!currComponent
 
-			// If either missing, fallback to fetching all (legacy behavior)
-			const selective = hasPrev && hasCurr
+			const shouldUpdateTeams = !hasCurr || currComponent.Team !== this.#fetchedTeamTimestamp
+			const shouldUpdateQuickButtons = !hasCurr || currComponent.QuickButton !== this.#fetchedQuickButtonTimestamp
+			const shouldUpdateRundowns = !hasCurr || currComponent.Rundown !== this.#fetchedRundownTimestamp
 
-			// Track which components to update
-			let shouldUpdateTeams = true
-			let shouldUpdateQuickButtons = true
-			let shouldUpdateRundowns = true
-
-			if (selective) {
-				shouldUpdateTeams = prevComponent.Team !== currComponent.Team
-				shouldUpdateQuickButtons = prevComponent.QuickButton !== currComponent.QuickButton
-				shouldUpdateRundowns = prevComponent.Rundown !== currComponent.Rundown
-
-				logger.debug(
-					'ComponentLastModified check — teams: %s, quickButtons: %s, rundowns: %s',
-					shouldUpdateTeams ? `changed (${prevComponent.Team} → ${currComponent.Team})` : 'unchanged',
-					shouldUpdateQuickButtons
-						? `changed (${prevComponent.QuickButton} → ${currComponent.QuickButton})`
-						: 'unchanged',
-					shouldUpdateRundowns ? `changed (${prevComponent.Rundown} → ${currComponent.Rundown})` : 'unchanged',
-				)
-			} else {
-				logger.debug(
-					'ComponentLastModified not available (prev: %o, curr: %o) — fetching all.',
-					prevComponent,
-					currComponent,
-				)
-			}
+			logger.debug(
+				'ComponentLastModified check — teams: %s, quickButtons: %s, rundowns: %s',
+				shouldUpdateTeams
+					? `changed (${this.#fetchedTeamTimestamp} → ${hasCurr ? currComponent.Team : '?'})`
+					: 'unchanged',
+				shouldUpdateQuickButtons
+					? `changed (${this.#fetchedQuickButtonTimestamp} → ${hasCurr ? currComponent.QuickButton : '?'})`
+					: 'unchanged',
+				shouldUpdateRundowns
+					? `changed (${this.#fetchedRundownTimestamp} → ${hasCurr ? currComponent.Rundown : '?'})`
+					: 'unchanged',
+			)
 
 			// Teams
 			if (shouldUpdateTeams) {
@@ -190,12 +203,14 @@ export class SibConnectionHttpPull extends EventEmitter {
 						this.#prevTeams = apiTeams
 						this.emit(sibConnectionEvents.OnSibTeamsUpdated, apiTeams)
 					}
+
+					// Teams fetched successfully — advance the baseline so we only re-fetch on the next change.
+					if (hasCurr) this.#fetchedTeamTimestamp = currComponent.Team
 				} catch (error) {
 					if (error instanceof SibRateLimitError) {
 						logger.warn('Rate limited by SIB on teams. Skipping remaining calls.')
 						this.emit(sibConnectionEvents.OnSibError, 'Rate limited by SIB. Waiting for next tick.')
-						// Do not advance #prevSibInfo: keep the previous ComponentLastModified so the
-						// next tick still sees a Team change and retries this fetch.
+						this.#prevSibInfo = sinInfo
 						return
 					}
 					logger.error('Sib request for teams failed, %s', error)
@@ -218,12 +233,14 @@ export class SibConnectionHttpPull extends EventEmitter {
 						this.#prevCollections = apiCollections
 						this.emit(sibConnectionEvents.OnSibQuickButtonsUpdated, apiCollections)
 					}
+
+					// Collections fetched successfully — advance the baseline so we only re-fetch on the next change.
+					if (hasCurr) this.#fetchedQuickButtonTimestamp = currComponent.QuickButton
 				} catch (error) {
 					if (error instanceof SibRateLimitError) {
 						logger.warn('Rate limited by SIB on collections. Skipping remaining calls.')
 						this.emit(sibConnectionEvents.OnSibError, 'Rate limited by SIB. Waiting for next tick.')
-						// Do not advance #prevSibInfo: keep the previous ComponentLastModified so the
-						// next tick still sees a QuickButton change and retries this fetch.
+						this.#prevSibInfo = sinInfo
 						return
 					}
 					logger.error('Sib request for collections failed, %s', error)
@@ -245,12 +262,14 @@ export class SibConnectionHttpPull extends EventEmitter {
 						this.#prevRundowns = apiRundowns
 						this.emit(sibConnectionEvents.OnSibRundownUpdated, apiRundowns)
 					}
+
+					// Rundowns fetched successfully — advance the baseline so we only re-fetch on the next change.
+					if (hasCurr) this.#fetchedRundownTimestamp = currComponent.Rundown
 				} catch (error) {
 					if (error instanceof SibRateLimitError) {
 						logger.warn('Rate limited by SIB on rundowns. Skipping remaining calls.')
 						this.emit(sibConnectionEvents.OnSibError, 'Rate limited by SIB. Waiting for next tick.')
-						// Do not advance #prevSibInfo: keep the previous ComponentLastModified so the
-						// next tick still sees a Rundown change and retries this fetch.
+						this.#prevSibInfo = sinInfo
 						return
 					}
 					logger.error('Sib request for rundowns failed, %s', error)
