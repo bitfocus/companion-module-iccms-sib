@@ -319,6 +319,11 @@ class SibPluginInstance extends InstanceBase {
 	async configUpdated(config) {
 		this.log('debug', `configUpdated.`)
 
+		// Tear down the previous poll cycle before reconnecting so the old timer can't keep
+		// ticking alongside the new one. A tick already mid-await may still emit once into the
+		// new cycle; the next fresh tick overwrites it.
+		this.#sibConnection?.disconnectFromSib()
+
 		this.config = config
 
 		const sibHost = config[configFieldId.SibIpHost]
