@@ -163,6 +163,12 @@ export class SibConnectionHttpPull extends EventEmitter {
 
 			currComponent = sinInfo && sinInfo.ComponentLastModified ? sinInfo.ComponentLastModified : null
 
+			// The heartbeat just succeeded, so the connection is up. The heartbeat is the ONLY thing
+			// that decides connection state. Report it here, NOT at the end of the tick, so a later
+			// data-fetch failure (e.g. bad token) can mark the status failed without this success
+			// overwriting it again — that overwrite was the ConnectionFailure → Ok flicker.
+			this.emit(sibConnectionEvents.OnSibConnected)
+
 			// Always emit db info changes if changed
 			if (!(JSON.stringify(this.#prevSibInfo) === JSON.stringify(sinInfo))) {
 				logger.debug('Connection. Db info updated. %o', sinInfo)
@@ -173,7 +179,6 @@ export class SibConnectionHttpPull extends EventEmitter {
 			if (this.#sibConfig.disableDataFetch === true) {
 				logger.debug('Data fetching disabled. Skipping heavy API calls.')
 				this.#prevSibInfo = sinInfo
-				this.emit(sibConnectionEvents.OnSibConnected)
 				return
 			}
 
@@ -216,8 +221,9 @@ export class SibConnectionHttpPull extends EventEmitter {
 					if (hasCurr) this.#fetchedTeamTimestamp = currComponent.Team
 				} catch (error) {
 					if (error instanceof SibRateLimitError) {
+						// 429 is benign — SIB is up, just throttling. Leave the connected status (set
+						// right after the heartbeat) in place and skip the rest; we retry next tick.
 						logger.warn('Rate limited by SIB on teams. Skipping remaining calls.')
-						this.emit(sibConnectionEvents.OnSibError, 'Rate limited by SIB. Waiting for next tick.')
 						this.#prevSibInfo = sinInfo
 						return
 					}
@@ -247,7 +253,6 @@ export class SibConnectionHttpPull extends EventEmitter {
 				} catch (error) {
 					if (error instanceof SibRateLimitError) {
 						logger.warn('Rate limited by SIB on collections. Skipping remaining calls.')
-						this.emit(sibConnectionEvents.OnSibError, 'Rate limited by SIB. Waiting for next tick.')
 						this.#prevSibInfo = sinInfo
 						return
 					}
@@ -276,7 +281,6 @@ export class SibConnectionHttpPull extends EventEmitter {
 				} catch (error) {
 					if (error instanceof SibRateLimitError) {
 						logger.warn('Rate limited by SIB on rundowns. Skipping remaining calls.')
-						this.emit(sibConnectionEvents.OnSibError, 'Rate limited by SIB. Waiting for next tick.')
 						this.#prevSibInfo = sinInfo
 						return
 					}
@@ -285,21 +289,20 @@ export class SibConnectionHttpPull extends EventEmitter {
 				}
 			}
 
-			// Save latest SIB info for next tick
+			// Save latest SIB info for next tick. The connection status was already reported right
+			// after the heartbeat — we deliberately do NOT re-emit OnSibConnected here, so any
+			// data-fetch failure above remains the last status instead of being overwritten by Ok.
 			this.#prevSibInfo = sinInfo
-
-			// NOTE: a non-rate-limit failure above emits OnSibError but does NOT return, so this
-			// OnSibConnected overwrites it in the UI. Intentional (unlike the rate-limit branches):
-			// one endpoint's blip shouldn't block the others, and failed fetches retry next tick.
-			this.emit(sibConnectionEvents.OnSibConnected)
 
 			logger.debug('Timer tick. Done.')
 		} catch (error) {
 			if (error instanceof SibRateLimitError) {
+				// 429 means SIB answered — it's reachable, just throttling — so the connection is up.
 				logger.warn('Rate limited by SIB on heartbeat. Waiting for next tick.')
-				this.emit(sibConnectionEvents.OnSibError, 'Rate limited by SIB. Waiting for next tick.')
+				this.emit(sibConnectionEvents.OnSibConnected)
 				return
 			}
+			// Only a heartbeat failure (no response / timeout) marks the connection as down.
 			logger.debug('Sib request for info failed, %s.', error)
 			this.emit(sibConnectionEvents.OnSibError, 'Connection to SIB failed. Check that SIB is running.')
 			return
