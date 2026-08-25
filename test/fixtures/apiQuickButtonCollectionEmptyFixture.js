@@ -5,5 +5,5 @@ import { defineFixture } from 'efate'
  * Usage: apiQuickButtonCollectionEmptyFixture.create()
  */
 export const apiQuickButtonCollectionsEmptyArrayFixture = defineFixture((t) => {
-  t.as(() => [])
+	t.as(() => [])
 })

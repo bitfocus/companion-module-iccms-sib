@@ -1,22 +1,48 @@
 {
-  "permissions": {
-    "deny": [
-      "Read(file_path:.clinerules/**)",
-      "Glob(path:.clinerules/**)",
-      "Glob(pattern:.clinerules/**)",
-      "Grep(path:.clinerules/**)",
-      "Edit(file_path:.clinerules/**)",
-      "Write(file_path:.clinerules/**)",
-      "Bash(cat .clinerules/**)",
-      "Bash(ls .clinerules/**)",
-      "Read(file_path:.idea/**)",
-      "Glob(path:.idea/**)",
-      "Glob(pattern:.idea/**)",
-      "Grep(path:.idea/**)",
-      "Edit(file_path:.idea/**)",
-      "Write(file_path:.idea/**)",
-      "Bash(cat .idea/**)",
-      "Bash(ls .idea/**)"
-    ]
-  }
+	"autoMemoryEnabled": false,
+	"permissions": {
+		"allow": ["Bash(mv:*)", "Bash(yarn test:*)", "Bash(yarn lint:*)", "Bash(yarn format:*)", "Bash(yarn package:*)"],
+		"deny": [
+			"Read(file_path:.idea/**)",
+			"Glob(path:.idea/**)",
+			"Glob(pattern:.idea/**)",
+			"Grep(path:.idea/**)",
+			"Edit(file_path:.idea/**)",
+			"Write(file_path:.idea/**)",
+			"Bash(cat .idea/**)",
+			"Bash(ls .idea/**)",
+			"Bash(command:git commit)",
+			"Bash(command:git merge)",
+			"Bash(command:git rebase)",
+			"Bash(command:git reset --hard)",
+			"Bash(command:git reset --merge)",
+			"Bash(command:git reset --keep)",
+			"Bash(command:git checkout --)",
+			"Bash(command:git restore)",
+			"Bash(command:git clean -f)",
+			"Bash(command:git clean -d)",
+			"Bash(command:git clean -x)",
+			"Bash(command:git rm -f)",
+			"Bash(command:git rm -rf)",
+			"Bash(command:git branch -D)",
+			"Bash(command:git branch -d)",
+			"Bash(command:git tag -d)",
+			"Bash(command:git update-ref -d)",
+			"Bash(command:git push --force)",
+			"Bash(command:git push -f)",
+			"Bash(command:git push --force-with-lease)",
+			"Bash(command:git push --mirror)",
+			"Bash(command:git push --delete)",
+			"Bash(command:git stash drop)",
+			"Bash(command:git stash clear)",
+			"Bash(command:git stash pop)",
+			"Bash(command:git reflog expire)",
+			"Bash(command:git gc --prune)",
+			"Bash(command:git filter-branch)",
+			"Bash(command:git filter-repo)",
+			"Bash(command:git revert)",
+			"Bash(command:git cherry-pick)",
+			"Bash(command:git config)"
+		]
+	}
 }

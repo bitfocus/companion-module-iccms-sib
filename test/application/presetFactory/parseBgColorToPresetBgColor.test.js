@@ -1,4 +1,4 @@
-import { parseBgColorToPresetBgColor } from '../../../application/presetFactory/parseBgColorToPresetBgColor.js'
+import { parseBgColorToPresetBgColor } from '../../../src/application/presetFactory/parseBgColorToPresetBgColor.js'
 import { combineRgb } from '@companion-module/base'
 
 describe('Test parse QB background HEX colors', () => {

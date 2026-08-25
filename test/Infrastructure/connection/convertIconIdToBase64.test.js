@@ -1,4 +1,4 @@
-import { convertIconIdToBase64 } from '../../../infrastructure/connection/sibHttpClient.js'
+import { convertIconIdToBase64 } from '../../../src/infrastructure/connection/sibHttpClient.js'
 
 describe('Convert sib icon id to base64 string', () => {
 	it.each([

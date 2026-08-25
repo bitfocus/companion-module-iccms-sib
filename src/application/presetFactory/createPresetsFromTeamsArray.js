@@ -1,0 +1,108 @@
+import { combineRgb } from '@companion-module/base'
+import { colord } from 'colord'
+import { actionId } from '../actionId.js'
+import { apiSportTeamType } from '../../infrastructure/sib-api/apiSportTeamType.js'
+import { getForegroundColorFromBackgroundColor } from './getForegroundColorFromBackgroundColor.js'
+import { composeIconWithGradient } from '../../domain/imageProcessing.js'
+import { logger } from '../../logger.js'
+
+/**
+ * Create team presets with header and two buttons (home/guest) per team, under "Teams" category.
+ * @param {ApiSportTeamWithoutPlayers[]} teams
+ * @param {TeamLogos} [teamLogos] Optional logo cache; when present, logos are composed onto buttons.
+ * @returns {object} presets dictionary
+ */
+export function createPresetsFromTeamsArray(teams, teamLogos) {
+	logger.debug('[createPresetsFromTeamsArray] Start creating team presets')
+	if (!Array.isArray(teams) || !teams) {
+		return {}
+	}
+	const presets = {}
+	const CATEGORY = 'Teams'
+
+	for (const team of teams) {
+		const cachedLogoPng64 = teamLogos ? teamLogos.getTeamLogoPngBase64(team.Id) : ''
+		// Composed once per team; home and guest buttons share the result.
+		const composedPng64 = cachedLogoPng64 ? composeIconWithGradient(cachedLogoPng64) : ''
+		// Header
+		const headerId = `header_team_${team.Id}`
+		presets[headerId] = {
+			type: 'text',
+			category: CATEGORY,
+			name: team.Name,
+			text: 'Move this button to the canvas to activate',
+		}
+
+		// Helper for button creation
+		function makeTeamButton(teamType) {
+			let bgClrInt = -1
+			let clr
+
+			if (team.TeamColorHex !== '') {
+				clr = colord(team.TeamColorHex).toRgb()
+				bgClrInt = combineRgb(clr.r, clr.g, clr.b)
+			} else {
+				bgClrInt = combineRgb(0, 0, 0)
+			}
+
+			let buttonName
+			if (teamType === apiSportTeamType.Home) {
+				buttonName = `Change home team to ${team.Name}`
+			} else {
+				buttonName = `Change guest team to ${team.Name}`
+			}
+
+			// Style
+			const style = {
+				text: team.Name,
+				size: 14,
+				alignment: 'center:bottom',
+				color: combineRgb(255, 255, 255),
+				bgcolor: bgClrInt,
+				pngalignment: 'center:center',
+			}
+
+			// Logo logic
+			if (composedPng64) {
+				style.color = combineRgb(255, 255, 255)
+				style.png64 = composedPng64
+			} else {
+				style.color = getForegroundColorFromBackgroundColor(team.TeamColorHex)
+				style.bgcolor = bgClrInt
+			}
+
+			return {
+				type: 'button',
+				category: CATEGORY,
+				name: buttonName,
+				style,
+				steps: [
+					{
+						down: [
+							{
+								actionId: actionId.ChangeTeam,
+								options: {
+									team_type: teamType,
+									team_oid: team.Id,
+								},
+							},
+						],
+						up: [],
+					},
+				],
+				feedbacks: [],
+			}
+		}
+
+		// Home team button
+		const homeButtonId = `team_${team.Id}_home`
+		presets[homeButtonId] = makeTeamButton(apiSportTeamType.Home)
+
+		// Guest team button
+		const guestButtonId = `team_${team.Id}_guest`
+		presets[guestButtonId] = makeTeamButton(apiSportTeamType.Guest)
+	}
+
+	logger.debug('[createPresetsFromTeamsArray] Finished creating team presets')
+	return presets
+}
