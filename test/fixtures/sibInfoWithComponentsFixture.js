@@ -6,7 +6,7 @@ import * as path from 'path'
  * Factory fixture for creating test data of type {@link ApiMessageSibInfo} (with components).
  *
  * @returns {ApiMessageSibInfo} An object with SIB info properties.
- *          See {@link ../infrastructure/sib-api/apiMessageSibInfo.js} for structure.
+ *          See {@link ../src/infrastructure/sib-api/apiMessageSibInfo.js} for structure.
  *
  * @example
  * const sibInfo = sibInfoWithComponentsFixture.create();
@@ -23,13 +23,13 @@ import * as path from 'path'
  * // }
  */
 export const sibInfoWithComponentsFixture = defineFixture((t) => {
-  t['SportInTheBoxVersion'].as(() => faker.system.semver())
-  t['ResponseDate'].as(() => faker.date.anytime().toISOString())
-  t['DatabasePath'].as(() => faker.system.directoryPath() + path.sep + faker.system.commonFileName('SIB2'))
-  t['LogOnName'].as(() => faker.system.fileName() + '\\' + faker.person.firstName().toLowerCase())
-  t['ComponentLastModified'].as(() => ({
-    QuickButton: faker.date.anytime().toISOString(),
-    Rundown: faker.date.anytime().toISOString(),
-    Team: faker.date.anytime().toISOString()
-  }))
+	t['SportInTheBoxVersion'].as(() => faker.system.semver())
+	t['ResponseDate'].as(() => faker.date.anytime().toISOString())
+	t['DatabasePath'].as(() => faker.system.directoryPath() + path.sep + faker.system.commonFileName('SIB2'))
+	t['LogOnName'].as(() => faker.system.fileName() + '\\' + faker.person.firstName().toLowerCase())
+	t['ComponentLastModified'].as(() => ({
+		QuickButton: faker.date.anytime().toISOString(),
+		Rundown: faker.date.anytime().toISOString(),
+		Team: faker.date.anytime().toISOString(),
+	}))
 })

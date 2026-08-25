@@ -5,5 +5,5 @@ import { defineFixture } from 'efate'
  * Usage: apiRundownWithoutItemsArrayEmptyFixture.create()
  */
 export const apiRundownWithoutItemsArrayEmptyFixture = defineFixture((t) => {
-  t['Rundowns'].as(() => [])
+	t['Rundowns'].as(() => [])
 })

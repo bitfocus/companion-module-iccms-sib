@@ -4,19 +4,18 @@
  * @example faker.helpers.arrayElement(ICON_ID_CHOICES_FIXTURE))
  */
 export const ICON_ID_CHOICES_FIXTURE = [
-  'rundown',
-  'window',
-  'folder',
-  'item_file',
-  'action',
-  'ClockTimeHalf',
-  'ClockTimeZero',
-  'ClockTimeOk',
-  'rundown',
-  'video2',
-  'record2',
-  'background',
-  'play2',
-  'controller'
+	'rundown',
+	'window',
+	'folder',
+	'item_file',
+	'action',
+	'ClockTimeHalf',
+	'ClockTimeZero',
+	'ClockTimeOk',
+	'rundown',
+	'video2',
+	'record2',
+	'background',
+	'play2',
+	'controller',
 ]
-

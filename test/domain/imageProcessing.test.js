@@ -1,5 +1,5 @@
 import { PNG } from 'pngjs'
-import { composeIconWithGradient } from '../../domain/imageProcessing.js'
+import { composeIconWithGradient } from '../../src/domain/imageProcessing.js'
 
 /**
  * Creates a solid-color test PNG as base64.
