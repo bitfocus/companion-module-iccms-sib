@@ -1,4 +1,4 @@
-import { getChoicesForChangeTeamAction } from '../../../application/presetFactory/getChoicesForChangeTeamAction.js'
+import { getChoicesForChangeTeamAction } from '../../../src/application/presetFactory/getChoicesForChangeTeamAction.js'
 
 describe('Choices are created from teams', () => {
 	test('Choices fort collection with three teams are correct.', () => {

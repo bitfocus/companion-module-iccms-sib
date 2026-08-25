@@ -17,16 +17,13 @@ import { ICON_ID_CHOICES_FIXTURE } from './iconIdChoicesFixture.js'
  * // { Id: 42, Text: 'MyCollection', Groups: [...], BackgroundColorHex: '#FF00FF', ... }
  */
 export const apiQuickButtonCollectionWithGroupsAndButtonsFixture = defineFixture((t) => {
-  t['Id'].as(() => faker.number.int({ min: 1, max: 100 }))
-  t['CollectionId'].as(() => faker.string.uuid())
-  t['CollectionType'].as(() => faker.number.int({ min: 0, max: 2 }))
-  t['Text'].as(() => faker.lorem.word())
-  t['Order'].as(() => faker.number.int({ min: 0, max: 10 }))
-  t['IconId'].as(() => faker.helpers.arrayElement(ICON_ID_CHOICES_FIXTURE))
-  t['BackgroundColorHex'].as(() => faker.color.rgb({ format: 'hex', casing: 'upper' }))
-  t['SvgIcon'].as(() => faker.string.alphanumeric(20))
-  t['Groups'].as(() => [
-    apiQuickButtonGroupWithButtonsFixture.create(),
-    apiQuickButtonGroupWithButtonsFixture.create()
-  ])
+	t['Id'].as(() => faker.number.int({ min: 1, max: 100 }))
+	t['CollectionId'].as(() => faker.string.uuid())
+	t['CollectionType'].as(() => faker.number.int({ min: 0, max: 2 }))
+	t['Text'].as(() => faker.lorem.word())
+	t['Order'].as(() => faker.number.int({ min: 0, max: 10 }))
+	t['IconId'].as(() => faker.helpers.arrayElement(ICON_ID_CHOICES_FIXTURE))
+	t['BackgroundColorHex'].as(() => faker.color.rgb({ format: 'hex', casing: 'upper' }))
+	t['SvgIcon'].as(() => faker.string.alphanumeric(20))
+	t['Groups'].as(() => [apiQuickButtonGroupWithButtonsFixture.create(), apiQuickButtonGroupWithButtonsFixture.create()])
 })

@@ -1,4 +1,4 @@
-import { parseCollectionWithGroupsAndButtons } from '../../../infrastructure/parsers/parseCollectionWithGroupsAndButtons.js'
+import { parseCollectionWithGroupsAndButtons } from '../../../src/infrastructure/parsers/parseCollectionWithGroupsAndButtons.js'
 
 describe('apiQuickButtonCollectionWithGroupsAndButtons deserialization', () => {
 	test('Deserialized collection', () => {

@@ -7,17 +7,15 @@
 node_modules/
 package-lock.json
 /pkg
-/pkg.tgz
+/*.tgz
+DEBUG-*
 
-# Yarn files (not using Zero-Installs)
-# https://yarnpkg.com/getting-started/qa#which-files-should-be-gitignored
+# Yarn
 .pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/sdks
-!.yarn/versions
+/.yarn
+
+# Claude Code (per-developer local settings)
+.claude/settings.local.json
 
 # Node artifact files
 dist/
