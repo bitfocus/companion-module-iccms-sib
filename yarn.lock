@@ -213,17 +213,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@faker-js/faker@npm:^10.5.0":
+  version: 10.5.0
+  resolution: "@faker-js/faker@npm:10.5.0"
+  checksum: 10c0/2de3c7b8f41592d52cefc3ab4c99536656249bca78d5ad184a3b7ac43ecc9d946056cef2c4d37060373ef06ad992d82530de08479fabe16fdbe77b911d842446
+  languageName: node
+  linkType: hard
+
 "@faker-js/faker@npm:^7.5.0":
   version: 7.6.0
   resolution: "@faker-js/faker@npm:7.6.0"
   checksum: 10c0/8f0e0588b1327563aba3bf71d859eb52575c6e34f9d259f63dfa3c3ba7eea910588395399f2531753f1b7b730c06e0ef79336634361b2e69445ed69123e019eb
-  languageName: node
-  linkType: hard
-
-"@faker-js/faker@npm:^8.3.1":
-  version: 8.3.1
-  resolution: "@faker-js/faker@npm:8.3.1"
-  checksum: 10c0/ed50c27a5674a8c755574ccc0c79c29fa70cd17d524b701269f584d2f78720c690da219f6111b0e743a4f6570fb08685d826b2d9e80ca9c1484b8c26047864c6
   languageName: node
   linkType: hard
 
@@ -1154,7 +1154,7 @@ __metadata:
   dependencies:
     "@companion-module/base": "npm:~1.12.1"
     "@companion-module/tools": "npm:^2.8.0"
-    "@faker-js/faker": "npm:^8.3.1"
+    "@faker-js/faker": "npm:^10.5.0"
     colord: "npm:^2.9.3"
     efate: "npm:^1.5.0"
     efate-faker: "npm:^1.5.0"
