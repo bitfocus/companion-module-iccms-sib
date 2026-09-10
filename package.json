@@ -38,7 +38,7 @@
 		"eslint": "^9.39.2",
 		"globals": "^11.12.0",
 		"prettier": "^3.8.3",
-		"vitest": "^4.1.9"
+		"vitest": "^4.1.11"
 	},
 	"prettier": "@companion-module/tools/.prettierrc.json",
 	"packageManager": "yarn@4.12.0"
