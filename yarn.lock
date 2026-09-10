@@ -1117,6 +1117,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"colord@npm:^2.9.4":
+  version: 2.9.4
+  resolution: "colord@npm:2.9.4"
+  checksum: 10c0/c8fb0d7ca4b3488c05d75c5e7b42b0ac84ca4b0a9f5538e74f063c083c1f57c319bcf02bee1b8ff691991c9610e875bafd2eafd5d050e383ad71910afadbf098
+  languageName: node
+  linkType: hard
+
 "colorette@npm:^2.0.14":
   version: 2.0.20
   resolution: "colorette@npm:2.0.20"
@@ -1155,7 +1162,7 @@ __metadata:
     "@companion-module/base": "npm:~1.12.1"
     "@companion-module/tools": "npm:^2.8.0"
     "@faker-js/faker": "npm:^8.3.1"
-    colord: "npm:^2.9.3"
+    colord: "npm:^2.9.4"
     efate: "npm:^1.5.0"
     efate-faker: "npm:^1.5.0"
     efate-uuid: "npm:^1.5.0"
